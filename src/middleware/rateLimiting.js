@@ -9,7 +9,7 @@ const rateLimit = require('express-rate-limit');
  */
 const generalApiLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 2000, // Limit each IP to 100 requests per windowMs
   message: {
     success: false,
     error: {
@@ -38,7 +38,7 @@ const generalApiLimiter = rateLimit({
  */
 const authLimiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 5 authentication attempts per windowMs
+  max: 2000, // Limit each IP to 5 authentication attempts per windowMs
   message: {
     success: false,
     error: {
@@ -70,7 +70,7 @@ const authLimiter = rateLimit({
  */
 const userManagementLimiter = rateLimit({
   windowMs: 0.5 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 30 requests per windowMs
+  max: 2000, // Limit each IP to 30 requests per windowMs
   message: {
     success: false,
     error: {
@@ -100,7 +100,7 @@ const userManagementLimiter = rateLimit({
  */
 const publicLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
-  max: 100, // Limit each IP to 60 requests per minute
+  max: 2000, // Limit each IP to 60 requests per minute
   message: {
     success: false,
     error: {

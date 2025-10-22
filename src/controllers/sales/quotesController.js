@@ -44,6 +44,8 @@ const postQuotes = asyncHandler(async (req, res) => {
     eta,
     payableAt,
     dispatchAt,
+    origin,
+    destination,
     customer,
     contactPerson,
     items,
@@ -55,7 +57,10 @@ const postQuotes = asyncHandler(async (req, res) => {
     termsNCondition,
     company,
     docAttached = '',
-    user = null,
+    total,
+    subtotal,
+    vat,
+    discount,
   } = req.body;
   const paddedId = String(lastInsertedId.lastId).padStart(2, '0');
 
@@ -70,6 +75,8 @@ const postQuotes = asyncHandler(async (req, res) => {
     eta,
     payableAt,
     dispatchAt,
+    origin,
+    destination,
     items,
     customer,
     date,
@@ -81,9 +88,13 @@ const postQuotes = asyncHandler(async (req, res) => {
     id: customID ? customID : quotePrefix + paddedId,
     company,
     organization,
-    user,
     docAttached,
     contactPerson,
+    total,
+    subtotal,
+    vat,
+    discount,
+    user: req.id,
     //   approval: hasApproval ? 'pending' : 'none',
   });
 

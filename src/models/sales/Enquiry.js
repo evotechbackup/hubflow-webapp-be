@@ -12,6 +12,8 @@ const ItemSchema = new Schema(
     productName: String,
     unit: String,
     quantity: Number,
+    budget: Number,
+    remark: String,
     description: String,
   },
   { _id: false }
@@ -33,6 +35,8 @@ const EnquirySchema = new Schema(
     eta: Date,
     payableAt: Date,
     dispatchAt: Date,
+    origin: String,
+    destination: String,
     notes: String,
     termsNCondition: String,
     approvalComment: String,
