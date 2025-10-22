@@ -3,92 +3,29 @@ const mongoose = require('mongoose');
 const CustomizationSchema = new mongoose.Schema(
   {
     // Sales
-    customerType: [
-      {
-        name: String,
-      },
-    ],
-
-    customerTags: [
-      {
-        name: String,
-      },
-    ],
+    customerType: [{ name: String }],
+    customerTags: [{ name: String }],
 
     // Procurement
-    vendorType: [
-      {
-        name: String,
-      },
-    ],
-
-    vendorSubType: [
-      {
-        name: String,
-      },
-    ],
-
-    vendorTags: [
-      {
-        name: String,
-      },
-    ],
-
-    incoTerms: [
-      {
-        name: String,
-      },
-    ],
+    vendorType: [{ name: String }],
+    vendorSubType: [{ name: String }],
+    vendorTags: [{ name: String }],
+    incoTerms: [{ name: String }],
 
     // HRM
-    officeLocations: [
-      {
-        name: String,
-      },
-    ],
-
-    employmentTypes: [
-      {
-        name: String,
-      },
-    ],
-
-    employmentContracts: [
-      {
-        name: String,
-      },
-    ],
-
-    visaStatus: [
-      {
-        name: String,
-      },
-    ],
-
-    employeeTeams: [
-      {
-        name: String,
-      },
-    ],
+    officeLocations: [{ name: String }],
+    employmentTypes: [{ name: String }],
+    employmentContracts: [{ name: String }],
+    visaStatus: [{ name: String }],
+    employeeTeams: [{ name: String }],
 
     // inventory
-    inventoryTypes: [
-      {
-        name: String,
-      },
-    ],
+    inventoryTypes: [{ name: String }],
+    inventoryTags: [{ name: String }],
 
-    inventoryTags: [
-      {
-        name: String,
-      },
-    ],
+    // General
 
-    regions: [
-      {
-        name: String,
-      },
-    ],
+    shipmentTypes: [{ name: String }],
 
     organization: {
       type: mongoose.Schema.Types.ObjectId,

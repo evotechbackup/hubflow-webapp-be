@@ -1,35 +1,35 @@
-const router = require("express").Router();
-const Department = require("../../models/user-management/Department");
-const Agent = require("../../models/Agent");
-const Organization = require("../../models/user-management/Organization");
-const Company = require("../../models/Company");
-const Employee = require("../../models/Employee");
-const EmployeeDepartment = require("../../models/HRM/EmployeeDepartment");
-const WebAttendance = require("../../models/HRM/WebAttendance");
-const CRMCustomer = require("../../models/crm/CRMCustomer");
-const Leads = require("../../models/crm/Leads");
-const Product = require("../../models/Product");
-const Category = require("../../models/Category");
-const Invoice = require("../../models/Sales/Invoice");
-const Customer = require("../../models/Sales/Customer");
-const Proposal = require("../../models/Sales/Proposal");
-const Quote = require("../../models/Sales/Quote");
-const Account = require("../../models/accounts/Account");
-const POSOrders = require("../../models/pos/POSOrders");
+const router = require('express').Router();
+const Department = require('../../models/user-management/Department');
+const Agent = require('../../models/Agent');
+const Organization = require('../../models/user-management/Organization');
+const Company = require('../../models/Company');
+const Employee = require('../../models/Employee');
+const EmployeeDepartment = require('../../models/HRM/EmployeeDepartment');
+const WebAttendance = require('../../models/HRM/WebAttendance');
+const CRMCustomer = require('../../models/crm/CRMCustomer');
+const Leads = require('../../models/crm/Leads');
+const Product = require('../../models/Product');
+const Category = require('../../models/Category');
+const Invoice = require('../../models/Sales/Invoice');
+const Customer = require('../../models/Sales/Customer');
+const Proposal = require('../../models/Sales/Proposal');
+const Quote = require('../../models/Sales/Quote');
+const Account = require('../../models/accounts/Account');
+const POSOrders = require('../../models/pos/POSOrders');
 
-const SalesOrder = require("../../models/Sales/SalesOrder");
-const RecruitmentForm = require("../../models/recruit/RecruitmentForm");
-const RecruitmentResponse = require("../../models/recruit/RecruitmentResponse");
-const Project = require("../../models/Projects/Project");
-const PurchaseQuotation = require("../../models/Purchases/PurchaseQuotation");
-const Vendors = require("../../models/Purchases/Vendors");
-const mongoose = require("mongoose");
+const SalesOrder = require('../../models/Sales/SalesOrder');
+const RecruitmentForm = require('../../models/recruit/RecruitmentForm');
+const RecruitmentResponse = require('../../models/recruit/RecruitmentResponse');
+const Project = require('../../models/Projects/Project');
+const PurchaseQuotation = require('../../models/Purchases/PurchaseQuotation');
+const Vendors = require('../../models/Purchases/Vendors');
+const mongoose = require('mongoose');
 
-router.get("/modules", async (req, res) => {
+router.get('/modules', async (req, res) => {
   try {
     const company = await Company.findById(req.company).populate(
-      "activeModules",
-      ["name"]
+      'activeModules',
+      ['name']
     );
     res.status(200).json(company.activeModules);
   } catch (error) {
@@ -38,16 +38,16 @@ router.get("/modules", async (req, res) => {
   }
 });
 
-router.get("/:companyId", async (req, res) => {
+router.get('/:companyId', async (req, res) => {
   try {
     const { companyId } = req.params;
     const company = await Company.findById(companyId)
       // .populate("organization")
       // .populate("modules")
-      .select("organization activeModules");
+      .select('organization activeModules');
 
     if (!company) {
-      return res.status(404).json({ error: "Company not found" });
+      return res.status(404).json({ error: 'Company not found' });
     }
 
     const orgids = company.organization.map((org) => org._id);
@@ -71,7 +71,7 @@ router.get("/:companyId", async (req, res) => {
   }
 });
 
-router.get("/hrm/:orgid", async (req, res) => {
+router.get('/hrm/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const totalEmployee = await Employee.countDocuments({
@@ -96,7 +96,7 @@ router.get("/hrm/:orgid", async (req, res) => {
       },
       {
         $group: {
-          _id: "$department",
+          _id: '$department',
           employeeCount: { $sum: 1 },
         },
       },
@@ -147,25 +147,25 @@ router.get("/hrm/:orgid", async (req, res) => {
       },
       {
         $group: {
-          _id: { month: { $month: "$date" } },
+          _id: { month: { $month: '$date' } },
           attendedDays: { $sum: 1 },
         },
       },
     ]);
 
     const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
 
     const attendancemonthwise = {};
@@ -180,16 +180,16 @@ router.get("/hrm/:orgid", async (req, res) => {
     res.status(200).json({
       totalEmployee: totalEmployee || 0,
       departmentData: departmentData || [],
-      overallRate: overallRate.toFixed(2) || 0 + "%",
+      overallRate: overallRate.toFixed(2) || `${0}%`,
       attendancemonthwise: attendancemonthwise || 0,
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 
-router.get("/finance/:orgid", async (req, res) => {
+router.get('/finance/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const accounts = await Account.aggregate([
@@ -200,23 +200,23 @@ router.get("/finance/:orgid", async (req, res) => {
       },
       {
         $group: {
-          _id: "$accountType",
-          totalAmount: { $sum: "$amount" },
+          _id: '$accountType',
+          totalAmount: { $sum: '$amount' },
         },
       },
     ]);
     let revenue = 0;
     let expenses = 0;
     accounts.forEach((acc) => {
-      if (["income", "otherincome", "indirectincome"].includes(acc._id)) {
+      if (['income', 'otherincome', 'indirectincome'].includes(acc._id)) {
         revenue += acc.totalAmount;
       }
       if (
         [
-          "expense",
-          "otherexpense",
-          "indirectexpense",
-          "costofgoodssold",
+          'expense',
+          'otherexpense',
+          'indirectexpense',
+          'costofgoodssold',
         ].includes(acc._id)
       ) {
         expenses += acc.totalAmount;
@@ -236,14 +236,14 @@ router.get("/finance/:orgid", async (req, res) => {
       {
         $match: {
           organization: new mongoose.Types.ObjectId(orgid),
-          accountType: { $in: ["income", "otherincome", "indirectincome"] },
+          accountType: { $in: ['income', 'otherincome', 'indirectincome'] },
           createdAt: { $gte: startOfYear, $lte: endOfYear },
         },
       },
       {
         $group: {
-          _id: { $month: "$createdAt" },
-          totalAmount: { $sum: "$amount" },
+          _id: { $month: '$createdAt' },
+          totalAmount: { $sum: '$amount' },
         },
       },
       { $sort: { _id: 1 } },
@@ -255,10 +255,10 @@ router.get("/finance/:orgid", async (req, res) => {
           organization: new mongoose.Types.ObjectId(orgid),
           accountType: {
             $in: [
-              "expense",
-              "otherexpense",
-              "indirectexpense",
-              "costofgoodssold",
+              'expense',
+              'otherexpense',
+              'indirectexpense',
+              'costofgoodssold',
             ],
           },
           createdAt: { $gte: startOfYear, $lte: endOfYear },
@@ -266,26 +266,26 @@ router.get("/finance/:orgid", async (req, res) => {
       },
       {
         $group: {
-          _id: { $month: "$createdAt" },
-          totalAmount: { $sum: "$amount" },
+          _id: { $month: '$createdAt' },
+          totalAmount: { $sum: '$amount' },
         },
       },
       { $sort: { _id: 1 } },
     ]);
 
     const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
 
     const revenuemonthwise = {};
@@ -316,12 +316,12 @@ router.get("/finance/:orgid", async (req, res) => {
       netCashFlow: netCashFlow || [],
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 
-router.get("/sales/:orgid", async (req, res) => {
+router.get('/sales/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const now = new Date();
@@ -346,7 +346,7 @@ router.get("/sales/:orgid", async (req, res) => {
       {
         $group: {
           _id: null,
-          totalSales: { $sum: "$total" },
+          totalSales: { $sum: '$total' },
         },
       },
       { $sort: { _id: 1 } },
@@ -360,8 +360,8 @@ router.get("/sales/:orgid", async (req, res) => {
     const closeDeal = await Invoice.countDocuments({
       organization: new mongoose.Types.ObjectId(orgid),
       valid: true,
-      approval: { $in: ["approved1", "approved2"] },
-      status: "paid",
+      approval: { $in: ['approved1', 'approved2'] },
+      status: 'paid',
     });
 
     //sales Pipeline
@@ -371,7 +371,7 @@ router.get("/sales/:orgid", async (req, res) => {
     const closed = await Invoice.countDocuments({
       organization: orgid,
       valid: true,
-      status: "paid",
+      status: 'paid',
     });
 
     const salespipe = {
@@ -383,17 +383,17 @@ router.get("/sales/:orgid", async (req, res) => {
 
     res.status(200).json({
       monthlySales: monthlySales.length > 0 ? monthlySales[0].totalSales : 0,
-      targetAchivement: targetAchivement,
+      targetAchivement,
       closeDeal: closeDeal || 0,
       salespipe: salespipe || [],
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 
-router.get("/crm/:orgid", async (req, res) => {
+router.get('/crm/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const totalCRMCustomer = await CRMCustomer.countDocuments({
@@ -410,28 +410,28 @@ router.get("/crm/:orgid", async (req, res) => {
       {
         $group: {
           _id: {
-            month: { $month: "$createdAt" },
-            year: { $year: "$createdAt" },
+            month: { $month: '$createdAt' },
+            year: { $year: '$createdAt' },
           },
           totalLeads: { $sum: 1 },
           convertedLeads: {
-            $sum: { $cond: [{ $eq: ["$isCustomer", true] }, 1, 0] },
+            $sum: { $cond: [{ $eq: ['$isCustomer', true] }, 1, 0] },
           },
         },
       },
       {
         $project: {
-          month: "$_id.month",
-          year: "$_id.year",
+          month: '$_id.month',
+          year: '$_id.year',
           totalLeads: 1,
           convertedLeads: 1,
           conversionRate: {
             $cond: [
-              { $eq: ["$totalLeads", 0] },
+              { $eq: ['$totalLeads', 0] },
               0,
               {
                 $multiply: [
-                  { $divide: ["$convertedLeads", "$totalLeads"] },
+                  { $divide: ['$convertedLeads', '$totalLeads'] },
                   100,
                 ],
               },
@@ -456,7 +456,7 @@ router.get("/crm/:orgid", async (req, res) => {
       },
       {
         $group: {
-          _id: { month: { $month: "$createdAt" } },
+          _id: { month: { $month: '$createdAt' } },
           total: { $sum: 1 },
         },
       },
@@ -472,25 +472,25 @@ router.get("/crm/:orgid", async (req, res) => {
       },
       {
         $group: {
-          _id: { month: { $month: "$createdAt" } },
+          _id: { month: { $month: '$createdAt' } },
           total: { $sum: 1 },
         },
       },
     ]);
 
     const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
 
     const leadmonthwise = {};
@@ -513,12 +513,12 @@ router.get("/crm/:orgid", async (req, res) => {
       customerWise: customerWise || [],
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 
-router.get("/inventory/:orgid", async (req, res) => {
+router.get('/inventory/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const stockSummary = await Product.aggregate([
@@ -533,7 +533,7 @@ router.get("/inventory/:orgid", async (req, res) => {
           totalItems: { $sum: 1 },
           stockValue: {
             $sum: {
-              $multiply: ["$openingStock", "$openingStockRate"],
+              $multiply: ['$openingStock', '$openingStockRate'],
             },
           },
         },
@@ -542,7 +542,7 @@ router.get("/inventory/:orgid", async (req, res) => {
 
     const lowStockCount = await Product.countDocuments({
       organization: orgid,
-      $expr: { $lt: ["$stockOnHand", "$reorderPoint"] },
+      $expr: { $lt: ['$stockOnHand', '$reorderPoint'] },
     });
     const stockValItems = stockSummary.length > 0 ? stockSummary[0] : [];
 
@@ -555,16 +555,16 @@ router.get("/inventory/:orgid", async (req, res) => {
       },
       {
         $lookup: {
-          from: "categories",
-          localField: "category",
-          foreignField: "_id",
-          as: "categoryDetails",
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'categoryDetails',
         },
       },
-      { $unwind: "$categoryDetails" },
+      { $unwind: '$categoryDetails' },
       {
         $group: {
-          _id: "$categoryDetails.type",
+          _id: '$categoryDetails.type',
           totalProducts: { $sum: 1 },
         },
       },
@@ -586,18 +586,18 @@ router.get("/inventory/:orgid", async (req, res) => {
     const endOfYear = new Date(now.getFullYear() + 1, 0, 1);
 
     const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
 
     res.status(200).json({
@@ -607,12 +607,12 @@ router.get("/inventory/:orgid", async (req, res) => {
       categoryDis: categoryDis || [],
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 
-router.get("/pos/:orgid", async (req, res) => {
+router.get('/pos/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const now = new Date();
@@ -650,7 +650,7 @@ router.get("/pos/:orgid", async (req, res) => {
       {
         $group: {
           _id: null,
-          totalRevenue: { $sum: "$totalAmount" },
+          totalRevenue: { $sum: '$totalAmount' },
         },
       },
     ]);
@@ -669,26 +669,26 @@ router.get("/pos/:orgid", async (req, res) => {
       },
       {
         $group: {
-          _id: { $month: "$createdAt" },
-          totalAmount: { $sum: "$totalAmount" },
+          _id: { $month: '$createdAt' },
+          totalAmount: { $sum: '$totalAmount' },
         },
       },
       { $sort: { _id: 1 } },
     ]);
 
     const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
 
     const transactionmonthwise = {};
@@ -703,7 +703,7 @@ router.get("/pos/:orgid", async (req, res) => {
       },
       {
         $group: {
-          _id: "$payment.method",
+          _id: '$payment.method',
           count: { $sum: 1 },
         },
       },
@@ -722,12 +722,12 @@ router.get("/pos/:orgid", async (req, res) => {
       posOrderPaymentMonthWise: posOrderPaymentMonthWise || [],
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 
-router.get("/recruit/:orgid", async (req, res) => {
+router.get('/recruit/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const now = new Date();
@@ -764,8 +764,8 @@ router.get("/recruit/:orgid", async (req, res) => {
       organization: orgid,
     }).populate([
       {
-        path: "form",
-        select: "roleName",
+        path: 'form',
+        select: 'roleName',
       },
     ]);
 
@@ -777,7 +777,7 @@ router.get("/recruit/:orgid", async (req, res) => {
       {
         $match: {
           organization: new mongoose.Types.ObjectId(orgid),
-          status: "offered",
+          status: 'offered',
         },
       },
       {
@@ -786,36 +786,36 @@ router.get("/recruit/:orgid", async (req, res) => {
           updatedAt: 1,
           daysToHire: {
             $divide: [
-              { $subtract: ["$updatedAt", "$createdAt"] },
+              { $subtract: ['$updatedAt', '$createdAt'] },
               1000 * 60 * 60 * 24,
             ],
           },
         },
       },
-      { $group: { _id: null, avarageHireDays: { $avg: "$daysToHire" } } },
+      { $group: { _id: null, avarageHireDays: { $avg: '$daysToHire' } } },
     ]);
 
     //pipeline
     const statuses = [
-      "applied",
-      "screening",
-      "interview",
-      "offered",
-      "rejected",
+      'applied',
+      'screening',
+      'interview',
+      'offered',
+      'rejected',
     ];
 
-    let pipeline = await RecruitmentResponse.aggregate([
+    const pipeline = await RecruitmentResponse.aggregate([
       { $match: { organization: new mongoose.Types.ObjectId(orgid) } },
       {
         $group: {
-          _id: "$status",
+          _id: '$status',
           count: { $sum: 1 },
         },
       },
       {
         $project: {
           _id: 0,
-          status: "$_id",
+          status: '$_id',
           count: 1,
         },
       },
@@ -834,30 +834,30 @@ router.get("/recruit/:orgid", async (req, res) => {
         $match: {
           organization: new mongoose.Types.ObjectId(orgid),
           createdAt: { $gte: startOfYear, $lte: endOfYear },
-          status: "offered",
+          status: 'offered',
         },
       },
       {
         $group: {
-          _id: { $month: "$createdAt" },
+          _id: { $month: '$createdAt' },
           count: { $sum: 1 },
         },
       },
     ]);
 
     const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
 
     const timetohire = {};
@@ -875,12 +875,12 @@ router.get("/recruit/:orgid", async (req, res) => {
         avgRateHire.length > 0 ? avgRateHire[0].avarageHireDays.toFixed(1) : 0,
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 
-router.get("/procurment/:orgid", async (req, res) => {
+router.get('/procurment/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const totalOrder = await PurchaseQuotation.countDocuments({
@@ -894,12 +894,12 @@ router.get("/procurment/:orgid", async (req, res) => {
       totalvendors: totalvendors || 0,
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 
-router.get("/project/:orgid", async (req, res) => {
+router.get('/project/:orgid', async (req, res) => {
   try {
     const { orgid } = req.params;
     const now = new Date();
@@ -910,7 +910,7 @@ router.get("/project/:orgid", async (req, res) => {
       {
         $match: {
           organization: new mongoose.Types.ObjectId(orgid),
-          status: { $in: ["InProgress", "Pending"] },
+          status: { $in: ['InProgress', 'Pending'] },
           isDeleted: false,
         },
       },
@@ -932,29 +932,29 @@ router.get("/project/:orgid", async (req, res) => {
       // Lookup targets to calculate "used" from targetBudget
       {
         $lookup: {
-          from: "targets",
-          localField: "target",
-          foreignField: "_id",
-          as: "targets",
+          from: 'targets',
+          localField: 'target',
+          foreignField: '_id',
+          as: 'targets',
         },
       },
       {
         $addFields: {
-          usedAmount: { $sum: "$targets.targetBudget" }, // total used per project
+          usedAmount: { $sum: '$targets.targetBudget' }, // total used per project
         },
       },
       {
         $group: {
           _id: null,
           count: { $sum: 1 },
-          budgetAmount: { $sum: "$budgetAmount" },
-          avgCompletion: { $avg: "$progress" },
-          usedAmount: { $sum: "$usedAmount" },
+          budgetAmount: { $sum: '$budgetAmount' },
+          avgCompletion: { $avg: '$progress' },
+          usedAmount: { $sum: '$usedAmount' },
         },
       },
       {
         $addFields: {
-          remainingAmount: { $subtract: ["$budgetAmount", "$usedAmount"] },
+          remainingAmount: { $subtract: ['$budgetAmount', '$usedAmount'] },
         },
       },
     ]);
@@ -969,13 +969,13 @@ router.get("/project/:orgid", async (req, res) => {
         ? Math.round(result2.avgCompletion).toFixed(2)
         : 0,
       budgetUsages: [
-        { label: "Used", value: result2.usedAmount || 0 },
-        { label: "Remaining", value: result2.remainingAmount || 0 },
+        { label: 'Used', value: result2.usedAmount || 0 },
+        { label: 'Remaining', value: result2.remainingAmount || 0 },
       ],
     });
   } catch (error) {
-    console.log("Error in hrm", error);
-    res.status(500).json("Internal Error");
+    console.log('Error in hrm', error);
+    res.status(500).json('Internal Error');
   }
 });
 

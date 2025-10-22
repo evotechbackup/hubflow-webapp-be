@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const approvalSchema = new mongoose.Schema({
   feature: {
@@ -37,9 +37,9 @@ const approvalSchema = new mongoose.Schema({
 const ApprovalManagement = new mongoose.Schema({
   organization: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Organization",
+    ref: 'Organization',
   },
   approval: [approvalSchema],
 });
 
-module.exports = mongoose.model("ApprovalManagement", ApprovalManagement);
+module.exports = mongoose.model('ApprovalManagement', ApprovalManagement);

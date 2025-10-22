@@ -14,6 +14,14 @@ const departmentRoutes = require('./user-management/departmentRoutes');
 const organizationRoutes = require('./user-management/organizationRoutes');
 const featureModulesRoutes = require('./user-management/featureModulesRoutes');
 
+// Master
+const customizationRoutes = require('./master/customizationRoutes');
+const currencyRoutes = require('./master/currencyRoutes');
+
+// Sales
+const customerRoutes = require('./sales/customerRoutes');
+const enquiryRoutes = require('./sales/enquiryRoutes');
+
 const { authenticate } = require('../middleware');
 
 const router = express.Router();
@@ -41,6 +49,14 @@ router.use(
   featureModulesRoutes
 );
 
+// Master
+router.use('/customization', authenticate, customizationRoutes);
+router.use('/master/currency', authenticate, currencyRoutes);
+
+// Sales
+router.use('/sales/customer', authenticate, customerRoutes);
+router.use('/sales/enquiry', authenticate, enquiryRoutes);
+
 // Health check endpoint is handled directly in server.js for comprehensive status reporting
 
 /**
@@ -57,6 +73,8 @@ router.get('/', (req, res) => {
       users: '/api/users',
       companies: '/api/companies',
       userManagement: '/api/user-management',
+      customization: 'api/customization',
+      master: 'api/master',
       health: '/api/health',
     },
   });

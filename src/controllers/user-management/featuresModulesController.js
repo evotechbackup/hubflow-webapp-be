@@ -1,6 +1,6 @@
 const { asyncHandler } = require('../../middleware/errorHandler');
-const Company = require('../../models/Company');
-const FeaturesModules = require('../../models/user-management/FeaturesModules');
+const Company = require('../../models/auth/Company');
+const FeaturesModules = require('../../models/auth/FeaturesModules');
 const { ValidationError } = require('../../utils/errors');
 
 const updateFeaturesModules = asyncHandler(async (req, res) => {
