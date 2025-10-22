@@ -17,6 +17,11 @@ const featureModulesRoutes = require('./user-management/featureModulesRoutes');
 // Master
 const customizationRoutes = require('./master/customizationRoutes');
 const currencyRoutes = require('./master/currencyRoutes');
+const containerTypeRoutes = require('./master/containerTypeRoute');
+const divisionRoutes = require('./master/divisionRoutes');
+const regionRoutes = require('./master/regionRoutes');
+const zoneRoutes = require('./master/zoneRoutes');
+const packRoutes = require('./master/packRoutes');
 const activityRoutes = require('./master/activityRoutes');
 const categoryRoutes = require('./master/categoryRoutes');
 const countryRoutes = require('./master/countryRoutes');
@@ -58,6 +63,11 @@ router.use(
 // Master
 router.use('/customization', authenticate, customizationRoutes);
 router.use('/master/currency', authenticate, currencyRoutes);
+router.use('/master/container-type', authenticate, containerTypeRoutes);
+router.use('/master/division', authenticate, divisionRoutes);
+router.use('/master/region', authenticate, regionRoutes);
+router.use('/master/zone', authenticate, zoneRoutes);
+router.use('/master/pack', authenticate, packRoutes);
 router.use('/master/activity', authenticate, activityRoutes);
 router.use('/master/category', authenticate, categoryRoutes);
 router.use('/master/country', authenticate, countryRoutes);
