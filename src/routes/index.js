@@ -18,6 +18,11 @@ const featureModulesRoutes = require('./user-management/featureModulesRoutes');
 const customizationRoutes = require('./master/customizationRoutes');
 const currencyRoutes = require('./master/currencyRoutes');
 const activityRoutes = require('./master/activityRoutes');
+const categoryRoutes = require('./master/categoryRoutes');
+const countryRoutes = require('./master/countryRoutes');
+const containerInventoryRoutes = require('./master/containerInventoryRoutes');
+const commodityRoutes = require('./master/commodityRoutes');
+const clauseRoutes = require('./master/clauseRoutes');
 
 // Sales
 const customerRoutes = require('./sales/customerRoutes');
@@ -54,6 +59,15 @@ router.use(
 router.use('/customization', authenticate, customizationRoutes);
 router.use('/master/currency', authenticate, currencyRoutes);
 router.use('/master/activity', authenticate, activityRoutes);
+router.use('/master/category', authenticate, categoryRoutes);
+router.use('/master/country', authenticate, countryRoutes);
+router.use(
+  '/master/container-inventory',
+  authenticate,
+  containerInventoryRoutes
+);
+router.use('/master/commodity', authenticate, commodityRoutes);
+router.use('/master/clause', authenticate, clauseRoutes);
 
 // Sales
 router.use('/sales/customer', authenticate, customerRoutes);

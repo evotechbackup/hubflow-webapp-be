@@ -148,7 +148,7 @@ const login = asyncHandler(async (req, res) => {
   const cookieName = jwtConfig.getTokenCookieName();
 
   user.lastLogin = Date.now();
-  user.tokenVersion = (user.tokenVersion || 0) + 1;
+  // user.tokenVersion = (user.tokenVersion || 0) + 1;
   await user.save({ validateBeforeSave: false });
 
   res.cookie(cookieName, token, cookieOptions);
@@ -207,9 +207,9 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     throw new AuthenticationError('Authentication required');
   }
 
-  if (Number(req.user.tokenVersion) !== Number(req.tokenVersion)) {
-    throw new AuthenticationError('Invalid token');
-  }
+  // if (Number(req.user.tokenVersion) !== Number(req.tokenVersion)) {
+  //   throw new AuthenticationError('Invalid token');
+  // }
 
   const company = await Company.findById(req.company);
 
