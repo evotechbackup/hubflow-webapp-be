@@ -135,20 +135,22 @@ class Server {
    * @returns {string[]|boolean} Array of allowed origins or true for all
    */
   getAllowedOrigins() {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS;
+    // const allowedOrigins = process.env.ALLOWED_ORIGINS;
 
-    if (!allowedOrigins) {
-      // Default origins for development
-      return [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'http://127.0.0.1:3000',
-        'http://127.0.0.1:3001',
-      ];
-    }
+    // if (!allowedOrigins) {
+    //   // Default origins for development
+    //   return [
+    //     'http://localhost:3000',
+    //     'http://localhost:3001',
+    //     'http://127.0.0.1:3000',
+    //     'http://127.0.0.1:3001',
+    //   ];
+    // }
 
-    // Parse comma-separated origins from environment variable
-    return allowedOrigins.split(',').map((origin) => origin.trim());
+    // // Parse comma-separated origins from environment variable
+    // return allowedOrigins.split(',').map((origin) => origin.trim());
+    // allow all origin
+    return true;
   }
 
   /**

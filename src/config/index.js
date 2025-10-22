@@ -78,9 +78,10 @@ function getAppConfig() {
 
     // CORS configuration
     cors: {
-      allowedOrigins: process.env.ALLOWED_ORIGINS
-        ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim())
-        : ['http://localhost:3000'],
+      allowedOrigins: "*",
+      // allowedOrigins: process.env.ALLOWED_ORIGINS
+      //   ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim())
+      //   : ['http://localhost:3000'],
     },
   };
 }
