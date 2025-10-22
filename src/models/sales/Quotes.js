@@ -11,15 +11,22 @@ const ItemSchema = new Schema(
     serviceId: { type: ObjectId, ref: 'Service' },
     productName: String,
     unit: String,
+    price: Number,
     quantity: Number,
+    discount: Number,
+    amount: Number,
     description: String,
   },
   { _id: false }
 );
 
-const EnquirySchema = new Schema(
+const QuotesSchema = new Schema(
   {
     customer: { type: ObjectId, ref: 'Customer' },
+    enquiry: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Enquiry',
+    },
     shipmentType: String,
     contactPerson: String,
     items: [ItemSchema],
@@ -36,6 +43,10 @@ const EnquirySchema = new Schema(
     notes: String,
     termsNCondition: String,
     approvalComment: String,
+    total: Number,
+    subTotal: Number,
+    vat: Number,
+    discount: Number,
     company: { type: ObjectId, ref: 'Company' },
     organization: { type: ObjectId, ref: 'Organization' },
     status: { type: String, default: 'pending', index: true },
@@ -61,16 +72,15 @@ const EnquirySchema = new Schema(
   },
   {
     timestamps: true,
-    // Optimize queries by converting to plain JS objects when not modifying
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
 
 // Indexes
-EnquirySchema.index({ id: 1, organization: 1 }, { unique: true });
-EnquirySchema.index({ organization: 1 });
+QuotesSchema.index({ id: 1, organization: 1 }, { unique: true });
+QuotesSchema.index({ organization: 1 });
 
-EnquirySchema.plugin(mongoosePaginate);
+QuotesSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model('Enquiry', EnquirySchema);
+module.exports = mongoose.model('Quotes', QuotesSchema);

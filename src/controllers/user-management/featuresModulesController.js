@@ -18,6 +18,7 @@ const updateFeaturesModules = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Features updated successfully',
+    data: features,
   });
 });
 

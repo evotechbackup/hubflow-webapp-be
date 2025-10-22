@@ -48,6 +48,10 @@ const CompanySchema = new mongoose.Schema(
     ],
 
     app: {
+      operations: {
+        type: Boolean,
+        default: false,
+      },
       sales: {
         type: Boolean,
         default: false,

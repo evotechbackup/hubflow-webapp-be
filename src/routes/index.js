@@ -8,6 +8,8 @@ const authRoutes = require('./auth/authRoutes');
 const userRoutes = require('./auth/userRoutes');
 const companyRoutes = require('./auth/companyRoutes');
 
+const awsConfig = require('../config/awsConfig');
+
 const modulesRoutes = require('./user-management/modulesRoutes');
 const rolesRoutes = require('./user-management/rolesRoutes');
 const departmentRoutes = require('./user-management/departmentRoutes');
@@ -32,6 +34,10 @@ const clauseRoutes = require('./master/clauseRoutes');
 // Sales
 const customerRoutes = require('./sales/customerRoutes');
 const enquiryRoutes = require('./sales/enquiryRoutes');
+const quoteRoutes = require('./sales/quoteRoutes');
+
+// Operations
+const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
 
 const { authenticate } = require('../middleware');
 
@@ -49,6 +55,8 @@ router.use('/auth', authRoutes);
  */
 router.use('/users', authenticate, userRoutes);
 router.use('/companies', companyRoutes);
+
+router.use('/api/files', awsConfig);
 
 router.use('/user-management/modules', modulesRoutes);
 router.use('/user-management/roles', authenticate, rolesRoutes);
@@ -82,6 +90,10 @@ router.use('/master/clause', authenticate, clauseRoutes);
 // Sales
 router.use('/sales/customer', authenticate, customerRoutes);
 router.use('/sales/enquiry', authenticate, enquiryRoutes);
+router.use('/sales/quote', authenticate, quoteRoutes);
+
+// Operations
+router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
 
 // Health check endpoint is handled directly in server.js for comprehensive status reporting
 
@@ -96,11 +108,14 @@ router.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       auth: '/api/auth',
+      files: '/api/files',
       users: '/api/users',
       companies: '/api/companies',
       userManagement: '/api/user-management',
       customization: 'api/customization',
       master: 'api/master',
+      sales: 'api/sales',
+      operations: 'api/operations',
       health: '/api/health',
     },
   });

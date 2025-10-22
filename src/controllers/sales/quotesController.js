@@ -1,4 +1,4 @@
-const Enquiry = require('../../models/sales/Enquiry');
+const Quotes = require('../../models/sales/Quotes');
 const LastInsertedId = require('../../models/master/LastInsertedID');
 // const {
 //   findNextApprovalLevelAndNotify,
@@ -10,16 +10,16 @@ const Customer = require('../../models/sales/Customer');
 const { asyncHandler } = require('../../middleware/errorHandler');
 const { NotFoundError } = require('../../utils/errors');
 
-const postEnquiry = asyncHandler(async (req, res) => {
+const postQuotes = asyncHandler(async (req, res) => {
   const { id, customID, organization } = req.body;
 
   let lastInsertedId = await LastInsertedId.findOne({
-    entity: 'Enquiry',
+    entity: 'Quotes',
     organization,
   });
 
   if (!lastInsertedId) {
-    lastInsertedId = new LastInsertedId({ entity: 'Enquiry', organization });
+    lastInsertedId = new LastInsertedId({ entity: 'Quotes', organization });
   }
 
   if (id !== undefined && !isNaN(parseInt(id))) {
@@ -38,6 +38,7 @@ const postEnquiry = asyncHandler(async (req, res) => {
   }
   const {
     shipmentType,
+    enquiry,
     incoterm,
     etd,
     eta,
@@ -58,11 +59,12 @@ const postEnquiry = asyncHandler(async (req, res) => {
   } = req.body;
   const paddedId = String(lastInsertedId.lastId).padStart(2, '0');
 
-  // const hasApproval = await ifHasApproval('enquiry', organization);
+  // const hasApproval = await ifHasApproval('quotes', organization);
 
-  // Create a new instance of the Enquiry model
-  const newEnquiry = new Enquiry({
+  // Create a new instance of the quotes model
+  const newQuotes = new Quotes({
     shipmentType,
+    enquiry,
     incoterm,
     etd,
     eta,
@@ -85,52 +87,52 @@ const postEnquiry = asyncHandler(async (req, res) => {
     //   approval: hasApproval ? 'pending' : 'none',
   });
 
-  // Save the new enquiry to the database
-  const savedEnquiry = await newEnquiry.save();
+  // Save the new quote to the database
+  const savedQuote = await newQuotes.save();
 
   // await createActivityLog({
   //   userId: req._id,
   //   action: 'create',
-  //   type: 'enquiry',
-  //   actionId: savedEnquiry.id,
-  //   organization: savedEnquiry.organization,
-  //   company: savedEnquiry.company,
+  //   type: 'quote',
+  //   actionId: savedQuote.id,
+  //   organization: savedQuote.organization,
+  //   company: savedQuote.company,
   // });
 
   // if (hasApproval) {
   //   await findNextApprovalLevelAndNotify(
-  //     'enquiry',
+  //     'quotes',
   //     'pending',
-  //     savedEnquiry.organization,
-  //     savedEnquiry.company,
-  //     savedEnquiry.id,
-  //     'Enquiry',
-  //     'enquiries',
-  //     savedEnquiry._id
+  //     savedQuote.organization,
+  //     savedQuote.company,
+  //     savedQuote.id,
+  //     'Quotes',
+  //     'quotes',
+  //     savedQuote._id
   //   );
   // }
 
-  // Send the saved enquiry as a response
+  // Send the saved quote as a response
   res.status(201).json({
     success: true,
-    message: 'Enquiry created successfully',
-    data: savedEnquiry,
+    message: 'Quote created successfully',
+    data: savedQuote,
   });
 });
 
-const getEnquiryById = asyncHandler(async (req, res) => {
+const getQuotesById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const enquiry = await Enquiry.findById(id).populate('customer');
+  const quote = await Quotes.findById(id).populate('customer');
   res.status(200).json({
     success: true,
-    message: 'Enquiry fetched successfully',
-    data: enquiry,
+    message: 'Quote fetched successfully',
+    data: quote,
   });
 });
 
-const getEnquiryDetailsById = asyncHandler(async (req, res) => {
+const getQuotesDetailsById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const enquiry = await Enquiry.findById(id)
+  const quote = await Quotes.findById(id)
     .populate('customer')
     .populate('organization')
     .populate('user', [
@@ -167,83 +169,83 @@ const getEnquiryDetailsById = asyncHandler(async (req, res) => {
     ]);
   res.status(200).json({
     success: true,
-    message: 'Enquiry fetched successfully',
-    data: enquiry,
+    message: 'Quote fetched successfully',
+    data: quote,
   });
 });
 
-const updateEnquiryStatus = asyncHandler(async (req, res) => {
+const rejectQuote = asyncHandler(async (req, res) => {
   try {
     const { approvalComment } = req.body;
-    const updatedEnquiry = await Enquiry.findById(
+    const updatedQuote = await Quotes.findById(
       req.params.id,
       { approval: 'rejected', approvalComment },
       { new: true }
     );
-    res.status(201).json(updatedEnquiry);
+    res.status(201).json(updatedQuote);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-const updateEnquiryApproval = asyncHandler(async (req, res) => {
+const updateQuoteApproval = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { approval, approvalComment } = req.body;
 
-  const enquiry = await Enquiry.findById(id);
-  if (!enquiry) {
-    throw new NotFoundError('Enquiry not found');
+  const quote = await Quotes.findById(id);
+  if (!quote) {
+    throw new NotFoundError('Quote not found');
   }
 
   // Reset fields based on approval type
   const resetFields = () => {
-    enquiry.verifiedBy = null;
-    enquiry.approvedBy1 = null;
-    enquiry.approvedBy2 = null;
-    enquiry.verifiedAt = null;
-    enquiry.approvedAt1 = null;
-    enquiry.approvedAt2 = null;
-    enquiry.reviewedBy = null;
-    enquiry.reviewedAt = null;
-    enquiry.acknowledgedBy = null;
-    enquiry.acknowledgedAt = null;
+    quote.verifiedBy = null;
+    quote.approvedBy1 = null;
+    quote.approvedBy2 = null;
+    quote.verifiedAt = null;
+    quote.approvedAt1 = null;
+    quote.approvedAt2 = null;
+    quote.reviewedBy = null;
+    quote.reviewedAt = null;
+    quote.acknowledgedBy = null;
+    quote.acknowledgedAt = null;
   };
 
   // Set approval status
-  enquiry.approval = approval;
+  quote.approval = approval;
 
   if (approval === 'correction') {
-    enquiry.approvalComment = approvalComment || null;
+    quote.approvalComment = approvalComment || null;
   }
 
   // Handle different approval types
   switch (approval) {
     case 'reviewed':
-      enquiry.reviewedBy = req.id || null;
-      enquiry.reviewedAt = new Date();
-      enquiry.verifiedBy = null;
-      enquiry.verifiedAt = null;
-      enquiry.acknowledgedBy = null;
-      enquiry.acknowledgedAt = null;
+      quote.reviewedBy = req.id || null;
+      quote.reviewedAt = new Date();
+      quote.verifiedBy = null;
+      quote.verifiedAt = null;
+      quote.acknowledgedBy = null;
+      quote.acknowledgedAt = null;
       break;
     case 'verified':
-      enquiry.verifiedBy = req.id || null;
-      enquiry.verifiedAt = new Date();
-      enquiry.acknowledgedBy = null;
-      enquiry.acknowledgedAt = null;
+      quote.verifiedBy = req.id || null;
+      quote.verifiedAt = new Date();
+      quote.acknowledgedBy = null;
+      quote.acknowledgedAt = null;
       break;
     case 'acknowledged':
-      enquiry.acknowledgedBy = req.id || null;
-      enquiry.acknowledgedAt = new Date();
+      quote.acknowledgedBy = req.id || null;
+      quote.acknowledgedAt = new Date();
       break;
     case 'approved1':
-      enquiry.approvedBy1 = req.id || null;
-      enquiry.approvedAt1 = new Date();
+      quote.approvedBy1 = req.id || null;
+      quote.approvedAt1 = new Date();
       break;
     case 'approved2':
-      enquiry.approvedBy2 = req.id || null;
-      enquiry.approvedAt2 = new Date();
+      quote.approvedBy2 = req.id || null;
+      quote.approvedAt2 = new Date();
       break;
     case 'correction':
     case 'rejected':
@@ -253,87 +255,87 @@ const updateEnquiryApproval = asyncHandler(async (req, res) => {
       break;
   }
 
-  const updatedEnquiry = await enquiry.save();
+  const updatedQuote = await quote.save();
 
   // Find next approval level and send notifications
   // await findNextApprovalLevelAndNotify(
-  //   'enquiry',
+  //   'quotes',
   //   approval,
-  //   updatedEnquiry.organization,
-  //   updatedEnquiry.company,
-  //   updatedEnquiry.id,
-  //   'Enquiry',
-  //   'enquiries',
-  //   updatedEnquiry._id
+  //   updatedQuote.organization,
+  //   updatedQuote.company,
+  //   updatedQuote.id,
+  //   'Quotes',
+  //   'quotes',
+  //   updatedQuote._id
   // );
 
   // await createActivityLog({
   //   userId: req._id,
   //   action: approval?.includes('approve') ? 'approve' : approval,
-  //   type: 'enquiry',
-  //   actionId: updatedEnquiry.id,
-  //   organization: updatedEnquiry.organization,
-  //   company: updatedEnquiry.company,
+  //   type: 'quote',
+  //   actionId: updatedQuote.id,
+  //   organization: updatedQuote.organization,
+  //   company: updatedQuote.company,
   // });
 
   res.status(201).json({
     success: true,
-    message: 'Enquiry updated successfully',
-    data: updatedEnquiry,
+    message: 'Quote updated successfully',
+    data: updatedQuote,
   });
 });
 
 const changeValidation = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { valid } = req.body;
-  const enquiry = await Enquiry.findById(id);
-  if (!enquiry) {
-    throw new NotFoundError('Enquiry not found');
+  const quote = await Quotes.findById(id);
+  if (!quote) {
+    throw new NotFoundError('Quote not found');
   }
 
-  // const hasApproval = await ifHasApproval('enquiry', enquiry.organization);
+  // const hasApproval = await ifHasApproval('quotes', quote.organization);
 
-  enquiry.valid = valid;
-  // enquiry.approval = hasApproval ? (valid ? 'pending' : 'rejected') : 'none';
-  enquiry.verifiedAt = null;
-  enquiry.verifiedBy = null;
-  enquiry.reviewedAt = null;
-  enquiry.reviewedBy = null;
-  enquiry.approvedAt1 = null;
-  enquiry.approvedBy1 = null;
-  enquiry.approvedAt2 = null;
-  enquiry.approvedBy2 = null;
-  enquiry.acknowledgedAt = null;
-  enquiry.acknowledgedBy = null;
-  await enquiry.save();
+  quote.valid = valid;
+  // quote.approval = hasApproval ? (valid ? 'pending' : 'rejected') : 'none';
+  quote.verifiedAt = null;
+  quote.verifiedBy = null;
+  quote.reviewedAt = null;
+  quote.reviewedBy = null;
+  quote.approvedAt1 = null;
+  quote.approvedBy1 = null;
+  quote.approvedAt2 = null;
+  quote.approvedBy2 = null;
+  quote.acknowledgedAt = null;
+  quote.acknowledgedBy = null;
+  await quote.save();
 
   // await createActivityLog({
   //   userId: req._id,
   //   action: 'invalidate',
-  //   type: 'enquiry',
-  //   actionId: enquiry.id,
-  //   organization: enquiry.organization,
-  //   company: enquiry.company,
+  //   type: 'quote',
+  //   actionId: quote.id,
+  //   organization: quote.organization,
+  //   company: quote.company,
   // });
   res.status(201).json({
     success: true,
-    message: 'Enquiry updated successfully',
-    data: enquiry,
+    message: 'Quote updated successfully',
+    data: quote,
   });
 });
 
-const updateEnquiry = asyncHandler(async (req, res) => {
+const updateQuote = asyncHandler(async (req, res) => {
   const { isrevised } = req.query;
 
-  const enquiry = await Enquiry.findById(req.params.id);
+  const quote = await Quotes.findById(req.params.id);
 
-  if (!enquiry) {
-    throw new NotFoundError('Enquiry not found');
+  if (!quote) {
+    throw new NotFoundError('Quote not found');
   }
 
-  const baseId = enquiry.id.split('-REV')[0];
-  const currentRevision = enquiry.id.includes('-REV')
-    ? parseInt(enquiry.id.split('-REV')[1])
+  const baseId = quote.id.split('-REV')[0];
+  const currentRevision = quote.id.includes('-REV')
+    ? parseInt(quote.id.split('-REV')[1])
     : 0;
 
   // Increment the revision number
@@ -342,11 +344,11 @@ const updateEnquiry = asyncHandler(async (req, res) => {
   // Create the new ID
   const newId = `${baseId}-REV${newRevision}`;
 
-  const updatedEnquiry = await Enquiry.findOneAndUpdate(
+  const updatedQuote = await Quotes.findOneAndUpdate(
     { _id: req.params.id },
     {
       ...req.body,
-      id: isrevised === 'true' ? newId : enquiry.id,
+      id: isrevised === 'true' ? newId : quote.id,
       verifiedAt: null,
       verifiedBy: null,
       reviewedAt: null,
@@ -362,34 +364,35 @@ const updateEnquiry = asyncHandler(async (req, res) => {
   );
 
   // const hasApproval = await ifHasApproval(
-  //   'enquiry',
-  //   updatedEnquiry.organization
+  //   'quotes',
+  //   updatedQuote.organization
   // );
 
-  // updatedEnquiry.approval = hasApproval ? 'pending' : 'none';
-  // await updatedEnquiry.save();
+  // updatedQuote.approval = hasApproval ? 'pending' : 'none';
+  // await updatedQuote.save();
 
   // await createActivityLog({
   //   userId: req._id,
   //   action: 'update',
-  //   type: 'enquiry',
-  //   actionId: updatedEnquiry.id,
-  //   organization: updatedEnquiry.organization,
-  //   company: updatedEnquiry.company,
+  //   type: 'quote',
+  //   actionId: updatedQuote.id,
+  //   organization: updatedQuote.organization,
+  //   company: updatedQuote.company,
   // });
 
   res.status(201).json({
     success: true,
-    message: 'Enquiry updated successfully',
-    data: updatedEnquiry,
+    message: 'Quote updated successfully',
+    data: updatedQuote,
   });
 });
 
-const getEnquiry = asyncHandler(async (req, res) => {
+const getQuotes = asyncHandler(async (req, res) => {
   const orgId = req.params.orgid;
   const {
     filter_validity,
     filter_approval,
+    filter_acceptStatus,
     filter_customer,
     search_query = '',
     customer_name = '',
@@ -427,6 +430,13 @@ const getEnquiry = asyncHandler(async (req, res) => {
   if (filter_approval) {
     query.approval = filter_approval;
   }
+  if (filter_acceptStatus) {
+    if (filter_acceptStatus === 'pending') {
+      query.acceptStatus = { $in: ['pending', 'notsubmitted', 'submitted'] };
+    } else {
+      query.acceptStatus = filter_acceptStatus;
+    }
+  }
   if (search_query) {
     query.id = { $regex: search_query, $options: 'i' };
   }
@@ -455,39 +465,42 @@ const getEnquiry = asyncHandler(async (req, res) => {
     page: parseInt(page, 10),
     limit: parseInt(limit, 10),
     sort: { [sort_by]: sort_order === 'asc' ? 1 : -1 },
-    populate: [{ path: 'customer', select: 'displayName currency' }],
+    populate: [
+      { path: 'customer', select: 'displayName currency' },
+      { path: 'enquiry', select: 'id' },
+    ],
   };
 
-  const result = await Enquiry.paginate(query, options);
+  const result = await Quotes.paginate(query, options);
   res.status(200).json({
     success: true,
-    message: 'Enquiry fetched successfully',
+    message: 'Quote fetched successfully',
     data: {
-      enquiries: result.docs,
+      quotes: result.docs,
       currentPage: result.page,
       totalPages: result.totalPages,
-      totalEnquiries: result.totalDocs,
+      totalQuotes: result.totalDocs,
     },
   });
 });
 
-const deleteEnquiry = asyncHandler(async (req, res) => {
-  const enquiry = await Enquiry.findByIdAndDelete(req.params.id);
+const deleteQuote = asyncHandler(async (req, res) => {
+  const quote = await Quotes.findByIdAndDelete(req.params.id);
   res.status(201).json({
     success: true,
-    message: 'Enquiry deleted successfully',
-    data: enquiry,
+    message: 'Quote deleted successfully',
+    data: quote,
   });
 });
 
 module.exports = {
-  postEnquiry,
-  getEnquiry,
-  getEnquiryById,
-  getEnquiryDetailsById,
-  updateEnquiry,
-  updateEnquiryStatus,
-  updateEnquiryApproval,
+  postQuotes,
+  getQuotes,
+  getQuotesById,
+  getQuotesDetailsById,
+  updateQuote,
+  rejectQuote,
+  updateQuoteApproval,
   changeValidation,
-  deleteEnquiry,
+  deleteQuote,
 };
