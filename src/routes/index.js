@@ -39,7 +39,7 @@ const quoteRoutes = require('./sales/quoteRoutes');
 
 // Operations
 const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
-
+const serviceRoutes = require('./operations/serviceRoute');
 const { authenticate } = require('../middleware');
 
 const router = express.Router();
@@ -96,6 +96,7 @@ router.use('/sales/quote', authenticate, quoteRoutes);
 
 // Operations
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
+router.use('/operations/service', authenticate, serviceRoutes);
 
 // Health check endpoint is handled directly in server.js for comprehensive status reporting
 
