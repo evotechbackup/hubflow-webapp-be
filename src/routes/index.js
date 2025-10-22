@@ -17,6 +17,7 @@ const featureModulesRoutes = require('./user-management/featureModulesRoutes');
 // Master
 const customizationRoutes = require('./master/customizationRoutes');
 const currencyRoutes = require('./master/currencyRoutes');
+const activityRoutes = require('./master/activityRoutes');
 
 // Sales
 const customerRoutes = require('./sales/customerRoutes');
@@ -52,6 +53,7 @@ router.use(
 // Master
 router.use('/customization', authenticate, customizationRoutes);
 router.use('/master/currency', authenticate, currencyRoutes);
+router.use('/master/activity', authenticate, activityRoutes);
 
 // Sales
 router.use('/sales/customer', authenticate, customerRoutes);
