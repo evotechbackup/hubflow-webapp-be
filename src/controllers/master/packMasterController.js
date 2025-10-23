@@ -33,8 +33,15 @@ const getPackMaster = asyncHandler(async (req, res) => {
 });
 
 const createPackMaster = asyncHandler(async (req, res) => {
-  const { packCode, packName, ediCode, status, remarks, organization, company } =
-    req.body;
+  const {
+    packCode,
+    packName,
+    ediCode,
+    status,
+    remarks,
+    organization,
+    company,
+  } = req.body;
 
   if (!packName || !organization) {
     throw new ValidationError('Name and organization are required');
@@ -67,14 +74,10 @@ const updatePackMaster = asyncHandler(async (req, res) => {
     throw new NotFoundError('Pack not found');
   }
 
-  const updatedPackMaster = await PackMaster.findByIdAndUpdate(
-    id,
-    updateData,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const updatedPackMaster = await PackMaster.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     success: true,

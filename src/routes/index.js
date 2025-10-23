@@ -35,6 +35,7 @@ const portRoutes = require('./master/portRoutes');
 const landPortRoutes = require('./master/landPortRoutes');
 const seaPortRoutes = require('./master/seaPortRoutes');
 const airPortRoutes = require('./master/airPortRoutes');
+
 // Sales
 const customerRoutes = require('./sales/customerRoutes');
 const enquiryRoutes = require('./sales/enquiryRoutes');
@@ -44,6 +45,8 @@ const bookingRoutes = require('./sales/bookingRoutes');
 // Operations
 const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
 const serviceRoutes = require('./operations/serviceRoute');
+const jobsRoutes = require('./operations/jobsRoutes');
+
 const { authenticate } = require('../middleware');
 
 const router = express.Router();
@@ -96,6 +99,7 @@ router.use('/master/port', authenticate, portRoutes);
 router.use('/master/airport', authenticate, airPortRoutes);
 router.use('/master/landport', authenticate, landPortRoutes);
 router.use('/master/seaPort', authenticate, seaPortRoutes);
+
 // Sales
 router.use('/sales/customer', authenticate, customerRoutes);
 router.use('/sales/enquiry', authenticate, enquiryRoutes);
@@ -105,6 +109,7 @@ router.use('/sales/booking', authenticate, bookingRoutes);
 // Operations
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
 router.use('/operations/service', authenticate, serviceRoutes);
+router.use('/operations/jobs', authenticate, jobsRoutes);
 
 // Health check endpoint is handled directly in server.js for comprehensive status reporting
 

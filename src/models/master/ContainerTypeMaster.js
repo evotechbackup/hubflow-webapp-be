@@ -42,4 +42,7 @@ ContainerTypeMasterSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model('ContainerTypeMaster', ContainerTypeMasterSchema);
+module.exports = mongoose.model(
+  'ContainerTypeMaster',
+  ContainerTypeMasterSchema
+);

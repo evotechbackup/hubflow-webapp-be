@@ -66,14 +66,10 @@ const updateZoneMaster = asyncHandler(async (req, res) => {
     throw new NotFoundError('Zone not found');
   }
 
-  const updatedZoneMaster = await ZoneMaster.findByIdAndUpdate(
-    id,
-    updateData,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const updatedZoneMaster = await ZoneMaster.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     success: true,
