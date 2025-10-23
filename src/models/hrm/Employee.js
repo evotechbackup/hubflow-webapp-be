@@ -447,7 +447,7 @@ const EmployeeSchema = new mongoose.Schema(
 
     employeeGroup: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'HRMEmployeeGroup',
+      ref: 'EmployeeGroup',
     },
     division: {
       type: String,
@@ -457,10 +457,6 @@ const EmployeeSchema = new mongoose.Schema(
       ref: 'EmployeeCamp',
     },
 
-    currProject: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Project',
-    },
     currJobSite: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'JobSite',
@@ -470,32 +466,7 @@ const EmployeeSchema = new mongoose.Schema(
       ref: 'JobStatus',
     },
 
-    projectHistory: [
-      {
-        project: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Project',
-        },
-        startDate: {
-          type: Date,
-        },
-        endDate: {
-          type: Date,
-        },
-        invoiceRate: {
-          type: Number,
-          default: 0,
-        },
-        payrollRate: {
-          type: Number,
-          default: 0,
-        },
-        jobSite: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'JobSite',
-        },
-      },
-    ],
+  
 
     nationality: {
       type: String,
@@ -570,10 +541,9 @@ EmployeeSchema.methods.generateEmbedding = async function () {
       .model('EmployeeDepartment')
       .findById(this.department);
     const employeeGroup = await mongoose
-      .model('HRMEmployeeGroup')
+      .model('EmployeeGroup')
       .findById(this.employeeGroup);
     const camp = await mongoose.model('EmployeeCamp').findById(this.camp);
-    const project = await mongoose.model('Project').findById(this.currProject);
     const jobSite = await mongoose.model('JobSite').findById(this.currJobSite);
     const jobStatus = await mongoose
       .model('JobStatus')
@@ -592,7 +562,6 @@ EmployeeSchema.methods.generateEmbedding = async function () {
       National id: ${this.idNumber}
       Camp: ${camp?.name || ''}
       Nationality: ${this.nationality}
-      Current Project: ${project?.name || ''}
       Current Job Site: ${jobSite?.name || ''}
       Current Job Status: ${jobStatus?.name || ''}
       Organization ID: ${this.organization}

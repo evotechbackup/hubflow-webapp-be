@@ -51,6 +51,9 @@ const jobsRoutes = require('./operations/jobsRoutes');
 const leadRoutes = require('./crm/leadRoutes');
 const contactRoutes = require('./crm/contactRoutes');
 
+//hrm
+const employeeRoutes = require('./hrm/employeeRoutes');
+
 const { authenticate } = require('../middleware');
 
 const router = express.Router();
@@ -114,6 +117,9 @@ router.use('/sales/booking', authenticate, bookingRoutes);
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
 router.use('/operations/service', authenticate, serviceRoutes);
 router.use('/operations/jobs', authenticate, jobsRoutes);
+
+//hrm
+router.use('/hrm/employees', authenticate, employeeRoutes);
 
 //crm
 router.use('/crm/leads', authenticate, leadRoutes);
