@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const LandPortMasterSchema = new mongoose.Schema(
+const AirPortMasterSchema = new mongoose.Schema(
   {
-    landPortCode: String,
-    landPortName: String,
+    airPortCode: String,
+    airPortName: String,
     ediCode: String,
     blNumber: Number,
     iataCode: String,
@@ -32,7 +32,7 @@ const LandPortMasterSchema = new mongoose.Schema(
     type: {
       type: String,
       enum: ['air', 'land', 'sea'],
-      default: 'land',
+      default: 'air',
     },
     remarks: String,
 
@@ -48,8 +48,8 @@ const LandPortMasterSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-LandPortMasterSchema.index({
+AirPortMasterSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model('LandPortMaster', LandPortMasterSchema);
+module.exports = mongoose.model('AirPortMaster', AirPortMasterSchema);

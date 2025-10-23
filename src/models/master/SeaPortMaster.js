@@ -29,6 +29,11 @@ const SeaPortMasterSchema = new mongoose.Schema(
       enum: ['active', 'inactive'],
       default: 'active',
     },
+    type: {
+      type: String,
+      enum: ['air', 'land', 'sea'],
+      default: 'sea',
+    },
     remarks: String,
 
     organization: {
