@@ -61,7 +61,7 @@ const getJobById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const job = await Job.findById(id)
-    .populate('customer', 'displayName')
+    .populate('customer', 'displayName contactPersons')
     .populate('booking', 'id');
 
   if (!job) {
