@@ -47,6 +47,10 @@ const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
 const serviceRoutes = require('./operations/serviceRoute');
 const jobsRoutes = require('./operations/jobsRoutes');
 
+//crm
+const leadRoutes = require('./crm/leadRoutes');
+const contactRoutes = require('./crm/contactRoutes');
+
 const { authenticate } = require('../middleware');
 
 const router = express.Router();
@@ -110,6 +114,10 @@ router.use('/sales/booking', authenticate, bookingRoutes);
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
 router.use('/operations/service', authenticate, serviceRoutes);
 router.use('/operations/jobs', authenticate, jobsRoutes);
+
+//crm
+router.use('/crm/leads', authenticate, leadRoutes);
+router.use('/crm/contacts', authenticate, contactRoutes);
 
 // Health check endpoint is handled directly in server.js for comprehensive status reporting
 
