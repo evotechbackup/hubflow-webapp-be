@@ -36,6 +36,7 @@ const portRoutes = require('./master/portRoutes');
 const customerRoutes = require('./sales/customerRoutes');
 const enquiryRoutes = require('./sales/enquiryRoutes');
 const quoteRoutes = require('./sales/quoteRoutes');
+const bookingRoutes = require('./sales/bookingRoutes');
 
 // Operations
 const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
@@ -94,6 +95,7 @@ router.use('/master/vessel', authenticate, vesselRoutes);
 router.use('/sales/customer', authenticate, customerRoutes);
 router.use('/sales/enquiry', authenticate, enquiryRoutes);
 router.use('/sales/quote', authenticate, quoteRoutes);
+router.use('/sales/booking', authenticate, bookingRoutes);
 
 // Operations
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
