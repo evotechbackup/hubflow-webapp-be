@@ -31,7 +31,7 @@ const containerInventoryRoutes = require('./master/containerInventoryRoutes');
 const commodityRoutes = require('./master/commodityRoutes');
 const clauseRoutes = require('./master/clauseRoutes');
 const vesselRoutes = require('./master/vesselRoutes');
-
+const portRoutes = require('./master/portRoutes');
 // Sales
 const customerRoutes = require('./sales/customerRoutes');
 const enquiryRoutes = require('./sales/enquiryRoutes');
@@ -80,6 +80,7 @@ router.use('/master/pack', authenticate, packRoutes);
 router.use('/master/activity', authenticate, activityRoutes);
 router.use('/master/category', authenticate, categoryRoutes);
 router.use('/master/country', authenticate, countryRoutes);
+router.use('/master/port', authenticate, portRoutes);
 router.use(
   '/master/container-inventory',
   authenticate,
