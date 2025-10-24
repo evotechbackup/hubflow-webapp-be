@@ -66,9 +66,11 @@ const contactRoutes = require('./crm/contactRoutes');
 
 //hrm
 const employeeRoutes = require('./hrm/employeeRoutes');
-
+const payrollRoutes = require('./hrm/payrollRoute');
 const { authenticate } = require('../middleware');
-
+const employeeDepartmentRoutes = require('./hrm/employeeDepartmentRoutes');
+const employeeGroupRoutes = require('./hrm/employeeGroupRoutes');
+const campRoutes = require('./hrm/campRoutes');
 const router = express.Router();
 
 /**
@@ -146,6 +148,10 @@ router.use('/accounts/pcc', authenticate, pccRoutes);
 
 //hrm
 router.use('/hrm/employees', authenticate, employeeRoutes);
+router.use('/hrm/payroll', authenticate, payrollRoutes);
+router.use('/hrm/employeeDepartment', authenticate, employeeDepartmentRoutes);
+router.use('/hrm/employeeGroup', authenticate, employeeGroupRoutes);
+router.use('/hrm/camps', authenticate, campRoutes);
 
 //crm
 router.use('/crm/leads', authenticate, leadRoutes);
