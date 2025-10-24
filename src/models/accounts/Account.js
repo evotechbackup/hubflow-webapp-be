@@ -222,7 +222,7 @@ AccountSchema.pre('save', async function (next) {
     }
   }
 
-  next();
+  return next();
 });
 
 AccountSchema.post('updateOne', async function (res, next) {
