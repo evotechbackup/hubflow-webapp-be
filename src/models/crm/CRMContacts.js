@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const CRMContactsSchema = new mongoose.Schema(
   {
@@ -26,7 +26,7 @@ const CRMContactsSchema = new mongoose.Schema(
     },
     customerType: {
       type: String,
-      enum: ["individual", "business"],
+      enum: ['individual', 'business'],
     },
     isCustomer: {
       type: Boolean,
@@ -52,27 +52,27 @@ const CRMContactsSchema = new mongoose.Schema(
     },
     account: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CRMAccounts",
+      ref: 'CRMAccounts',
     },
     pipelineStatus: {
       type: String,
       enum: [
-        "new",
-        "prospect",
-        "proposal",
-        "closed",
-        "rejected",
-        "noanswer",
-        "callback",
-        "pending",
-        "junk",
+        'new',
+        'prospect',
+        'proposal',
+        'closed',
+        'rejected',
+        'noanswer',
+        'callback',
+        'pending',
+        'junk',
       ],
-      default: "new",
+      default: 'new',
     },
     assignedTo: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Employee",
+        ref: 'Employee',
       },
     ],
 
@@ -80,7 +80,7 @@ const CRMContactsSchema = new mongoose.Schema(
       {
         comment: {
           type: String,
-          default: "",
+          default: '',
         },
         date: {
           type: Date,
@@ -93,11 +93,11 @@ const CRMContactsSchema = new mongoose.Schema(
       {
         status: {
           type: String,
-          default: "new",
+          default: 'new',
         },
         agent: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Agent",
+          ref: 'Agent',
         },
         date: {
           type: Date,
@@ -108,22 +108,22 @@ const CRMContactsSchema = new mongoose.Schema(
 
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
 
     files: [
       {
         name: {
           type: String,
-          default: "",
+          default: '',
         },
         filename: {
           type: String,
-          default: "",
+          default: '',
         },
         date: {
           type: Date,
@@ -149,4 +149,4 @@ CRMContactsSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model("CRMContacts", CRMContactsSchema);
+module.exports = mongoose.model('CRMContacts', CRMContactsSchema);

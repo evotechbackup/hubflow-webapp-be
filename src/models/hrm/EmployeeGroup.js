@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const DivisionSchema = new mongoose.Schema(
   {
@@ -12,7 +12,7 @@ const DivisionSchema = new mongoose.Schema(
     employees: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Employee",
+        ref: 'Employee',
       },
     ],
   },
@@ -30,8 +30,8 @@ const EmployeeGroupSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["own", "freelancer", "rental"],
-      default: "own",
+      enum: ['own', 'freelancer', 'rental'],
+      default: 'own',
     },
     division: [
       {
@@ -40,11 +40,11 @@ const EmployeeGroupSchema = new mongoose.Schema(
     ],
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
@@ -54,4 +54,4 @@ EmployeeGroupSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model("EmployeeGroup", EmployeeGroupSchema);
+module.exports = mongoose.model('EmployeeGroup', EmployeeGroupSchema);

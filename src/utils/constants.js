@@ -10,6 +10,9 @@ const APPROVAL_STATUSES = [
   'approved2',
 ];
 
+const PF = 'https://hub-flow-assets.s3.me-central-1.amazonaws.com/';
+
 module.exports = {
   APPROVAL_STATUSES,
+  PF,
 };

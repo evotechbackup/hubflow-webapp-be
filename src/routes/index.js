@@ -18,6 +18,7 @@ const featureModulesRoutes = require('./user-management/featureModulesRoutes');
 
 // Master
 const customizationRoutes = require('./master/customizationRoutes');
+const lastInsertedIdRoutes = require('./master/lastInsertedIdRoutes');
 const currencyRoutes = require('./master/currencyRoutes');
 const containerTypeRoutes = require('./master/containerTypeRoute');
 const divisionRoutes = require('./master/divisionRoutes');
@@ -46,6 +47,18 @@ const bookingRoutes = require('./sales/bookingRoutes');
 const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
 const serviceRoutes = require('./operations/serviceRoute');
 const jobsRoutes = require('./operations/jobsRoutes');
+
+// Accounts
+const accountRoutes = require('../routes/accounts/accountRoutes');
+const parentAccountRoutes = require('../routes/accounts/parentaccountRoutes');
+const transactionRoutes = require('../routes/accounts/transactionRoutes');
+const costCenterRoutes = require('../routes/accounts/costCenterRoutes');
+const costMasterRoutes = require('../routes/accounts/costMasterRoutes');
+const expenseRoutes = require('../routes/accounts/expenseRoutes');
+const recurringExpenseRoutes = require('../routes/accounts/recurringExpenseRoutes');
+const journalRoutes = require('../routes/accounts/journalRoutes');
+const pcrRoutes = require('../routes/accounts/pcrRoutes');
+const pccRoutes = require('../routes/accounts/pccRoutes');
 
 //crm
 const leadRoutes = require('./crm/leadRoutes');
@@ -85,6 +98,7 @@ router.use(
 
 // Master
 router.use('/customization', authenticate, customizationRoutes);
+router.use('/lastInsertedId', authenticate, lastInsertedIdRoutes);
 router.use('/master/currency', authenticate, currencyRoutes);
 router.use('/master/container-type', authenticate, containerTypeRoutes);
 router.use('/master/division', authenticate, divisionRoutes);
@@ -118,6 +132,18 @@ router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
 router.use('/operations/service', authenticate, serviceRoutes);
 router.use('/operations/jobs', authenticate, jobsRoutes);
 
+// Accounts
+router.use('/accounts', authenticate, accountRoutes);
+router.use('/parentaccount', authenticate, parentAccountRoutes);
+router.use('/transactions', authenticate, transactionRoutes);
+router.use('/accounts/costcenter', authenticate, costCenterRoutes);
+router.use('/accounts/costmaster', authenticate, costMasterRoutes);
+router.use('/accounts/expenses', authenticate, expenseRoutes);
+router.use('/accounts/recurringexpense', authenticate, recurringExpenseRoutes);
+router.use('/accounts/journals', authenticate, journalRoutes);
+router.use('/accounts/pcr', authenticate, pcrRoutes);
+router.use('/accounts/pcc', authenticate, pccRoutes);
+
 //hrm
 router.use('/hrm/employees', authenticate, employeeRoutes);
 
@@ -146,6 +172,9 @@ router.get('/', (req, res) => {
       master: 'api/master',
       sales: 'api/sales',
       operations: 'api/operations',
+      accounts: 'api/accounts',
+      parentaccount: 'api/parentaccount',
+      transactions: 'api/transactions',
       health: '/api/health',
     },
   });

@@ -221,9 +221,7 @@ const getAllEmployees = asyncHandler(async (req, res) => {
       'projectHistory',
     ],
     sort: { createdAt: -1 },
-    populate: [
-      { path: 'department', select: 'name' },
-    ],
+    populate: [{ path: 'department', select: 'name' }],
     lean: true,
   });
   res.status(200).json({
@@ -414,11 +412,9 @@ const getEmployeeForExport = asyncHandler(async (req, res) => {
 const updateEmployee = asyncHandler(async (req, res) => {
   const employee = req.body;
 
-  ['department', 'camp', 'employeeGroup', 'currJobSite'].forEach(
-    (field) => {
-      if (employee[field] === '') employee[field] = null;
-    }
-  );
+  ['department', 'camp', 'employeeGroup', 'currJobSite'].forEach((field) => {
+    if (employee[field] === '') employee[field] = null;
+  });
 
   const updatedEmployee = await Employee.findByIdAndUpdate(
     req.params.id,

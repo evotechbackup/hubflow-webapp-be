@@ -466,8 +466,6 @@ const EmployeeSchema = new mongoose.Schema(
       ref: 'JobStatus',
     },
 
-  
-
     nationality: {
       type: String,
     },

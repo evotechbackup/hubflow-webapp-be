@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const EmployeeAuthSchema = new mongoose.Schema(
   {
     employee: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Employee",
+      ref: 'Employee',
     },
     username: {
       type: String,
@@ -26,11 +26,11 @@ const EmployeeAuthSchema = new mongoose.Schema(
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
@@ -42,8 +42,8 @@ EmployeeAuthSchema.index({
   organization: 1,
 });
 
-EmployeeAuthSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) throw new Error("Password not modified");
+EmployeeAuthSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) throw new Error('Password not modified');
 
   this.password = await bcrypt.hash(this.password, 10);
   next();
@@ -53,4 +53,4 @@ EmployeeAuthSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-module.exports = mongoose.model("EmployeeAuth", EmployeeAuthSchema);
+module.exports = mongoose.model('EmployeeAuth', EmployeeAuthSchema);

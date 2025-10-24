@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const CRMAccountsSchema = new mongoose.Schema(
   {
@@ -8,19 +8,19 @@ const CRMAccountsSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["lead", "contact"],
-      default: "lead",
+      enum: ['lead', 'contact'],
+      default: 'lead',
     },
     leads: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Leads",
+        ref: 'Leads',
       },
     ],
     contacts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "CRMContacts",
+        ref: 'CRMContacts',
       },
     ],
     isDeleted: {
@@ -29,11 +29,11 @@ const CRMAccountsSchema = new mongoose.Schema(
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
   },
   { timestamps: true }
@@ -43,4 +43,4 @@ CRMAccountsSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model("CRMAccounts", CRMAccountsSchema);
+module.exports = mongoose.model('CRMAccounts', CRMAccountsSchema);

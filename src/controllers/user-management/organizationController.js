@@ -1,13 +1,10 @@
 const User = require('../../models/auth/User');
 const Organization = require('../../models/auth/Organization');
 const Company = require('../../models/auth/Company');
-// const Account = require("../../models/accounts/Account");
+const Account = require('../../models/accounts/Account');
 // const Category = require("../../models/Category");
-// const ParentAccount = require("../../models/accounts/ParentAccount");
-// const {
-//   fixedParentAccounts,
-//   fixedAccounts,
-// } = require("../../utilities/accounts");
+const ParentAccount = require('../../models/accounts/ParentAccount');
+const { fixedParentAccounts, fixedAccounts } = require('../../utils/accounts');
 const mongoose = require('mongoose');
 const { asyncHandler } = require('../../middleware');
 const {
@@ -40,12 +37,9 @@ const createOrganization = asyncHandler(async (req, res) => {
       );
     }
 
-    const fixedJobStatuses = ['office', 'standby', 'vacation'];
-
     const newOrg = new Organization({
       name,
       department: departments,
-      jobStatusType: fixedJobStatuses,
       isAccrualAccounting,
     });
     const savedOrg = await newOrg.save({ session });
@@ -58,49 +52,49 @@ const createOrganization = asyncHandler(async (req, res) => {
     );
 
     // Create parent accounts
-    // const parentAccountsWithOrgId = fixedParentAccounts.map((account) => ({
-    //   ...account,
-    //   organization: savedOrg._id,
-    //   company: companyId,
-    // }));
+    const parentAccountsWithOrgId = fixedParentAccounts.map((account) => ({
+      ...account,
+      organization: savedOrg._id,
+      company: companyId,
+    }));
 
-    // const savedParentAccounts = await ParentAccount.insertMany(
-    //   parentAccountsWithOrgId,
-    //   { session }
-    // );
+    const savedParentAccounts = await ParentAccount.insertMany(
+      parentAccountsWithOrgId,
+      { session }
+    );
 
     // Create child accounts and link them to parent accounts
-    // const childAccountPromises = fixedAccounts.map(async (account) => {
-    //   const parentAccount = savedParentAccounts.find(
-    //     (parent) => parent.accountName === account.parentAccount
-    //   );
+    const childAccountPromises = fixedAccounts.map(async (account) => {
+      const parentAccount = savedParentAccounts.find(
+        (parent) => parent.accountName === account.parentAccount
+      );
 
-    //   if (!parentAccount) {
-    //     throw new NotFoundError(
-    //       `No parent account found for ${account.accountName}`
-    //     );
-    //   }
+      if (!parentAccount) {
+        throw new NotFoundError(
+          `No parent account found for ${account.accountName}`
+        );
+      }
 
-    //   const newAccount = new Account({
-    //     ...account,
-    //     parentAccount: null,
-    //     organization: savedOrg._id,
-    //     company: companyId,
-    //   });
+      const newAccount = new Account({
+        ...account,
+        parentAccount: null,
+        organization: savedOrg._id,
+        company: companyId,
+      });
 
-    //   const savedAccount = await newAccount.save({ session });
+      const savedAccount = await newAccount.save({ session });
 
-    //   // Add child account to parent's childAccounts array
-    //   await ParentAccount.findByIdAndUpdate(
-    //     parentAccount._id,
-    //     { $push: { childAccounts: savedAccount._id } },
-    //     { new: true, session }
-    //   );
+      // Add child account to parent's childAccounts array
+      await ParentAccount.findByIdAndUpdate(
+        parentAccount._id,
+        { $push: { childAccounts: savedAccount._id } },
+        { new: true, session }
+      );
 
-    //   return savedAccount;
-    // });
+      return savedAccount;
+    });
 
-    // const savedChildAccounts = await Promise.all(childAccountPromises);
+    await Promise.all(childAccountPromises);
 
     // Create categories
     // await Category.insertMany(
