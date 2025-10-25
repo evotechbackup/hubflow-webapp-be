@@ -43,6 +43,12 @@ const enquiryRoutes = require('./sales/enquiryRoutes');
 const quoteRoutes = require('./sales/quoteRoutes');
 const bookingRoutes = require('./sales/bookingRoutes');
 
+// Procurement
+const vendorRoutes = require('./procurement/vendorRoutes');
+const rfqRoutes = require('./procurement/rfqRoutes');
+const rfpRoutes = require('./procurement/rfpRoutes');
+const purchaseOrderRoutes = require('./procurement/purchaseOrderRoutes');
+
 // Operations
 const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
 const serviceRoutes = require('./operations/serviceRoute');
@@ -67,12 +73,16 @@ const contactRoutes = require('./crm/contactRoutes');
 //hrm
 const employeeRoutes = require('./hrm/employeeRoutes');
 const payrollRoutes = require('./hrm/payrollRoute');
-const { authenticate } = require('../middleware');
 const employeeDepartmentRoutes = require('./hrm/employeeDepartmentRoutes');
 const employeeGroupRoutes = require('./hrm/employeeGroupRoutes');
 const campRoutes = require('./hrm/campRoutes');
 const webAttendanceRoutes = require('./hrm/webAttendanceRoutes');
 const leaveRoutes = require('./hrm/leaveRoutes');
+
+// Approvals
+const approvalManagementRoutes = require('./approvals/approvalManagementRoutes');
+
+const { authenticate } = require('../middleware');
 const router = express.Router();
 
 /**
@@ -98,6 +108,11 @@ router.use(
   '/user-management/features-modules',
   authenticate,
   featureModulesRoutes
+);
+router.use(
+  '/api/user-management/approval',
+  authenticate,
+  approvalManagementRoutes
 );
 
 // Master
@@ -130,6 +145,12 @@ router.use('/sales/customer', authenticate, customerRoutes);
 router.use('/sales/enquiry', authenticate, enquiryRoutes);
 router.use('/sales/quote', authenticate, quoteRoutes);
 router.use('/sales/booking', authenticate, bookingRoutes);
+
+// Procurement
+router.use('/procurement/vendor', authenticate, vendorRoutes);
+router.use('/procurement/rfq', authenticate, rfqRoutes);
+router.use('/procurement/rfp', authenticate, rfpRoutes);
+router.use('/procurement/purchase-order', authenticate, purchaseOrderRoutes);
 
 // Operations
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
@@ -181,6 +202,7 @@ router.get('/', (req, res) => {
       customization: 'api/customization',
       master: 'api/master',
       sales: 'api/sales',
+      procurement: 'api/procurement',
       operations: 'api/operations',
       accounts: 'api/accounts',
       parentaccount: 'api/parentaccount',

@@ -16,14 +16,6 @@ const approvalSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  // correction: {
-  //   type: Boolean,
-  //   default: true,
-  // },
-  // rejected: {
-  //   type: Boolean,
-  //   default: true,
-  // },
   approved1: {
     type: Boolean,
     default: true,
