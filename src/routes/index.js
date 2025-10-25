@@ -71,6 +71,8 @@ const { authenticate } = require('../middleware');
 const employeeDepartmentRoutes = require('./hrm/employeeDepartmentRoutes');
 const employeeGroupRoutes = require('./hrm/employeeGroupRoutes');
 const campRoutes = require('./hrm/campRoutes');
+const webAttendanceRoutes = require('./hrm/webAttendanceRoutes');
+const leaveRoutes = require('./hrm/leaveRoutes');
 const router = express.Router();
 
 /**
@@ -152,6 +154,8 @@ router.use('/hrm/payroll', authenticate, payrollRoutes);
 router.use('/hrm/employeeDepartment', authenticate, employeeDepartmentRoutes);
 router.use('/hrm/employeeGroup', authenticate, employeeGroupRoutes);
 router.use('/hrm/camps', authenticate, campRoutes);
+router.use('/hrm/webAttendance', authenticate, webAttendanceRoutes);
+router.use('/hrm/leaveManagement', authenticate, leaveRoutes);
 
 //crm
 router.use('/crm/leads', authenticate, leadRoutes);
