@@ -1,19 +1,19 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const EmployeeReportSubmissionSchema = new mongoose.Schema(
   {
     form: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "EmployeeReport",
+      ref: 'EmployeeReport',
       required: true,
     },
     department: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "EmployeeDepartment",
+      ref: 'EmployeeDepartment',
     },
-    role:{
-        type: String,
-        required: true,
+    role: {
+      type: String,
+      required: true,
     },
     inspectionDate: {
       type: Date,
@@ -48,21 +48,24 @@ const EmployeeReportSubmissionSchema = new mongoose.Schema(
     ],
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Employee",
+      ref: 'Employee',
       required: true,
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
       required: true,
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("EmployeeReportSubmission", EmployeeReportSubmissionSchema);
+module.exports = mongoose.model(
+  'EmployeeReportSubmission',
+  EmployeeReportSubmissionSchema
+);

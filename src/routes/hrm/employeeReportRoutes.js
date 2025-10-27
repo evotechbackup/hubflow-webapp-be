@@ -15,10 +15,7 @@ router.post('/create', createEmployeeReport);
 
 router.get('/:id', getEmployeeReportById);
 
-router.get(
-  '/departmentandrole/:deptId/:role',
-  getFormsBasedOnDeptIdAndRole
-);
+router.get('/departmentandrole/:deptId/:role', getFormsBasedOnDeptIdAndRole);
 
 router.get('/submitCount/:orgid', getSubmissionCount);
 

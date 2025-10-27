@@ -674,7 +674,7 @@ const changeBulkEmployeeStatus = asyncHandler(async (req, res) => {
   });
 });
 
-const employeeByemail = asyncHandler(async (req, res) => { 
+const employeeByemail = asyncHandler(async (req, res) => {
   const { email } = req.params;
   const employee = await Employee.findOne({ email });
   res.status(200).json({

@@ -68,6 +68,12 @@ const recurringExpenseRoutes = require('../routes/accounts/recurringExpenseRoute
 const journalRoutes = require('../routes/accounts/journalRoutes');
 const pcrRoutes = require('../routes/accounts/pcrRoutes');
 const pccRoutes = require('../routes/accounts/pccRoutes');
+const reportsRoutes = require('../routes/accounts/reportsRoutes');
+const balancesheetRoutes = require('../routes/accounts/reports/balancesheetRoutes');
+const profitnlossRoutes = require('../routes/accounts/reports/profitnlossRoutes');
+const cashflowstatementRoutes = require('../routes/accounts/reports/cashflowstatementRoutes');
+const trialbalanceRoutes = require('../routes/accounts/reports/trialbalanceRoutes');
+const analyticsRoutes = require('../routes/accounts/reports/analyticsRoutes');
 
 //crm
 const leadRoutes = require('./crm/leadRoutes');
@@ -185,6 +191,16 @@ router.use('/accounts/recurringexpense', authenticate, recurringExpenseRoutes);
 router.use('/accounts/journals', authenticate, journalRoutes);
 router.use('/accounts/pcr', authenticate, pcrRoutes);
 router.use('/accounts/pcc', authenticate, pccRoutes);
+router.use('/accounts/reports', authenticate, reportsRoutes);
+router.use('/accounts/reports/balance-sheet', authenticate, balancesheetRoutes);
+router.use('/accounts/reports/profitnloss', authenticate, profitnlossRoutes);
+router.use(
+  '/accounts/reports/cashflowstatement',
+  authenticate,
+  cashflowstatementRoutes
+);
+router.use('/accounts/reports/trial-balance', authenticate, trialbalanceRoutes);
+router.use('/accounts/reports/analytics', authenticate, analyticsRoutes);
 
 //hrm
 router.use('/hrm/employees', authenticate, employeeRoutes);

@@ -17,10 +17,7 @@ router.get('/:id', getEmployeeReportSubmissionById);
 
 router.get('/report/:reportId', getEmployeeReportSubmissionsByReportId);
 
-router.get(
-  '/emplreport/:submissionId',
-  getEmployeeReportSubmissionByReportId
-);
+router.get('/emplreport/:submissionId', getEmployeeReportSubmissionByReportId);
 
 router.post('/submit/:formId', submitEmployeeReport);
 

@@ -21,7 +21,10 @@ router.get('/:id', getLeaveById);
 
 router.get('/organization/:orgid', getLeaveTypesByOrganizationId);
 
-router.get('/leavetypesbydeptid/:orgid/:departmentId', getLeaveTypeByDepartmentId);
+router.get(
+  '/leavetypesbydeptid/:orgid/:departmentId',
+  getLeaveTypeByDepartmentId
+);
 
 router.post('/addleavetype/:orgid', addLeaveTypeToOrganization);
 

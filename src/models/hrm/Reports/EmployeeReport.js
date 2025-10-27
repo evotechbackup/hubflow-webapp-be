@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const QuestionSchema = new mongoose.Schema(
   {
@@ -9,16 +9,16 @@ const QuestionSchema = new mongoose.Schema(
     questionType: {
       type: String,
       enum: [
-        "text",
-        "date",
-        "number",
-        "dropdown",
-        "meter",
-        "yesno",
-        "photo",
-        "signature",
-        "checkbox",
-        "multiplechoice",
+        'text',
+        'date',
+        'number',
+        'dropdown',
+        'meter',
+        'yesno',
+        'photo',
+        'signature',
+        'checkbox',
+        'multiplechoice',
       ],
       required: true,
     },
@@ -70,10 +70,10 @@ const EmployeeReportFormSchema = new mongoose.Schema(
     },
     department: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "EmployeeDepartment",
+      ref: 'EmployeeDepartment',
     },
     role: {
-        type: String
+      type: String,
     },
     questions: [
       {
@@ -82,14 +82,14 @@ const EmployeeReportFormSchema = new mongoose.Schema(
     ],
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("EmployeeReport", EmployeeReportFormSchema);
+module.exports = mongoose.model('EmployeeReport', EmployeeReportFormSchema);

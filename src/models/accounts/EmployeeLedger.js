@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const EmployeeLedgerSchema = new mongoose.Schema(
   {
     employee: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Employee",
+      ref: 'Employee',
       required: true,
     },
     ledger: [
@@ -19,11 +19,11 @@ const EmployeeLedgerSchema = new mongoose.Schema(
         },
         payrollId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Payroll",
+          ref: 'Payroll',
         },
         type: {
           type: String,
-          enum: ["full", "advance", "timesheet", "projecttimesheet", "loan"],
+          enum: ['full', 'advance', 'timesheet', 'projecttimesheet', 'loan'],
         },
         createdAt: {
           type: Date,
@@ -33,11 +33,11 @@ const EmployeeLedgerSchema = new mongoose.Schema(
     ],
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   {
@@ -45,15 +45,15 @@ const EmployeeLedgerSchema = new mongoose.Schema(
   }
 );
 
-EmployeeLedgerSchema.index({ organization: 1, employee: 1, "ledger.month": 1 });
+EmployeeLedgerSchema.index({ organization: 1, employee: 1, 'ledger.month': 1 });
 
 EmployeeLedgerSchema.index(
   {
     organization: 1,
     employee: 1,
-    "ledger.month": 1,
+    'ledger.month': 1,
   },
   { unique: true }
 );
 
-module.exports = mongoose.model("EmployeeLedger", EmployeeLedgerSchema);
+module.exports = mongoose.model('EmployeeLedger', EmployeeLedgerSchema);
