@@ -51,46 +51,46 @@ async function getApprovalSettings(organization) {
  * @param {Array} agents - List of agents to notify
  * @param {Object} params - Notification parameters
  */
-async function createNotifications(
-  agents,
-  { documentPrefix, documentId = '', field_route = '', fieldId = '' },
-  finalNotification = false
-) {
-  const notifications = agents.map((agent) => ({
-    type: 'approval',
-    approval: `${documentPrefix} #${documentId}`,
-    receiver: agent._id,
-    date: new Date(),
-    extraData: {
-      field_route,
-      fieldId,
-    },
-  }));
+// async function createNotifications(
+//   agents,
+//   { documentPrefix, documentId = '', field_route = '', fieldId = '' },
+//   finalNotification = false
+// ) {
+//   const notifications = agents.map((agent) => ({
+//     type: 'approval',
+//     approval: `${documentPrefix} #${documentId}`,
+//     receiver: agent._id,
+//     date: new Date(),
+//     extraData: {
+//       field_route,
+//       fieldId,
+//     },
+//   }));
 
-  // Batch insert notifications
-  // await TaskNotification.insertMany(notifications);
+// Batch insert notifications
+// await TaskNotification.insertMany(notifications);
 
-  // Send email notifications in parallel
-  // await Promise.all(
-  //   agents.map((agent) =>
-  //     finalNotification
-  //       ? sendApprovalFinalNotification(
-  //           documentPrefix,
-  //           documentId,
-  //           agent.email
-  //         ).catch((error) =>
-  //           console.error(`Failed to send email to ${agent.email}:`, error)
-  //         )
-  //       : sendApprovalNotification(
-  //           documentPrefix,
-  //           documentId,
-  //           agent.email
-  //         ).catch((error) =>
-  //           console.error(`Failed to send email to ${agent.email}:`, error)
-  //         )
-  //   )
-  // );
-}
+// Send email notifications in parallel
+// await Promise.all(
+//   agents.map((agent) =>
+//     finalNotification
+//       ? sendApprovalFinalNotification(
+//           documentPrefix,
+//           documentId,
+//           agent.email
+//         ).catch((error) =>
+//           console.error(`Failed to send email to ${agent.email}:`, error)
+//         )
+//       : sendApprovalNotification(
+//           documentPrefix,
+//           documentId,
+//           agent.email
+//         ).catch((error) =>
+//           console.error(`Failed to send email to ${agent.email}:`, error)
+//         )
+//   )
+// );
+// }
 
 /**
  * Finds the next approval level and sends notifications to relevant agents
@@ -202,28 +202,28 @@ async function findNextApprovalLevelAndNotify(
 
     // Find next approval level
     const currentLevel = approvalOrder[params.currentApproval] || 0;
-    const sortedNextLevels = Object.entries(approvalAllowed)
-      .filter(([_, level]) => level > currentLevel)
-      .sort(([_, a], [__, b]) => a - b);
+    // const sortedNextLevels = Object.entries(approvalAllowed)
+    //   .filter(([_, level]) => level > currentLevel)
+    //   .sort(([_, a], [__, b]) => a - b);
 
-    let nextApprovalQuery = {};
+    // let nextApprovalQuery = {};
 
-    const nextApprovalLevel = sortedNextLevels[0]?.[0];
-    const secondNextApprovalLevel = sortedNextLevels[1]?.[0];
-    if (secondNextApprovalLevel && nextApprovalLevel) {
-      nextApprovalQuery = {
-        'approval.feature': featureLower,
-        $or: [
-          { 'approval.allowed': nextApprovalLevel },
-          { 'approval.allowed': secondNextApprovalLevel },
-        ],
-      };
-    } else if (nextApprovalLevel) {
-      nextApprovalQuery = {
-        'approval.feature': featureLower,
-        'approval.allowed': nextApprovalLevel,
-      };
-    }
+    // const nextApprovalLevel = sortedNextLevels[0]?.[0];
+    // const secondNextApprovalLevel = sortedNextLevels[1]?.[0];
+    // if (secondNextApprovalLevel && nextApprovalLevel) {
+    //   nextApprovalQuery = {
+    //     'approval.feature': featureLower,
+    //     $or: [
+    //       { 'approval.allowed': nextApprovalLevel },
+    //       { 'approval.allowed': secondNextApprovalLevel },
+    //     ],
+    //   };
+    // } else if (nextApprovalLevel) {
+    //   nextApprovalQuery = {
+    //     'approval.feature': featureLower,
+    //     'approval.allowed': nextApprovalLevel,
+    //   };
+    // }
 
     // check if any of the approvalAllowed after currentLevel are not 0
     if (finalNotification) {
@@ -281,76 +281,77 @@ async function findNextApprovalLevelAndNotify(
       ]);
 
       if (roles.length > 0) {
-        await createNotifications(
-          roles,
-          {
-            documentPrefix: params.documentPrefix,
-            documentId: params.documentId,
-            field_route: params.field_route,
-            fieldId: params.fieldId,
-          },
-          true
-        );
+        // await createNotifications(
+        //   roles,
+        //   {
+        //     documentPrefix: params.documentPrefix,
+        //     documentId: params.documentId,
+        //     field_route: params.field_route,
+        //     fieldId: params.fieldId,
+        //   },
+        //   true
+        // );
       }
     }
 
-    if (!nextApprovalLevel) {
-      return null;
-    }
+    // if (!nextApprovalLevel) {
+    //   return null;
+    // }
 
     // Find roles and agents in a single aggregation pipeline
-    const roles = await Roles.aggregate([
-      {
-        $match: { company: new mongoose.Types.ObjectId(params.company) },
-      },
-      {
-        $unwind: '$approval',
-      },
-      {
-        $match: nextApprovalQuery,
-      },
-      {
-        $lookup: {
-          from: 'users',
-          let: { roleName: '$name' },
-          pipeline: [
-            {
-              $match: {
-                $expr: { $eq: ['$role', '$$roleName'] },
-              },
-            },
-            {
-              $project: {
-                _id: 1,
-                email: 1,
-              },
-            },
-          ],
-          as: 'users',
-        },
-      },
-      {
-        $unwind: '$users',
-      },
-      {
-        $replaceRoot: { newRoot: '$users' },
-      },
-    ]);
+    // const roles = await Roles.aggregate([
+    //   {
+    //     $match: { company: new mongoose.Types.ObjectId(params.company) },
+    //   },
+    //   {
+    //     $unwind: '$approval',
+    //   },
+    //   {
+    //     $match: nextApprovalQuery,
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'users',
+    //       let: { roleName: '$name' },
+    //       pipeline: [
+    //         {
+    //           $match: {
+    //             $expr: { $eq: ['$role', '$$roleName'] },
+    //           },
+    //         },
+    //         {
+    //           $project: {
+    //             _id: 1,
+    //             email: 1,
+    //           },
+    //         },
+    //       ],
+    //       as: 'users',
+    //     },
+    //   },
+    //   {
+    //     $unwind: '$users',
+    //   },
+    //   {
+    //     $replaceRoot: { newRoot: '$users' },
+    //   },
+    // ]);
 
-    if (roles.length > 0) {
-      await createNotifications(
-        roles,
-        {
-          documentPrefix: params.documentPrefix,
-          documentId: params.documentId,
-          field_route: params.field_route,
-          fieldId: params.fieldId,
-        },
-        false
-      );
-    }
+    // if (roles.length > 0) {
+    //   await createNotifications(
+    //     roles,
+    //     {
+    //       documentPrefix: params.documentPrefix,
+    //       documentId: params.documentId,
+    //       field_route: params.field_route,
+    //       fieldId: params.fieldId,
+    //     },
+    //     false
+    //   );
+    // }
 
-    return nextApprovalLevel;
+    // return nextApprovalLevel;
+    return false;
   } catch (error) {
     console.error('Error in findNextApprovalLevelAndNotify:', error);
     throw error;

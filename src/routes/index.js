@@ -48,6 +48,9 @@ const vendorRoutes = require('./procurement/vendorRoutes');
 const rfqRoutes = require('./procurement/rfqRoutes');
 const rfpRoutes = require('./procurement/rfpRoutes');
 const purchaseOrderRoutes = require('./procurement/purchaseOrderRoutes');
+const purchaseReceiveRoutes = require('./procurement/purchaseReceiveRoutes');
+const billsRoutes = require('./procurement/billsRoutes');
+const vendorPerformanceRoutes = require('./procurement/vendorPerformanceRoutes');
 
 // Operations
 const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
@@ -154,6 +157,17 @@ router.use('/procurement/vendor', authenticate, vendorRoutes);
 router.use('/procurement/rfq', authenticate, rfqRoutes);
 router.use('/procurement/rfp', authenticate, rfpRoutes);
 router.use('/procurement/purchase-order', authenticate, purchaseOrderRoutes);
+router.use(
+  '/procurement/purchase-receive',
+  authenticate,
+  purchaseReceiveRoutes
+);
+router.use('/procurement/bills', authenticate, billsRoutes);
+router.use(
+  '/procurement/vendorperformance',
+  authenticate,
+  vendorPerformanceRoutes
+);
 
 // Operations
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
