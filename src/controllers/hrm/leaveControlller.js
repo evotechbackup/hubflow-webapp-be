@@ -355,7 +355,7 @@ const getLeavesByMonth = asyncHandler(async (req, res) => {
   });
 });
 
-const getLeavesByMonthAndYear = asyncHandler(async (req, res) => {
+const getLeavesByMonths = asyncHandler(async (req, res) => {
   const { month, orgid } = req.params;
   const leaves = await Leave.find({
     month: { $in: month },
@@ -389,7 +389,7 @@ const getLeaveByEmployeeId = asyncHandler(async (req, res) => {
 });
 
 const updateApproval = asyncHandler(async (req, res) => {
-  const { id, agentid } = req.params;
+  const { id, userid } = req.params;
   const { approval, approvalComment } = req.body;
 
   const leave = await Leave.findById(id);
@@ -415,7 +415,7 @@ const updateApproval = asyncHandler(async (req, res) => {
 
   switch (approval) {
     case 'reviewed':
-      leave.reviewedBy = agentid;
+      leave.reviewedBy = userid;
       leave.reviewedAt = new Date();
       leave.verifiedBy = null;
       leave.verifiedAt = null;
@@ -424,24 +424,24 @@ const updateApproval = asyncHandler(async (req, res) => {
       break;
 
     case 'verified':
-      leave.verifiedBy = agentid;
+      leave.verifiedBy = userid;
       leave.verifiedAt = new Date();
       leave.acknowledgedBy = null;
       leave.acknowledgedAt = null;
       break;
 
     case 'acknowledged':
-      leave.acknowledgedBy = agentid;
+      leave.acknowledgedBy = userid;
       leave.acknowledgedAt = new Date();
       break;
 
     case 'approved1':
-      leave.approvedBy1 = agentid;
+      leave.approvedBy1 = userid;
       leave.approvedAt1 = new Date();
       break;
 
     case 'approved2':
-      leave.approvedBy2 = agentid;
+      leave.approvedBy2 = userid;
       leave.approvedAt2 = new Date();
       break;
 
@@ -491,7 +491,7 @@ module.exports = {
   updateApproval,
   getLeaveByEmployeeId,
   getLeavesByMonth,
-  getLeavesByMonthAndYear,
+  getLeavesByMonths,
   invalidateLeave,
   deleteLeave,
   getSpecificLeaveById,

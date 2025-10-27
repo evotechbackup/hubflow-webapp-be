@@ -78,6 +78,9 @@ const employeeGroupRoutes = require('./hrm/employeeGroupRoutes');
 const campRoutes = require('./hrm/campRoutes');
 const webAttendanceRoutes = require('./hrm/webAttendanceRoutes');
 const leaveRoutes = require('./hrm/leaveRoutes');
+const leaveTypeRoutes = require('./hrm/leaveTypeRoutes');
+const employeeReportRoutes = require('./hrm/employeeReportRoutes');
+const employeeReportSubmissionRoutes = require('./hrm/employeeReportSubmissionRoutes');
 
 // Approvals
 const approvalManagementRoutes = require('./approvals/approvalManagementRoutes');
@@ -177,6 +180,13 @@ router.use('/hrm/employeeGroup', authenticate, employeeGroupRoutes);
 router.use('/hrm/camps', authenticate, campRoutes);
 router.use('/hrm/webAttendance', authenticate, webAttendanceRoutes);
 router.use('/hrm/leaveManagement', authenticate, leaveRoutes);
+router.use('/hrm/leaveType', authenticate, leaveTypeRoutes);
+router.use('/hrm/employeeReport', authenticate, employeeReportRoutes);
+router.use(
+  '/hrm/employeeReportSubmission',
+  authenticate,
+  employeeReportSubmissionRoutes
+);
 
 //crm
 router.use('/crm/leads', authenticate, leadRoutes);

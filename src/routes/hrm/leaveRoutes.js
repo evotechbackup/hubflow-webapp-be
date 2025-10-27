@@ -6,7 +6,7 @@ const {
   updateApproval,
   getLeaveByEmployeeId,
   getLeavesByMonth,
-  getLeavesByMonthAndYear,
+  getLeavesByMonths,
   invalidateLeave,
   deleteLeave,
   getSpecificLeaveById,
@@ -25,13 +25,13 @@ router.get('/:id', getLeaveById);
 
 router.get('/employee/:employeeId', getLeaveByEmployeeId);
 
-router.get('/month/:month', getLeavesByMonth);
+router.get('/leavesbymonth/:orgid', getLeavesByMonth);
 
-router.get('/month/:month/:year', getLeavesByMonthAndYear);
+router.get('/getleavesbymonth/:orgid/:month', getLeavesByMonths);
 
 router.put('/invalidate/:id', invalidateLeave);
 
-router.put('/approval/:id', updateApproval);
+router.put('/approval/:id/:userid', updateApproval);
 
 router.delete('/delete/:id', deleteLeave);
 

@@ -674,6 +674,16 @@ const changeBulkEmployeeStatus = asyncHandler(async (req, res) => {
   });
 });
 
+const employeeByemail = asyncHandler(async (req, res) => { 
+  const { email } = req.params;
+  const employee = await Employee.findOne({ email });
+  res.status(200).json({
+    success: true,
+    message: 'Employee fetched successfully',
+    data: employee,
+  });
+});
+
 const totalEmployee = asyncHandler(async (req, res) => {
   const { orgid } = req.params;
 
@@ -705,5 +715,6 @@ module.exports = {
   employeeBySearch,
   getEmployeeId,
   changeBulkEmployeeStatus,
+  employeeByemail,
   totalEmployee,
 };
