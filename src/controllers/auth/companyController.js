@@ -55,7 +55,7 @@ const signupCompany = asyncHandler(async (req, res) => {
     userName: fullName,
     password,
     phone,
-    profileType: 'superadmin',
+    role: 'superadmin',
     company: savedCompany._id,
   });
 

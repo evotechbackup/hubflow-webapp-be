@@ -898,40 +898,22 @@ const getPurchaseOrdersById = asyncHandler(async (req, res) => {
     .populate('items.itemsId')
     .populate('items.fleetId')
     .populate('company')
-    .populate('user', [
-      'signature',
-      'fullName',
-      'email',
-      'phone',
-      'profileType',
-    ])
-    .populate('verifiedBy', [
-      'signature',
-      'fullName',
-      'email',
-      'phone',
-      'profileType',
-    ])
-    .populate('reviewedBy', [
-      'signature',
-      'fullName',
-      'email',
-      'phone',
-      'profileType',
-    ])
+    .populate('user', ['signature', 'fullName', 'email', 'phone', 'role'])
+    .populate('verifiedBy', ['signature', 'fullName', 'email', 'phone', 'role'])
+    .populate('reviewedBy', ['signature', 'fullName', 'email', 'phone', 'role'])
     .populate('approvedBy1', [
       'signature',
       'fullName',
       'email',
       'phone',
-      'profileType',
+      'role',
     ])
     .populate('approvedBy2', [
       'signature',
       'fullName',
       'email',
       'phone',
-      'profileType',
+      'role',
     ])
     .populate('organization');
 

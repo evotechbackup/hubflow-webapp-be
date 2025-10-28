@@ -102,7 +102,7 @@ const searchUsers = asyncHandler(async (req, res) => {
     const query = {
       organization: req.params.orgid,
       deactivated: false,
-      profileType: { $nin: ['admin', 'superadmin'] },
+      role: { $nin: ['admin', 'superadmin'] },
     };
 
     if (searchQuery && searchQuery !== 'null' && searchQuery !== '') {
@@ -229,7 +229,7 @@ const updateUser = asyncHandler(async (req, res) => {
       signature: req.body.signature,
       emirateId: req.body.emirateId,
       userid: req.body.userid,
-      profileType: req.body.role,
+      role: req.body.role,
       twoFactor: req.body.twoFactor,
       hierarchy: req.body.hierarchy,
       employeeId: req.body.employeeId,
@@ -272,7 +272,7 @@ const updateUserHierarchy = asyncHandler(async (req, res) => {
       signature: req.body.signature,
       emirateid: req.body.emirateid,
       userid: req.body.userid,
-      profileType: req.body.role,
+      role: req.body.role,
       twoFactor: req.body.twoFactor,
       hierarchy: req.body.hierarchy,
       employeeId: req.body.employeeId,
@@ -357,7 +357,7 @@ const getActiveUsersByDepartment = asyncHandler(async (req, res) => {
     query.fullName = { $regex: new RegExp(search, 'i') };
   }
   if (filter_role) {
-    query.profileType = filter_role;
+    query.role = filter_role;
   }
   if (filter_deactivated) {
     query.deactivated = filter_deactivated;
@@ -412,7 +412,7 @@ const addUser = asyncHandler(async (req, res) => {
       password,
       fullName,
       userName,
-      profileType: role,
+      role,
       emirateid,
       phone,
       userid,
@@ -521,7 +521,7 @@ const getSuperAdminByCompany = asyncHandler(async (req, res) => {
 
   const agents = await User.find({
     company: companyid,
-    profileType: 'superadmin',
+    role: 'superadmin',
   });
 
   if (!agents) {

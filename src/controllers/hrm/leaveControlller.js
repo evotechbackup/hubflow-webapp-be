@@ -122,40 +122,22 @@ const getSpecificLeaveById = asyncHandler(async (req, res) => {
     ])
     .populate('leaveType', ['leaveType', 'maxDuration'])
     .populate('departmentId')
-    .populate('agent', [
-      'signature',
-      'fullName',
-      'email',
-      'phone',
-      'profileType',
-    ])
-    .populate('verifiedBy', [
-      'signature',
-      'fullName',
-      'email',
-      'phone',
-      'profileType',
-    ])
-    .populate('reviewedBy', [
-      'signature',
-      'fullName',
-      'email',
-      'phone',
-      'profileType',
-    ])
+    .populate('agent', ['signature', 'fullName', 'email', 'phone', 'role'])
+    .populate('verifiedBy', ['signature', 'fullName', 'email', 'phone', 'role'])
+    .populate('reviewedBy', ['signature', 'fullName', 'email', 'phone', 'role'])
     .populate('approvedBy1', [
       'signature',
       'fullName',
       'email',
       'phone',
-      'profileType',
+      'role',
     ])
     .populate('approvedBy2', [
       'signature',
       'fullName',
       'email',
       'phone',
-      'profileType',
+      'role',
     ])
     .populate('organization', [
       'letterheadArabicName',

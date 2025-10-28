@@ -51,6 +51,9 @@ const purchaseOrderRoutes = require('./procurement/purchaseOrderRoutes');
 const purchaseReceiveRoutes = require('./procurement/purchaseReceiveRoutes');
 const billsRoutes = require('./procurement/billsRoutes');
 const vendorPerformanceRoutes = require('./procurement/vendorPerformanceRoutes');
+const paymentMadeRoutes = require('./procurement/paymentMadeRoutes');
+const purchaseInspectionFormRoutes = require('./procurement/purchaseInspectionFormRoutes');
+const purchaseInspectionReportRoutes = require('./procurement/purchaseInspectionReportRoutes');
 
 // Operations
 const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
@@ -74,6 +77,10 @@ const profitnlossRoutes = require('../routes/accounts/reports/profitnlossRoutes'
 const cashflowstatementRoutes = require('../routes/accounts/reports/cashflowstatementRoutes');
 const trialbalanceRoutes = require('../routes/accounts/reports/trialbalanceRoutes');
 const analyticsRoutes = require('../routes/accounts/reports/analyticsRoutes');
+const pcrVoucherRoutes = require('../routes/accounts/vouchers/pcrVoucherRoutes');
+const pccVoucherRoutes = require('../routes/accounts/vouchers/pccVoucherRoutes');
+const expenseVoucherRoutes = require('../routes/accounts/vouchers/expenseVoucherRoutes');
+const openingBalanceRoutes = require('../routes/accounts/openingBalanceRoutes');
 
 //crm
 const leadRoutes = require('./crm/leadRoutes');
@@ -90,6 +97,8 @@ const leaveRoutes = require('./hrm/leaveRoutes');
 const leaveTypeRoutes = require('./hrm/leaveTypeRoutes');
 const employeeReportRoutes = require('./hrm/employeeReportRoutes');
 const employeeReportSubmissionRoutes = require('./hrm/employeeReportSubmissionRoutes');
+const groupPayrollRoutes = require('./hrm/groupPayrollRoutes');
+const payrollVoucherRoutes = require('./hrm/payrollVoucherRoutes');
 
 // Approvals
 const approvalManagementRoutes = require('./approvals/approvalManagementRoutes');
@@ -174,6 +183,17 @@ router.use(
   authenticate,
   vendorPerformanceRoutes
 );
+router.use('/procurement/payment-made', authenticate, paymentMadeRoutes);
+router.use(
+  '/procurement/purchaseInspectionForm',
+  authenticate,
+  purchaseInspectionFormRoutes
+);
+router.use(
+  '/procurement/purchaseInspectionReport',
+  authenticate,
+  purchaseInspectionReportRoutes
+);
 
 // Operations
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
@@ -201,6 +221,10 @@ router.use(
 );
 router.use('/accounts/reports/trial-balance', authenticate, trialbalanceRoutes);
 router.use('/accounts/reports/analytics', authenticate, analyticsRoutes);
+router.use('/accounts/pcrvoucher', authenticate, pcrVoucherRoutes);
+router.use('/accounts/pccvoucher', authenticate, pccVoucherRoutes);
+router.use('/accounts/expensevoucher', authenticate, expenseVoucherRoutes);
+router.use('/accounts/openingbalance', authenticate, openingBalanceRoutes);
 
 //hrm
 router.use('/hrm/employees', authenticate, employeeRoutes);
@@ -217,6 +241,8 @@ router.use(
   authenticate,
   employeeReportSubmissionRoutes
 );
+router.use('/hrm/grouppayroll', authenticate, groupPayrollRoutes);
+router.use('/hrm/payrollVoucher', authenticate, payrollVoucherRoutes);
 
 //crm
 router.use('/crm/leads', authenticate, leadRoutes);

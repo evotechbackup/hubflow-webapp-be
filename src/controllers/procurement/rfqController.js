@@ -41,35 +41,15 @@ const getRFQById = asyncHandler(async (req, res) => {
     .populate('user', [
       'signature',
       'userName',
-      'profileType',
+      'role',
       'fullName',
       'phone',
       'email',
     ])
-    .populate('reviewedBy', [
-      'signature',
-      'userName',
-      'profileType',
-      'fullName',
-    ])
-    .populate('verifiedBy', [
-      'signature',
-      'userName',
-      'profileType',
-      'fullName',
-    ])
-    .populate('approvedBy1', [
-      'signature',
-      'userName',
-      'profileType',
-      'fullName',
-    ])
-    .populate('approvedBy2', [
-      'signature',
-      'userName',
-      'profileType',
-      'fullName',
-    ]);
+    .populate('reviewedBy', ['signature', 'userName', 'role', 'fullName'])
+    .populate('verifiedBy', ['signature', 'userName', 'role', 'fullName'])
+    .populate('approvedBy1', ['signature', 'userName', 'role', 'fullName'])
+    .populate('approvedBy2', ['signature', 'userName', 'role', 'fullName']);
 
   if (!rfq) {
     throw new NotFoundError('RFQ not found');

@@ -250,31 +250,11 @@ const getPCCSlipById = asyncHandler(async (req, res) => {
     .populate('employee', ['firstName', 'lastName'])
     .populate('costCenter', ['unit'])
     .populate('pcrId', ['id', 'amount', 'description'])
-    .populate('user', ['signature', 'profileType', 'fullName', 'userName'])
-    .populate('reviewedBy', [
-      'signature',
-      'userName',
-      'profileType',
-      'fullName',
-    ])
-    .populate('verifiedBy', [
-      'signature',
-      'userName',
-      'profileType',
-      'fullName',
-    ])
-    .populate('approvedBy1', [
-      'signature',
-      'userName',
-      'profileType',
-      'fullName',
-    ])
-    .populate('approvedBy2', [
-      'signature',
-      'userName',
-      'profileType',
-      'fullName',
-    ])
+    .populate('user', ['signature', 'role', 'fullName', 'userName'])
+    .populate('reviewedBy', ['signature', 'userName', 'role', 'fullName'])
+    .populate('verifiedBy', ['signature', 'userName', 'role', 'fullName'])
+    .populate('approvedBy1', ['signature', 'userName', 'role', 'fullName'])
+    .populate('approvedBy2', ['signature', 'userName', 'role', 'fullName'])
     .populate('organization', [
       'letterheadArabicName',
       'letterheadName',

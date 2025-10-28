@@ -95,7 +95,7 @@ const editRole = asyncHandler(async (req, res) => {
   if (hierarchy !== roles.hierarchy) {
     await User.updateMany(
       {
-        profileType: roles.name,
+        role: roles.name,
         company: roles.company,
       },
       {
@@ -108,8 +108,8 @@ const editRole = asyncHandler(async (req, res) => {
 
   if (name !== roles.name) {
     await User.updateMany(
-      { profileType: roles.name, company: roles.company },
-      { $set: { profileType: name } }
+      { role: roles.name, company: roles.company },
+      { $set: { role: name } }
     );
   }
 
