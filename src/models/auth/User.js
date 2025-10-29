@@ -10,8 +10,8 @@ const userSchema = new mongoose.Schema(
       minlength: [3, 'Full name must be at least 3 characters long'],
       maxlength: [100, 'Full name cannot exceed 100 characters'],
       match: [
-        /^[a-zA-Z0-9_]+$/,
-        'Full name can only contain letters, numbers, and underscores',
+        /^[a-zA-Z0-9_ ]+$/,
+        'Full name can only contain letters, numbers, underscores, and spaces',
       ],
     },
     userName: {
@@ -25,10 +25,11 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
       match: [
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/,
         'Please enter a valid email address',
       ],
     },
+
     password: {
       type: String,
       required: [true, 'Password is required'],

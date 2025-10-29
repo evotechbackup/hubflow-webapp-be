@@ -55,7 +55,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
   req.role = user.role || 'user';
   req.company = decoded.company;
   req.organization = decoded.organization;
-  req.name = decoded.fullName;
+  req.name = decoded.name;
   req.hierarchy = decoded.hierarchy;
   req.tokenVersion = decoded.tokenVersion;
 
