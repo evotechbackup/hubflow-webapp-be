@@ -21,6 +21,7 @@ const {
   getSuperAdminByCompany,
   getActives,
   deleteUser,
+  updateEmailCredentials,
 } = require('../../controllers/auth/userController');
 
 const router = express.Router();
@@ -49,7 +50,7 @@ router.put('/edit/:id', updateUser);
 
 router.put('/edit/hierarchy/:id', updateUserHierarchy);
 
-// router.put('/email-credentials/:id', updateEmailCredentials);
+router.put('/email-credentials/:id', updateEmailCredentials);
 
 router.get(
   '/active/department/:orgid/:departmentid',

@@ -64,55 +64,37 @@ router.put('/other/:id', editOrganizationOther);
 
 router.put('/billing/:id', editOrganizationBilling);
 
-router.put('/set-attendance/:organizationid', editOrganizationAttendance);
+router.put('/set-attendance/:id', editOrganizationAttendance);
 
-router.put(
-  '/inventory-feature/:organizationid',
-  editOrganizationInventoryFeature
-);
+router.put('/inventory-feature/:id', editOrganizationInventoryFeature);
 
-router.put('/fleets-feature/:organizationid', editOrganizationFleetsFeature);
+router.put('/fleets-feature/:id', editOrganizationFleetsFeature);
 
-router.put('/rental-types/:organizationid', editOrganizationRentalTypes);
+router.put('/rental-types/:id', editOrganizationRentalTypes);
 
-router.put('/sales-feature/:organizationid', editOrganizationSalesFeature);
+router.put('/sales-feature/:id', editOrganizationSalesFeature);
 
-router.put('/crm-feature/:organizationid', editOrganizationCrmFeature);
+router.put('/crm-feature/:id', editOrganizationCrmFeature);
 
-router.put('/invoice-feature/:organizationid', editOrganizationInvoiceFeature);
+router.put('/invoice-feature/:id', editOrganizationInvoiceFeature);
 
-router.put('/cost-center/:organizationid', editOrganizationCostCenter);
+router.put('/cost-center/:id', editOrganizationCostCenter);
 
-router.put(
-  '/quotation-feature/:organizationid',
-  editOrganizationQuotationFeature
-);
+router.put('/quotation-feature/:id', editOrganizationQuotationFeature);
 
-router.put('/sales-template/:organizationid', editOrganizationSalesTemplate);
+router.put('/sales-template/:id', editOrganizationSalesTemplate);
 
-router.put(
-  '/account-template/:organizationid',
-  editOrganizationAccountTemplate
-);
+router.put('/account-template/:id', editOrganizationAccountTemplate);
 
-router.put(
-  '/procurement-template/:organizationid',
-  editOrganizationProcurementTemplate
-);
+router.put('/procurement-template/:id', editOrganizationProcurementTemplate);
 
-router.put('/hrm-template/:organizationid', editOrganizationHrmTemplate);
+router.put('/hrm-template/:id', editOrganizationHrmTemplate);
 
-router.put('/home-module/:organizationid', editOrganizationHomeModule);
+router.put('/home-module/:id', editOrganizationHomeModule);
 
-router.put(
-  '/home-module-reorder/:organizationid',
-  editOrganizationHomeModuleReorder
-);
+router.put('/home-module-reorder/:id', editOrganizationHomeModuleReorder);
 
-router.put(
-  '/email-configuration/:organizationid',
-  editOrganizationEmailConfiguration
-);
+router.put('/email-configuration/:id', editOrganizationEmailConfiguration);
 
 router.put('/delete/:id', deleteOrganization);
 

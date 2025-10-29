@@ -586,7 +586,7 @@ const editOrganizationSalesTemplate = asyncHandler(async (req, res) => {
     await organization.save();
   } else {
     await Organization.findByIdAndUpdate(
-      req.params.organizationid,
+      id,
       { $set: { [`salesTemplate.${type}`]: template } },
       { new: true }
     );
@@ -609,7 +609,7 @@ const editOrganizationAccountTemplate = asyncHandler(async (req, res) => {
     await organization.save();
   } else {
     await Organization.findByIdAndUpdate(
-      req.params.organizationid,
+      id,
       { $set: { [`accountTemplate.${type}`]: template } },
       { new: true }
     );
@@ -632,7 +632,7 @@ const editOrganizationProcurementTemplate = asyncHandler(async (req, res) => {
     await organization.save();
   } else {
     await Organization.findByIdAndUpdate(
-      req.params.organizationid,
+      id,
       { $set: { [`procurementTemplate.${type}`]: template } },
       { new: true }
     );
@@ -655,7 +655,7 @@ const editOrganizationHrmTemplate = asyncHandler(async (req, res) => {
     await organization.save();
   } else {
     await Organization.findByIdAndUpdate(
-      req.params.organizationid,
+      id,
       { $set: { [`hrmTemplate.${type}`]: template } },
       { new: true }
     );

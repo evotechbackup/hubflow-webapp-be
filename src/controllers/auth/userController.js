@@ -8,6 +8,7 @@ const { asyncHandler } = require('../../middleware/errorHandler');
 const Company = require('../../models/auth/Company');
 const User = require('../../models/auth/User');
 const { ValidationError, NotFoundError } = require('../../utils/errors');
+const EmailCredentials = require('../../models/auth/EmailCredentials');
 
 const createUser = asyncHandler(async (req, res) => {
   const {
@@ -88,7 +89,7 @@ const getUserById = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: { user },
+      data: user,
     });
   } catch (error) {
     next(error);
@@ -562,6 +563,50 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+const updateEmailCredentials = asyncHandler(async (req, res) => {
+  const {
+    organizationId,
+    emailAccount,
+    authMethod,
+    imap,
+    smtp,
+    oauth2,
+    encryptionKeyId,
+  } = req.body;
+  const emailCredentials = await EmailCredentials.findOne({ user: req.id });
+  if (!emailCredentials) {
+    const newEmailCredential = new EmailCredentials({
+      user: req.id,
+      organizationId,
+      emailAccount,
+      authMethod,
+      imap,
+      smtp,
+      oauth2,
+      encryptionKeyId,
+    });
+    await newEmailCredential.save();
+    return res.json({
+      success: true,
+      message: 'Email credentials created successfully',
+      data: newEmailCredential,
+    });
+  }
+  emailCredentials.organizationId = organizationId;
+  emailCredentials.emailAccount = emailAccount;
+  emailCredentials.authMethod = authMethod;
+  emailCredentials.imap = imap;
+  emailCredentials.smtp = smtp;
+  emailCredentials.oauth2 = oauth2;
+  emailCredentials.encryptionKeyId = encryptionKeyId;
+  await emailCredentials.save();
+  return res.json({
+    success: true,
+    message: 'Email credentials updated successfully',
+    data: emailCredentials,
+  });
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -581,4 +626,5 @@ module.exports = {
   getSuperAdminByCompany,
   getActives,
   deleteUser,
+  updateEmailCredentials,
 };
