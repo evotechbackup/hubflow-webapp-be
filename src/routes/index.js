@@ -119,7 +119,7 @@ router.use('/auth', authRoutes);
 router.use('/users', authenticate, userRoutes);
 router.use('/companies', companyRoutes);
 
-router.use('/api/files', awsConfig);
+router.use('/files', awsConfig);
 
 router.use('/user-management/modules', modulesRoutes);
 router.use('/user-management/roles', authenticate, rolesRoutes);
