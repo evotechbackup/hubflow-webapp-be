@@ -15,6 +15,11 @@ const ItemSchema = new Schema(
     vat: Number,
     amount: Number,
     description: String,
+    cost: Number,
+    vendor: {
+      type: ObjectId,
+      ref: 'Vendor',
+    },
   },
   { _id: false }
 );

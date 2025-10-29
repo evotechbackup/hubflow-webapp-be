@@ -16,6 +16,11 @@ const ItemSchema = new Schema(
     vat: Number,
     amount: Number,
     description: String,
+    cost: Number,
+    vendor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Vendor',
+    },
   },
   { _id: false }
 );
@@ -53,6 +58,10 @@ const BookingSchema = new Schema(
     subtotal: Number,
     vat: Number,
     discount: Number,
+    costTotal: Number,
+    costSubtotal: Number,
+    costVat: Number,
+    costDiscount: Number,
     company: { type: ObjectId, ref: 'Company' },
     organization: { type: ObjectId, ref: 'Organization' },
     status: { type: String, default: 'pending', index: true },
@@ -75,6 +84,10 @@ const BookingSchema = new Schema(
     acknowledgedBy: { type: ObjectId, ref: 'User' },
     acknowledgedAt: Date,
     docAttached: String,
+    jobCreated: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -1,12 +1,15 @@
 const Job = require('../../models/operations/Jobs');
 const { asyncHandler } = require('../../middleware/errorHandler');
 const { NotFoundError } = require('../../utils/errors');
+const Booking = require('../../models/sales/Booking');
 
 const createJob = asyncHandler(async (req, res) => {
   const jobData = req.body;
 
   const job = new Job({ ...jobData, user: req.id });
   await job.save();
+
+  await Booking.findByIdAndUpdate(job.booking, { jobCreated: true });
 
   res.status(201).json({
     success: true,
@@ -62,7 +65,8 @@ const getJobById = asyncHandler(async (req, res) => {
 
   const job = await Job.findById(id)
     .populate('customer', 'displayName contactPersons')
-    .populate('booking', 'id');
+    .populate('booking', 'id')
+    .populate('items.vendor', 'displayName');
 
   if (!job) {
     throw new NotFoundError('Job not found');

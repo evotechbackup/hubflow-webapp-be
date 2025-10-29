@@ -62,6 +62,10 @@ const postBooking = asyncHandler(async (req, res) => {
     subtotal,
     vat,
     discount,
+    costTotal,
+    costSubtotal,
+    costVat,
+    costDiscount,
   } = req.body;
   const paddedId = String(lastInsertedId.lastId).padStart(2, '0');
 
@@ -96,6 +100,10 @@ const postBooking = asyncHandler(async (req, res) => {
     subtotal,
     vat,
     discount,
+    costTotal,
+    costSubtotal,
+    costVat,
+    costDiscount,
     user: req.id,
     //   approval: hasApproval ? 'pending' : 'none',
   });
@@ -392,6 +400,7 @@ const getBookings = asyncHandler(async (req, res) => {
     endDate,
     sort_by = 'date',
     sort_order = 'desc',
+    filter_jobcreated,
     page = 1,
     limit = 25,
     is_agent,
@@ -444,6 +453,10 @@ const getBookings = asyncHandler(async (req, res) => {
     endDate !== 'null'
   ) {
     query.date = dateFilter;
+  }
+
+  if (filter_jobcreated) {
+    query.jobCreated = filter_jobcreated === 'true';
   }
 
   const options = {
