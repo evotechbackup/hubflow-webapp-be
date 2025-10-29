@@ -100,6 +100,12 @@ const employeeReportSubmissionRoutes = require('./hrm/employeeReportSubmissionRo
 const groupPayrollRoutes = require('./hrm/groupPayrollRoutes');
 const payrollVoucherRoutes = require('./hrm/payrollVoucherRoutes');
 
+//recruit
+const recruitmentFormRoutes = require('./recruit/recruitmentFormRoutes');
+const recruitmentResponseRoutes = require('./recruit/recruitmentResponseRoutes');
+const recruitOfferRoutes = require('./recruit/recruitOffer');
+const recruitDashboardRoutes = require('./recruit/recuritDashboarRoutes');
+
 // Approvals
 const approvalManagementRoutes = require('./approvals/approvalManagementRoutes');
 
@@ -247,6 +253,12 @@ router.use('/hrm/payrollVoucher', authenticate, payrollVoucherRoutes);
 //crm
 router.use('/crm/leads', authenticate, leadRoutes);
 router.use('/crm/contacts', authenticate, contactRoutes);
+
+//recruit
+router.use('/recruit/recruitmentform', recruitmentFormRoutes);
+router.use('/recruit/recruitmentresponse', recruitmentResponseRoutes);
+router.use('/recruit/recruitmentOffer', authenticate, recruitOfferRoutes);
+router.use('/recruit/dashboard', authenticate, recruitDashboardRoutes);
 
 // Health check endpoint is handled directly in server.js for comprehensive status reporting
 

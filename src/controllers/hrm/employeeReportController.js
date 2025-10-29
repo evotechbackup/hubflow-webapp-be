@@ -52,6 +52,21 @@ const getEmployeeReportById = asyncHandler(async (req, res) => {
   });
 });
 
+const updateEmployeeReport = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const employeeReport = await EmployeeReport.findByIdAndUpdate(id, req.body, {
+    new: true,
+  });
+  if (!employeeReport) {
+    throw new Error('Employee report not found');
+  }
+  res.status(200).json({
+    success: true,
+    message: 'Employee report updated successfully',
+    data: employeeReport,
+  });
+});
+
 //get forms based on dept id and role
 const getFormsBasedOnDeptIdAndRole = asyncHandler(async (req, res) => {
   const { deptId, role } = req.params;
@@ -359,11 +374,26 @@ const getAnalytics = asyncHandler(async (req, res) => {
   });
 });
 
+const deleteEmployeeReport = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const employeeReport = await EmployeeReport.findByIdAndDelete(id);
+  if (!employeeReport) {
+    throw new Error('Employee report not found');
+  }
+  res.status(200).json({
+    success: true,
+    message: 'Employee report deleted successfully',
+    data: employeeReport,
+  });
+});
+
 module.exports = {
   getAllEmployeeReports,
   createEmployeeReport,
+  updateEmployeeReport,
   getEmployeeReportById,
   getFormsBasedOnDeptIdAndRole,
   getSubmissionCount,
   getAnalytics,
+  deleteEmployeeReport,
 };

@@ -14,6 +14,7 @@ const {
   changeBulkEmployeeStatus,
   totalEmployee,
   employeeByemail,
+  getAllEmployee,
 } = require('../../controllers/hrm/employeeController');
 
 const router = require('express').Router();
@@ -33,4 +34,5 @@ router.get('/employee-id/:id', getEmployeeId);
 router.put('/change-bulk-employee-status', changeBulkEmployeeStatus);
 router.get('/total-employee/:orgid', totalEmployee);
 router.get('/employeeByEmail/:email', employeeByemail);
+router.get('/getAllEmployee/:orgid', getAllEmployee);
 module.exports = router;

@@ -148,7 +148,7 @@ const getEmployeeByDepartmentandRoleId = asyncHandler(async (req, res) => {
 
   const employees = await Employee.find({
     department: departmentId,
-    role: `${role}`,
+    role,
   });
 
   res.status(200).json({

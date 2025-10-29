@@ -701,6 +701,22 @@ const totalEmployee = asyncHandler(async (req, res) => {
     .json({ success: true, data: { totalEmployee, totalEmployeeInactive } });
 });
 
+const getAllEmployee = asyncHandler(async (req, res) => {
+  try {
+    const { orgid } = req.params;
+    const employees = await Employee.find({
+      organization: orgid,
+      isActivated: true,
+    })
+      .select('firstName lastName employeeId')
+      .sort({ createdAt: -1 });
+    res.json(employees);
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = {
   createEmployee,
   getAllEmployees,
@@ -717,4 +733,5 @@ module.exports = {
   changeBulkEmployeeStatus,
   employeeByemail,
   totalEmployee,
+  getAllEmployee,
 };
