@@ -124,7 +124,9 @@ const postEnquiry = asyncHandler(async (req, res) => {
 
 const getEnquiryById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const enquiry = await Enquiry.findById(id).populate('customer');
+  const enquiry = await Enquiry.findById(id)
+    .populate('customer')
+    .populate('items.serviceId', ['name', 'price', 'unit']);
   res.status(200).json({
     success: true,
     message: 'Enquiry fetched successfully',

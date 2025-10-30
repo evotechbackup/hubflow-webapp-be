@@ -146,6 +146,7 @@ const getQuotesDetailsById = asyncHandler(async (req, res) => {
   const quote = await Quotes.findById(id)
     .populate('customer')
     .populate('organization')
+    .populate('items.serviceId', ['name', 'price', 'unit', 'costPrice'])
     .populate('user', [
       'signature',
       'userName',
