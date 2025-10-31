@@ -8,7 +8,11 @@ const FCM = require('../../models/auth/FCM');
 const { generateToken } = require('../../utils/jwt');
 const jwtConfig = require('../../config/jwt');
 const { asyncHandler } = require('../../middleware');
-const { ValidationError, AuthenticationError } = require('../../utils/errors');
+const {
+  ValidationError,
+  AuthenticationError,
+  NotFoundError,
+} = require('../../utils/errors');
 const Company = require('../../models/auth/Company');
 const Department = require('../../models/auth/Department');
 
@@ -257,9 +261,28 @@ const getCurrentUser = asyncHandler(async (req, res) => {
   });
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+
+  const validPassword = await user.comparePassword(req.body.oldPassword);
+  if (!validPassword) {
+    throw new AuthenticationError('Incorrect old password');
+  }
+  user.password = req.body.newPassword;
+  await user.save();
+  res.status(200).json({
+    success: true,
+    message: 'Password updated',
+  });
+});
+
 module.exports = {
   register,
   login,
   logout,
   getCurrentUser,
+  changePassword,
 };

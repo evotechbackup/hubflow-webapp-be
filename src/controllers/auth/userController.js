@@ -81,7 +81,7 @@ const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findById(id).select('-password');
+    const user = await User.findById(id);
 
     if (!user) {
       throw new NotFoundError('User not found');

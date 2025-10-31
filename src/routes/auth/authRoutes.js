@@ -10,6 +10,7 @@ const {
   login,
   logout,
   getCurrentUser,
+  changePassword,
 } = require('../../controllers/auth/authController');
 
 const router = express.Router();
@@ -43,5 +44,7 @@ router.post('/logout', logout);
  * @access  Private (requires authentication)
  */
 router.post('/verify_token', authenticate, getCurrentUser);
+
+router.put('/changepassword', authenticate, changePassword);
 
 module.exports = router;
