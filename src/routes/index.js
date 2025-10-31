@@ -112,6 +112,20 @@ const recruitmentResponseRoutes = require('./recruit/recruitmentResponseRoutes')
 const recruitOfferRoutes = require('./recruit/recruitOffer');
 const recruitDashboardRoutes = require('./recruit/recuritDashboarRoutes');
 
+//docs
+const docsFolderRoutes = require('./docsFile/docsFolderRoutes');
+const docsFileRoutes = require('./docsFile/docsFileRoutes');
+const docsTemplateRoutes = require('./docsFile/docsTemplateRoutes');
+
+//sheets
+const sheetFolderRoutes = require('./sheets/sheetFolderRoutes');
+const sheetFilesRoutes = require('./sheets/sheetFilesRoutes');
+
+//tools
+const taskRoutes = require('./task/taskRoutes');
+const taskGroupRoutes = require('./task/taskGroupRoutes');
+const storageRoutes = require('./task/storageRoute');
+
 // Approvals
 const approvalManagementRoutes = require('./approvals/approvalManagementRoutes');
 
@@ -272,6 +286,17 @@ router.use('/recruit/recruitmentresponse', recruitmentResponseRoutes);
 router.use('/recruit/recruitmentOffer', authenticate, recruitOfferRoutes);
 router.use('/recruit/dashboard', authenticate, recruitDashboardRoutes);
 
+//docs
+router.use('/docsFolder', authenticate, docsFolderRoutes);
+router.use('/docs', authenticate, docsFileRoutes);
+router.use('/docsTemplate', authenticate, docsTemplateRoutes);
+
+//sheets
+router.use('/sheetFolder', authenticate, sheetFolderRoutes);
+router.use('/sheetFiles', authenticate, sheetFilesRoutes);
+router.use('/task', authenticate, taskRoutes);
+router.use('/taskgroup', authenticate, taskGroupRoutes);
+router.use('/storage', storageRoutes);
 // Health check endpoint is handled directly in server.js for comprehensive status reporting
 
 /**
