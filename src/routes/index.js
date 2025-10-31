@@ -36,6 +36,12 @@ const portRoutes = require('./master/portRoutes');
 const landPortRoutes = require('./master/landPortRoutes');
 const seaPortRoutes = require('./master/seaPortRoutes');
 const airPortRoutes = require('./master/airPortRoutes');
+const bankBranchRoutes = require('./master/bankBranchRoutes');
+const districtRoutes = require('./master/districtRoutes');
+const cityRoutes = require('./master/cityRoutes');
+const areaRoutes = require('./master/areaRoutes');
+const nationalityRoutes = require('./master/nationalityRoutes');
+const addressRoutes = require('./master/addressRoutes');
 
 // Sales
 const customerRoutes = require('./sales/customerRoutes');
@@ -166,6 +172,12 @@ router.use('/master/port', authenticate, portRoutes);
 router.use('/master/airport', authenticate, airPortRoutes);
 router.use('/master/landport', authenticate, landPortRoutes);
 router.use('/master/seaPort', authenticate, seaPortRoutes);
+router.use('/master/bank-branch', authenticate, bankBranchRoutes);
+router.use('/master/district', authenticate, districtRoutes);
+router.use('/master/cities', authenticate, cityRoutes);
+router.use('/master/area', authenticate, areaRoutes);
+router.use('/master/nationality', authenticate, nationalityRoutes);
+router.use('/master/address', authenticate, addressRoutes);
 
 // Sales
 router.use('/sales/customer', authenticate, customerRoutes);

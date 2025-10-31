@@ -5,12 +5,20 @@ const CustomizationSchema = new mongoose.Schema(
     // Sales
     customerType: [{ name: String }],
     customerTags: [{ name: String }],
+    customerClassification: [{ name: String, code: String }],
+    customerBusinessType: [{ name: String }, { code: String }],
+    customerCompanyType: [{ name: String }, { code: String }],
+    customerGroup: [{ name: String }, { code: String }],
 
     // Procurement
     vendorType: [{ name: String }],
     vendorSubType: [{ name: String }],
     vendorTags: [{ name: String }],
-    incoTerms: [{ name: String }],
+    incoTerms: [{ name: String, code: String }],
+    vendorClassification: [{ name: String, code: String }],
+    vendorBusinessType: [{ name: String }, { code: String }],
+    vendorCompanyType: [{ name: String }, { code: String }],
+    vendorGroup: [{ name: String }, { code: String }],
 
     // HRM
     officeLocations: [{ name: String }],
@@ -24,7 +32,6 @@ const CustomizationSchema = new mongoose.Schema(
     inventoryTags: [{ name: String }],
 
     // General
-
     shipmentTypes: [{ name: String }],
 
     organization: {

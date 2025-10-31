@@ -26,7 +26,7 @@ const getCustomization = asyncHandler(async (req, res) => {
 });
 
 const createCustomization = asyncHandler(async (req, res) => {
-  const { name, type, organization, color } = req.body;
+  const { name, type, organization, code } = req.body;
 
   if (!name || !type || !organization) {
     throw new ValidationError('Name, type, and organization are required');
@@ -38,7 +38,7 @@ const createCustomization = asyncHandler(async (req, res) => {
     },
     {
       $push: {
-        [type]: { name, color },
+        [type]: { name, code },
       },
     },
     { new: true, upsert: true }
@@ -56,7 +56,7 @@ const createCustomization = asyncHandler(async (req, res) => {
 
 const updateCustomization = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, type, organization, color } = req.body;
+  const { name, type, organization, code } = req.body;
 
   if (!name || !type || !organization) {
     throw new ValidationError('Name, type, and organization are required');
@@ -76,7 +76,7 @@ const updateCustomization = asyncHandler(async (req, res) => {
   customization[type] = customization[type].map((item) => {
     if (item._id?.toString() === objId) {
       found = true;
-      return { _id: item._id, name, color };
+      return { _id: item._id, name, code };
     }
     return item;
   });
