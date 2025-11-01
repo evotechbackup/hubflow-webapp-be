@@ -129,6 +129,15 @@ const storageRoutes = require('./task/storageRoute');
 // Approvals
 const approvalManagementRoutes = require('./approvals/approvalManagementRoutes');
 
+// Fleets
+const fleetRoutes = require('./fleets/fleetRoutes');
+const fleetCategoryRoutes = require('./fleets/fleetCategoryRoutes');
+
+//inventory
+const inventorycategoryRoutes = require('./inventory/categoryRoutes');
+const inventoryRoutes = require('./inventory/productRoutes');
+
+
 const { authenticate } = require('../middleware');
 const router = express.Router();
 
@@ -297,6 +306,16 @@ router.use('/sheetFiles', authenticate, sheetFilesRoutes);
 router.use('/task', authenticate, taskRoutes);
 router.use('/taskgroup', authenticate, taskGroupRoutes);
 router.use('/storage', storageRoutes);
+
+// Fleets
+router.use('/fleets', fleetRoutes);
+router.use('/fleets/category', authenticate, fleetCategoryRoutes);
+
+//inventory
+router.use('/inventory/category', authenticate, inventorycategoryRoutes);
+router.use('/inventory', authenticate, inventoryRoutes);
+
+//
 // Health check endpoint is handled directly in server.js for comprehensive status reporting
 
 /**
