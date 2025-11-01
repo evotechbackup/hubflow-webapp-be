@@ -137,7 +137,6 @@ const fleetCategoryRoutes = require('./fleets/fleetCategoryRoutes');
 const inventorycategoryRoutes = require('./inventory/categoryRoutes');
 const inventoryRoutes = require('./inventory/productRoutes');
 
-
 const { authenticate } = require('../middleware');
 const router = express.Router();
 
