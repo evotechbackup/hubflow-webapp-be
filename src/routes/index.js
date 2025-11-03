@@ -136,6 +136,7 @@ const fleetCategoryRoutes = require('./fleets/fleetCategoryRoutes');
 //inventory
 const inventorycategoryRoutes = require('./inventory/categoryRoutes');
 const inventoryRoutes = require('./inventory/productRoutes');
+const inventoryAdjustmentRoutes = require('./inventory/inventoryAdjustmentRoutes');
 
 const { authenticate } = require('../middleware');
 const router = express.Router();
@@ -312,7 +313,8 @@ router.use('/fleets/category', authenticate, fleetCategoryRoutes);
 
 //inventory
 router.use('/inventory/category', authenticate, inventorycategoryRoutes);
-router.use('/inventory', authenticate, inventoryRoutes);
+router.use('/products', authenticate, inventoryRoutes);
+router.use('/inventory-adjustment', authenticate, inventoryAdjustmentRoutes);
 
 //
 // Health check endpoint is handled directly in server.js for comprehensive status reporting

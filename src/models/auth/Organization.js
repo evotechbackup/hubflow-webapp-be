@@ -144,7 +144,11 @@ const OrganizationSchema = new mongoose.Schema(
       address: {
         type: String,
       },
-
+      reasons: [
+        {
+          type: String,
+        },
+      ],
       bankName: {
         type: String,
       },
