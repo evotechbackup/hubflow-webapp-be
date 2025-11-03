@@ -8,9 +8,9 @@ const PurchaseOrder = require('../../models/procurement/PurchaseOrder');
 const Transaction = require('../../models/accounts/Transaction');
 const Account = require('../../models/accounts/Account');
 const QRCode = require('qrcode');
-const {
-  recalculateAccountRunningBalanceAfterTransaction,
-} = require('../../utilities/transactionUtils');
+// const {
+//   recalculateAccountRunningBalanceAfterTransaction,
+// } = require('../../utilities/transactionUtils');
 const InventoryFleet = require('../../models/fleets/InventoryFleet');
 const { asyncHandler } = require('../../middleware/errorHandler');
 
@@ -172,10 +172,10 @@ const updateopeningstock = asyncHandler(async (req, res) => {
             $inc: { amount: -Number(openingTransaction.debit) },
           });
 
-          await recalculateAccountRunningBalanceAfterTransaction(
-            openingTransaction.account,
-            openingTransaction.createdAt
-          );
+          // await recalculateAccountRunningBalanceAfterTransaction(
+          //   openingTransaction.account,
+          //   openingTransaction.createdAt
+          // );
         }
 
         product.openingStock = item.openingStock;
@@ -442,10 +442,10 @@ const updateProduct = asyncHandler(async (req, res) => {
           amount: -Number(openingTransaction.debit),
         },
       });
-      await recalculateAccountRunningBalanceAfterTransaction(
-        openingTransaction.account,
-        openingTransaction.createdAt
-      );
+      // await recalculateAccountRunningBalanceAfterTransaction(
+      //   openingTransaction.account,
+      //   openingTransaction.createdAt
+      // );
     }
 
     const accountUpdate = await Account.findByIdAndUpdate(
