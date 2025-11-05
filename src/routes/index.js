@@ -65,6 +65,7 @@ const purchaseInspectionReportRoutes = require('./procurement/purchaseInspection
 const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
 const serviceRoutes = require('./operations/serviceRoute');
 const jobsRoutes = require('./operations/jobsRoutes');
+const shipmentRoutes = require('./operations/shipmentRoutes');
 
 // Accounts
 const accountRoutes = require('../routes/accounts/accountRoutes');
@@ -240,6 +241,7 @@ router.use(
 router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
 router.use('/operations/service', authenticate, serviceRoutes);
 router.use('/operations/jobs', authenticate, jobsRoutes);
+router.use('/operations/shipment', authenticate, shipmentRoutes);
 
 // Accounts
 router.use('/accounts', authenticate, accountRoutes);

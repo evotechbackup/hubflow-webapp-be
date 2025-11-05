@@ -1,4 +1,5 @@
 const Job = require('../../models/operations/Jobs');
+const Shipment = require('../../models/operations/Shipment');
 const { asyncHandler } = require('../../middleware/errorHandler');
 const { NotFoundError } = require('../../utils/errors');
 const Booking = require('../../models/sales/Booking');
@@ -6,7 +7,24 @@ const Booking = require('../../models/sales/Booking');
 const createJob = asyncHandler(async (req, res) => {
   const jobData = req.body;
 
-  const job = new Job({ ...jobData, user: req.id });
+  const job = new Job({
+    shipmentType: jobData.shipmentType,
+    customer: jobData.customer,
+    contactPerson: jobData.contactPerson,
+    date: jobData.date,
+    company: jobData.company,
+    organization: jobData.organization,
+    user: req.id,
+  });
+
+  const shipment = new Shipment({
+    ...jobData,
+    jobId: job._id,
+    user: req.id,
+  });
+
+  await shipment.save();
+
   await job.save();
 
   await Booking.findByIdAndUpdate(job.booking, { jobCreated: true });
@@ -30,8 +48,6 @@ const getJobs = asyncHandler(async (req, res) => {
   if (search) {
     query.$or = [
       { id: { $regex: search, $options: 'i' } },
-      { mblNo: { $regex: search, $options: 'i' } },
-      { vesselName: { $regex: search, $options: 'i' } },
       { contactPerson: { $regex: search, $options: 'i' } },
     ];
   }
@@ -40,10 +56,7 @@ const getJobs = asyncHandler(async (req, res) => {
     page: parseInt(page),
     limit: parseInt(limit),
     sort: { createdAt: -1 },
-    populate: [
-      { path: 'customer', select: 'displayName' },
-      { path: 'booking', select: 'id' },
-    ],
+    populate: [{ path: 'customer', select: 'displayName' }],
   };
 
   const jobs = await Job.paginate(query, options);
@@ -63,10 +76,10 @@ const getJobs = asyncHandler(async (req, res) => {
 const getJobById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const job = await Job.findById(id)
-    .populate('customer', 'displayName contactPersons')
-    .populate('booking', 'id')
-    .populate('items.vendor', 'displayName');
+  const job = await Job.findById(id).populate(
+    'customer',
+    'displayName contactPersons'
+  );
 
   if (!job) {
     throw new NotFoundError('Job not found');
