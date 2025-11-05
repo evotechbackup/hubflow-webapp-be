@@ -4,95 +4,14 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const { Schema } = mongoose;
 const { ObjectId } = Schema.Types;
 
-// Item subdocument schema
-const ItemSchema = new Schema(
-  {
-    serviceId: { type: ObjectId, ref: 'Service' },
-    productName: String,
-    unit: String,
-    price: Number,
-    quantity: Number,
-    vat: Number,
-    amount: Number,
-    description: String,
-    cost: Number,
-    vendor: {
-      type: ObjectId,
-      ref: 'Vendor',
-    },
-  },
-  { _id: false }
-);
-
 const JobSchema = new Schema(
   {
     shipmentType: String,
     customer: { type: ObjectId, ref: 'Customer' },
     contactPerson: String,
 
-    // Job info
-    carrier: String,
-    mblNo: String,
-    mblDate: Date,
-    vesselName: String,
-    voyageNo: String,
-    deliveryAgent: String,
-    placeOfReceipt: String,
-    por: String,
-    pol: String,
-    pod: String,
-    pof: String,
-    placeOfDelivery: String,
-    etd: Date,
-    eta: Date,
-    crossTrade: {
-      type: String,
-      enum: ['yes', 'no'],
-      default: 'no',
-    },
-    incoterm: String,
-    freight: String,
-    serviceType: String,
-    payableAt: String,
-    dispatchAt: String,
-    isHazardous: {
-      type: String,
-      enum: ['yes', 'no'],
-      default: 'no',
-    },
-    remarks: String,
-    salesperson: String,
-    shipper: String,
-    consignee: String,
-    internalRemarks: String,
+    shipments: [{ type: ObjectId, ref: 'Shipment' }],
 
-    // container/consignment
-    containerType: String,
-    containerNo: String,
-    numberOfPackages: Number,
-    numberOfPallet: Number,
-    actualSeal: String,
-    grossWeight: Number,
-    grossWeightUnit: String,
-    netWeight: Number,
-    netWeightUnit: String,
-    volumeWeight: Number,
-    volumeWeightUnit: String,
-    totalWeight: Number,
-    totalWeightUnit: String,
-    volume: Number,
-    volumeUnit: String,
-    chargeableUnit: String,
-    hsCode: String,
-    containerRemarks: String,
-    hsDescription: String,
-
-    // costing
-    booking: {
-      type: ObjectId,
-      ref: 'Booking',
-    },
-    items: [ItemSchema],
     id: { type: String },
     date: { type: Date, default: Date.now },
 
