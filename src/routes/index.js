@@ -91,6 +91,19 @@ const openingBalanceRoutes = require('../routes/accounts/openingBalanceRoutes');
 //crm
 const leadRoutes = require('./crm/leadRoutes');
 const contactRoutes = require('./crm/contactRoutes');
+const accountsRoutes = require('./crm/accountsRoutes');
+const agentRoutes = require('./crm/agentRoutes');
+const crmCustomerRoutes = require('./crm/customerRoutes');
+const crmProjectRoutes = require('./crm/crmProjectRoutes');
+const interestRoutes = require('./crm/interestRoutes');
+const itemsRoutes = require('./crm/itemsRoutes');
+const productsRoutes = require('./crm/crmproductsRoutes');
+const propertiesRoutes = require('./crm/propertiesRoutes');
+const crmQuoteRoutes = require('./crm/crmQuoteRoutes');
+const crmServiceRoutes = require('./crm/crmServiceRoutes');
+const crmTaskRoutes = require('./crm/crmTaskRoutes');
+const dealRoutes = require('./crm/dealRoutes');
+const developerRoutes = require('./crm/developerRoutes');
 
 //hrm
 const employeeRoutes = require('./hrm/employeeRoutes');
@@ -286,8 +299,21 @@ router.use('/hrm/grouppayroll', authenticate, groupPayrollRoutes);
 router.use('/hrm/payrollVoucher', authenticate, payrollVoucherRoutes);
 
 //crm
-router.use('/crm/leads', authenticate, leadRoutes);
+router.use('/crm/leads', leadRoutes);
 router.use('/crm/contacts', authenticate, contactRoutes);
+router.use('/crm/accounts', authenticate, accountsRoutes);
+router.use('/crm/agents', authenticate, agentRoutes);
+router.use('/crm/customers', authenticate, crmCustomerRoutes);
+router.use('/crm/projects', authenticate, crmProjectRoutes);
+router.use('/crm/interests', authenticate, interestRoutes);
+router.use('/crm/items', authenticate, itemsRoutes);
+router.use('/crm/products', authenticate, productsRoutes);
+router.use('/crm/properties', authenticate, propertiesRoutes);
+router.use('/crm/quotes', authenticate, crmQuoteRoutes);
+router.use('/crm/services', authenticate, crmServiceRoutes);
+router.use('/crm/tasks', authenticate, crmTaskRoutes);
+router.use('/crm/deals', authenticate, dealRoutes);
+router.use('/crm/developers', authenticate, developerRoutes);
 
 //recruit
 router.use('/recruit/recruitmentform', recruitmentFormRoutes);

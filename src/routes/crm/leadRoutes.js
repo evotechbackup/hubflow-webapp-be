@@ -9,28 +9,41 @@ const {
   getFiles,
   assignedTo,
   deleteFiles,
+  changepipeline,
+  uploadFile,
 } = require('../../controllers/crm/leadController');
-
+const { authenticate } = require('../../middleware');
+const multer = require('multer');
 const router = require('express').Router();
 
-router.get('/all/:orgid', getAllLeads);
+const storage = multer.memoryStorage();
 
-router.get('/:id', getLead);
+const upload = multer({ storage });
 
-router.post('/create', createLead);
+router.get('/all/:orgid', authenticate, getAllLeads);
 
-router.put('/update/:id', updateLead);
+router.get('/:id', authenticate, getLead);
 
-router.delete('/delete/:id', deleteLead);
+router.post('/create', authenticate, createLead);
 
-router.get('/without-customers/:orgid', getLeadsWithoutCustomers);
+router.put('/addComment/:id', authenticate, createLead);
 
-router.delete('/deleteFiles/:id', deleteFiles);
+router.put('/update/:id', authenticate, updateLead);
 
-router.post('/assignedTo/:id', assignedTo);
+router.put('/changepipeline/:id', authenticate, changepipeline);
 
-router.put('/updateFiles/:id', updateFiles);
+router.delete('/delete/:id', authenticate, deleteLead);
 
-router.get('/getFiles/:id', getFiles);
+router.get('/without-customers/:orgid', authenticate, getLeadsWithoutCustomers);
+
+router.delete('/deleteFiles/:id', authenticate, deleteFiles);
+
+router.post('/assignedTo/:id', authenticate, assignedTo);
+
+router.put('/updateFiles/:id', authenticate, updateFiles);
+
+router.get('/getFiles/:id', authenticate, getFiles);
+
+router.post('/uploaddocs/:type/:id', upload.single('file'), uploadFile);
 
 module.exports = router;

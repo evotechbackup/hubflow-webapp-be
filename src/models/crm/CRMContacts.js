@@ -97,7 +97,7 @@ const CRMContactsSchema = new mongoose.Schema(
         },
         agent: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'Agent',
+          ref: 'User',
         },
         date: {
           type: Date,
