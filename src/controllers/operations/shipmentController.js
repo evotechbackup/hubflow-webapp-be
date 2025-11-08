@@ -30,7 +30,19 @@ const createShipment = asyncHandler(async (req, res) => {
 const getShipmentById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const shipment = await Shipment.findById(id);
+  const shipment = await Shipment.findById(id)
+    .populate('organization', ['organizationLogo'])
+    .populate('booking', ['id'])
+    .populate('user', ['fullName'])
+    .populate('items.vendor', ['displayName'])
+    .populate({
+      path: 'jobId',
+      select: 'customer shipmentType id',
+      populate: {
+        path: 'customer',
+        select: 'displayName billingAddress',
+      },
+    });
 
   if (!shipment) {
     throw new NotFoundError('Shipment not found');

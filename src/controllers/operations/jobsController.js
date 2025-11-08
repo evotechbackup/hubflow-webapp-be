@@ -76,10 +76,9 @@ const getJobs = asyncHandler(async (req, res) => {
 const getJobById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const job = await Job.findById(id).populate(
-    'customer',
-    'displayName contactPersons'
-  );
+  const job = await Job.findById(id)
+    .populate('customer', 'displayName contactPersons')
+    .populate('shipments', 'id');
 
   if (!job) {
     throw new NotFoundError('Job not found');
