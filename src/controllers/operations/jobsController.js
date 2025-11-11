@@ -143,10 +143,114 @@ const getJobsByCustomer = asyncHandler(async (req, res) => {
   });
 });
 
+const getProductsByJobAndVendor = asyncHandler(async (req, res) => {
+  const { jobId, vendorId } = req.params;
+
+  const job = await Job.findById(jobId).populate('shipments', 'items').lean();
+
+  const products = job.shipments?.flatMap((shipment) =>
+    shipment.items?.filter(
+      (item) => !item.purchaseRef && item.vendor.toString() === vendorId
+    )
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'Products fetched successfully',
+    data: products,
+  });
+});
+
+const getShipmentDetailsByJob = asyncHandler(async (req, res) => {
+  const { jobId } = req.params;
+  const job = await Job.findById(jobId)
+    .populate('organization', ['organizationLogo'])
+    .populate('customer', ['displayName', 'billingAddress'])
+    .populate({
+      path: 'shipments',
+      populate: [
+        {
+          path: 'items.vendor',
+          select: 'displayName',
+        },
+        {
+          path: 'user',
+          select: 'fullName',
+        },
+        {
+          path: 'booking',
+          select: 'id',
+        },
+      ],
+    });
+
+  if (!job) {
+    throw new NotFoundError('Job not found');
+  }
+
+  let invoiceProvision = 0;
+  let invoiceActual = 0;
+  let costProvision = 0;
+  let costActual = 0;
+  let estimatedProfit = 0;
+  let actualProfit = 0;
+
+  if (job.shipments && job.shipments.length > 0) {
+    job.shipments.forEach((shipment) => {
+      if (shipment.items && shipment.items.length > 0) {
+        shipment.items.forEach((item) => {
+          // Invoice (Provision) - sum of all item amounts
+          invoiceProvision += item.amount || 0;
+
+          // Invoice (Actual) - sum of all invoice amounts
+          invoiceActual += item.invoiceAmount || 0;
+
+          // Cost (Provision) - sum of cost * quantity
+          costProvision += (item.cost || 0) * (item.quantity || 0);
+
+          // Cost (Actual) - sum of purchase amount * quantity
+          costActual += item.purchaseAmount || 0;
+
+          // Estimated Profit - invoice provision - cost provision
+          estimatedProfit +=
+            (item.amount || 0) - (item.cost || 0) * (item.quantity || 0);
+
+          // Actual Profit - invoice actual - purchase amount
+          actualProfit +=
+            (item.invoiceAmount || 0) - (item.purchaseAmount || 0);
+        });
+      }
+    });
+  }
+
+  // Gross Profit % = (Actual Profit / Invoice Actual) * 100
+  const grossProfit =
+    invoiceActual > 0 ? (actualProfit / invoiceActual) * 100 : 0;
+
+  const result = {
+    job,
+    invoiceProvision,
+    invoiceActual,
+    costProvision,
+    costActual,
+    estimatedProfit,
+    actualProfit,
+    grossProfit: parseFloat(grossProfit.toFixed(3)),
+  };
+
+  res.status(200).json({
+    success: true,
+    message: 'Job fetched successfully',
+    data: result,
+  });
+});
+
 module.exports = {
   createJob,
   getJobs,
   getJobById,
   getJobByIdWithShipments,
   getJobsByCustomer,
+  getProductsByJobAndVendor,
+  getShipmentDetailsByJob,
 };

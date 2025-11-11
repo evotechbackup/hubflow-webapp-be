@@ -4,6 +4,8 @@ const {
   getJobById,
   getJobByIdWithShipments,
   getJobsByCustomer,
+  getProductsByJobAndVendor,
+  getShipmentDetailsByJob,
 } = require('../../controllers/operations/jobsController');
 
 const express = require('express');
@@ -14,8 +16,10 @@ router.post('/', createJob);
 router.get('/all/:orgId', getJobs);
 
 router.get('/:id', getJobById);
-router.get('/:id/shipments', getJobByIdWithShipments);
+router.get('/shipments/:id', getJobByIdWithShipments);
+router.get('/shipments-with-details/:jobId', getShipmentDetailsByJob);
 
 router.get('/customer/:customerId', getJobsByCustomer);
+router.get('/job/:jobId/vendor/:vendorId', getProductsByJobAndVendor);
 
 module.exports = router;

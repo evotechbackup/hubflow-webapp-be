@@ -22,6 +22,8 @@ const {
   ServerError,
 } = require('../../utils/errors');
 const { createActivityLog } = require('../../utils/logUtils');
+const Shipment = require('../../models/operations/Shipment');
+const Jobs = require('../../models/operations/Jobs');
 
 const approvePurchaseOrder = async (updatedPurchaseOrder, session) => {
   let totalItemsVat = 0;
@@ -230,6 +232,7 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
       subject,
       referenceDate,
       rfpId,
+      job,
     } = req.body;
 
     const paddedId = String(lastInsertedId.lastId).padStart(3, '0');
@@ -270,6 +273,7 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
       subject,
       referenceDate,
       rfpId,
+      job,
     });
     const savedQuotation = await newQuotation.save({ session });
 
@@ -279,6 +283,51 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
           poCreated: true,
         },
       });
+    }
+
+    if (job && vendor) {
+      const shipments = await Shipment.find({
+        jobId: job,
+        valid: true,
+      });
+
+      const bulkOps = [];
+
+      for (const shipment of shipments) {
+        const updatedItems = shipment.items.map((item) => {
+          if (
+            item.vendor.toString() === vendor.toString() &&
+            !item.purchaseRef
+          ) {
+            const poIndex = savedQuotation.items.findIndex(
+              (i) => i.productName.toString() === item.productName.toString()
+            );
+
+            if (poIndex !== -1) {
+              return {
+                ...item.toObject(),
+                purchaseId: savedQuotation.id,
+                purchaseRef: savedQuotation._id,
+                purchaseAmount: savedQuotation.items[poIndex].amount,
+              };
+            }
+          }
+          return item;
+        });
+
+        if (JSON.stringify(updatedItems) !== JSON.stringify(shipment.items)) {
+          bulkOps.push({
+            updateOne: {
+              filter: { _id: shipment._id },
+              update: { $set: { items: updatedItems } },
+            },
+          });
+        }
+      }
+
+      if (bulkOps.length > 0) {
+        await Shipment.bulkWrite(bulkOps);
+      }
     }
 
     if (savedQuotation.organization && savedQuotation.company) {
@@ -2168,6 +2217,26 @@ const checkExistId = asyncHandler(async (req, res) => {
   });
 });
 
+const getJobsByVendorId = asyncHandler(async (req, res) => {
+  const { vendorId } = req.params;
+  const shipmentIds = await Shipment.find({
+    'items.vendor': vendorId,
+    'items.purchaseRef': { $exists: false },
+    valid: true,
+  }).distinct('_id');
+
+  const jobs = await Jobs.find({
+    shipments: { $in: shipmentIds },
+    valid: true,
+  }).select('id');
+
+  res.status(200).json({
+    success: true,
+    message: 'Jobs fetched successfully',
+    data: jobs,
+  });
+});
+
 module.exports = {
   createPurchaseOrder,
   updatePurchaseOrder,
@@ -2191,4 +2260,5 @@ module.exports = {
   getPurchaseQuotations,
   getPurchaseOrdersPayment,
   checkExistId,
+  getJobsByVendorId,
 };

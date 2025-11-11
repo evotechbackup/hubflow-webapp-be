@@ -27,7 +27,7 @@ const ItemSchema = new Schema(
     invoiceCreated: { type: Boolean, default: false },
 
     purchaseId: String,
-    purchaseRef: { type: ObjectId, ref: 'Bill' },
+    purchaseRef: { type: ObjectId, ref: 'PurchaseOrder' },
     purchaseAmount: Number,
   },
   { _id: false }

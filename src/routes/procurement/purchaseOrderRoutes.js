@@ -21,10 +21,11 @@ const {
   getPurchaseQuotations,
   getPurchaseOrdersPayment,
   checkExistId,
+  getJobsByVendorId,
 } = require('../../controllers/procurement/purchaseOrderController');
 const router = require('express').Router();
 
-router.post('/:orderId', createPurchaseOrder);
+router.post('/', createPurchaseOrder);
 
 router.put('/:poId', updatePurchaseOrder);
 
@@ -70,5 +71,7 @@ router.get('/purchaseQuotations/:vendorId', getPurchaseQuotations);
 router.get('/purchaseorders/payment/:vendorId', getPurchaseOrdersPayment);
 
 router.get('/checkExistId/:orgid', checkExistId);
+
+router.get('/jobs/:vendorId', getJobsByVendorId);
 
 module.exports = router;

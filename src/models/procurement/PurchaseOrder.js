@@ -229,6 +229,10 @@ const PurchaseOrderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'RFP',
     },
+    job: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Job',
+    },
   },
   { timestamps: true }
 );
