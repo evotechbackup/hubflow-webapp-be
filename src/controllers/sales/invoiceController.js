@@ -2060,7 +2060,10 @@ const getFilteredInvoices = asyncHandler(async (req, res) => {
     page: parseInt(page, 10),
     limit: parseInt(limit, 10),
     sort: { [sort_by]: sort_order === 'asc' ? 1 : -1 },
-    populate: [{ path: 'customer', select: 'displayName currency' }],
+    populate: [
+      { path: 'customer', select: 'displayName currency' },
+      { path: 'job', select: 'id' },
+    ],
   };
 
   const result = await Invoice.paginate(query, options);
@@ -2147,7 +2150,10 @@ const getFilteredInvoicesByUser = asyncHandler(async (req, res) => {
     page: parseInt(page, 10),
     limit: parseInt(limit, 10),
     sort: { [sort_by]: sort_order === 'asc' ? 1 : -1 },
-    populate: [{ path: 'customer', select: 'displayName currency' }],
+    populate: [
+      { path: 'customer', select: 'displayName currency' },
+      { path: 'job', select: 'id' },
+    ],
   };
 
   const result = await Invoice.paginate(query, options);
