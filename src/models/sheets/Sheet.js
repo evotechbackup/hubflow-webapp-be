@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const SheetSchema = new mongoose.Schema(
   {
@@ -12,7 +12,7 @@ const SheetSchema = new mongoose.Schema(
     celldata: { type: Array, default: [] },
     config: { type: Object, default: {} },
 
-    color: { type: String, default: "" },
+    color: { type: String, default: '' },
     pivotTable: { type: Object, default: null },
     isPivotTable: { type: Boolean, default: false },
     frozen: { type: Object, default: {} },
@@ -25,11 +25,11 @@ const SheetSchema = new mongoose.Schema(
 
     file: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ExcelFile",
+      ref: 'ExcelFile',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Sheet", SheetSchema);
+module.exports = mongoose.model('Sheet', SheetSchema);

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const inventoryFleetSchema = new mongoose.Schema(
   {
@@ -6,21 +6,21 @@ const inventoryFleetSchema = new mongoose.Schema(
     productName: String,
     category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "FleetCategory",
+      ref: 'FleetCategory',
     },
     rentType: {
       type: String,
-      enum: ["own", "rental"],
-      default: "own",
+      enum: ['own', 'rental'],
+      default: 'own',
     },
     tags: [String],
     price: {
       type: String,
-      default: "",
+      default: '',
     },
     costPrice: {
       type: String,
-      default: "",
+      default: '',
     },
     inWarehouseQuantity: {
       type: Number,
@@ -37,23 +37,23 @@ const inventoryFleetSchema = new mongoose.Schema(
     description: String,
     salesAccount: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Account",
+      ref: 'Account',
     },
     purchaseAccount: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Account",
+      ref: 'Account',
     },
     inventoryAccount: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Account",
+      ref: 'Account',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     manufacturer: {
       type: String,
@@ -116,11 +116,11 @@ const inventoryFleetSchema = new mongoose.Schema(
       {
         name: {
           type: String,
-          default: "",
+          default: '',
         },
         filename: {
           type: String,
-          default: "",
+          default: '',
         },
         date: {
           type: Date,
@@ -140,7 +140,7 @@ const inventoryFleetSchema = new mongoose.Schema(
     ],
     rentalType: {
       type: String,
-      enum: ["vehicle", "equipment"],
+      enum: ['vehicle', 'equipment'],
     },
     odometerReading: {
       type: Number,
@@ -185,7 +185,7 @@ const inventoryFleetSchema = new mongoose.Schema(
     },
     openingTransaction: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Transaction",
+      ref: 'Transaction',
     },
     isDeleted: {
       type: Boolean,
@@ -195,6 +195,6 @@ const inventoryFleetSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const InventoryFleet = mongoose.model("InventoryFleet", inventoryFleetSchema);
+const InventoryFleet = mongoose.model('InventoryFleet', inventoryFleetSchema);
 
 module.exports = InventoryFleet;

@@ -1,20 +1,20 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const CRMProductsSchema = new mongoose.Schema(
   {
     product: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: 'Product',
       },
     ],
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
@@ -24,4 +24,4 @@ CRMProductsSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model("CRMProducts", CRMProductsSchema);
+module.exports = mongoose.model('CRMProducts', CRMProductsSchema);

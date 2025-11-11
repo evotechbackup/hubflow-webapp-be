@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const DocsFileSchema = new mongoose.Schema(
   {
@@ -6,32 +6,32 @@ const DocsFileSchema = new mongoose.Schema(
     fileSize: { type: String },
     folder: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "DocsFolder",
+      ref: 'DocsFolder',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
       required: true,
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
       required: true,
     },
 
     agents: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: false,
     },
-    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
     isArchived: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
@@ -40,4 +40,4 @@ const DocsFileSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("DocsFile", DocsFileSchema);
+module.exports = mongoose.model('DocsFile', DocsFileSchema);

@@ -20,6 +20,15 @@ const ItemSchema = new Schema(
       type: ObjectId,
       ref: 'Vendor',
     },
+
+    invoiceId: String,
+    invoiceRef: { type: ObjectId, ref: 'Invoice' },
+    invoiceAmount: Number,
+    invoiceCreated: { type: Boolean, default: false },
+
+    purchaseId: String,
+    purchaseRef: { type: ObjectId, ref: 'Bill' },
+    purchaseAmount: Number,
   },
   { _id: false }
 );

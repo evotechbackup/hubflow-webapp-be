@@ -91,8 +91,62 @@ const getJobById = asyncHandler(async (req, res) => {
   });
 });
 
+const getJobByIdWithShipments = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const job = await Job.findById(id).populate(
+    'shipments',
+    'items invoiceCreated'
+  );
+
+  if (!job) {
+    throw new NotFoundError('Job not found');
+  }
+
+  const shipments = job.shipments?.map((shipment) => {
+    return {
+      ...shipment,
+      invoiceCreated: shipment.invoiceCreated,
+    };
+  });
+
+  res.status(200).json({
+    success: true,
+    message: 'Job fetched successfully',
+    data: shipments,
+  });
+});
+
+const getJobsByCustomer = asyncHandler(async (req, res) => {
+  const { customerId } = req.params;
+
+  const jobs = await Job.find({
+    customer: customerId,
+    invoiceCreated: false,
+    valid: true,
+  })
+    .select('id shipments')
+    .populate('shipments', 'id invoiceCreated')
+    .lean();
+
+  const result = jobs?.map((job) => {
+    return {
+      ...job,
+      shipments: job.shipments?.filter((shipment) => !shipment.invoiceCreated),
+    };
+  });
+
+  res.status(200).json({
+    success: true,
+    message: 'Jobs fetched successfully',
+    data: result,
+  });
+});
+
 module.exports = {
   createJob,
   getJobs,
   getJobById,
+  getJobByIdWithShipments,
+  getJobsByCustomer,
 };

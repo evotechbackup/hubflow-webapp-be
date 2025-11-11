@@ -12,5 +12,4 @@ router.get('/:id', getOfferById);
 router.post('/create', createOffer);
 router.put('/update/:id/:agent', updateApproval);
 
-
 module.exports = router;

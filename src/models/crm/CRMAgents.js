@@ -1,20 +1,20 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const CRMAgentsSchema = new mongoose.Schema(
   {
     department: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeDepartment",
+        ref: 'EmployeeDepartment',
       },
     ],
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
@@ -24,4 +24,4 @@ CRMAgentsSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model("CRMAgents", CRMAgentsSchema);
+module.exports = mongoose.model('CRMAgents', CRMAgentsSchema);

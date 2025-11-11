@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const CRMPropertiesSchema = new mongoose.Schema(
   {
@@ -9,82 +9,82 @@ const CRMPropertiesSchema = new mongoose.Schema(
     },
     thumbnail: {
       type: String,
-      default: "",
+      default: '',
     },
     media: [
       {
         type: String,
-        default: "",
+        default: '',
       },
     ],
     units: {
       type: String,
-      default: "",
+      default: '',
     },
     startingPrice: {
       type: String,
-      default: "",
+      default: '',
     },
     descriptor: {
       type: String,
-      default: "",
+      default: '',
     },
     description: {
       type: String,
-      default: "",
+      default: '',
     },
     email: {
       type: String,
-      default: "",
+      default: '',
     },
     phone: {
       type: String,
-      default: "",
+      default: '',
     },
     address: {
       type: String,
-      default: "",
+      default: '',
     },
     lat: {
       type: String,
-      default: "",
+      default: '',
     },
     lng: {
       type: String,
-      default: "",
+      default: '',
     },
     projectType: {
       type: String,
-      enum: ["primary", "secondary", ""],
-      default: "",
+      enum: ['primary', 'secondary', ''],
+      default: '',
     },
     area: {
       type: String,
-      default: "",
+      default: '',
     },
     status: {
       type: String,
-      default: "",
+      default: '',
     },
     handOver: {
       type: String,
-      default: "",
+      default: '',
     },
     amenities: [
       {
         type: String,
-        default: "",
+        default: '',
       },
     ],
     documents: [
       {
         name: {
           type: String,
-          default: "",
+          default: '',
         },
         filename: {
           type: String,
-          default: "",
+          default: '',
         },
         date: {
           type: Date,
@@ -94,12 +94,12 @@ const CRMPropertiesSchema = new mongoose.Schema(
     ],
     developer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Developer",
+      ref: 'Developer',
     },
     agent: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     isDeleted: {
@@ -108,14 +108,14 @@ const CRMPropertiesSchema = new mongoose.Schema(
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("CRMProperties", CRMPropertiesSchema);
+module.exports = mongoose.model('CRMProperties', CRMPropertiesSchema);

@@ -203,128 +203,128 @@ AccountSchema.methods.generateEmbedding = async function (skipSave = false) {
   }
 };
 
-AccountSchema.pre('save', async function (next) {
-  if (!this.isModified() || this.isNew) {
-    // Proceed to post-save where we'll generate embedding
-    return next();
-  }
+// AccountSchema.pre('save', async function (next) {
+//   if (!this.isModified() || this.isNew) {
+//     // Proceed to post-save where we'll generate embedding
+//     return next();
+//   }
 
-  const isRelevantFieldModified = EMBEDDING_FIELDS.some((field) =>
-    this.isModified(field)
-  );
+//   const isRelevantFieldModified = EMBEDDING_FIELDS.some((field) =>
+//     this.isModified(field)
+//   );
 
-  if (isRelevantFieldModified) {
-    try {
-      // Pass skipSave=true since we're in a pre-save hook
-      await this.generateEmbedding(true);
-    } catch (err) {
-      return next(err);
-    }
-  }
+//   if (isRelevantFieldModified) {
+//     try {
+//       // Pass skipSave=true since we're in a pre-save hook
+//       await this.generateEmbedding(true);
+//     } catch (err) {
+//       return next(err);
+//     }
+//   }
 
-  return next();
-});
+//   return next();
+// });
 
-AccountSchema.post('updateOne', async function (res, next) {
-  try {
-    const filter = this.getFilter();
-    const update = this.getUpdate();
+// AccountSchema.post('updateOne', async function (res, next) {
+//   try {
+//     const filter = this.getFilter();
+//     const update = this.getUpdate();
 
-    // Check if any embedding-relevant fields were updated
-    const isRelevantFieldUpdated = EMBEDDING_FIELDS.some(
-      (field) =>
-        (update.$set && update.$set[field] !== undefined) ||
-        update[field] !== undefined
-    );
+//     // Check if any embedding-relevant fields were updated
+//     const isRelevantFieldUpdated = EMBEDDING_FIELDS.some(
+//       (field) =>
+//         (update.$set && update.$set[field] !== undefined) ||
+//         update[field] !== undefined
+//     );
 
-    if (isRelevantFieldUpdated) {
-      const doc = await this.model.findOne(filter);
-      if (doc) {
-        await doc.generateEmbedding();
-      }
-    }
-  } catch (err) {
-    console.error('Embedding generation failed after updateOne:', err);
-  }
-  next();
-});
+//     if (isRelevantFieldUpdated) {
+//       const doc = await this.model.findOne(filter);
+//       if (doc) {
+//         await doc.generateEmbedding();
+//       }
+//     }
+//   } catch (err) {
+//     console.error('Embedding generation failed after updateOne:', err);
+//   }
+//   next();
+// });
 
 // For findOneAndUpdate & findByIdAndUpdate
-AccountSchema.post('findOneAndUpdate', async function (doc, next) {
-  try {
-    if (doc) {
-      const update = this.getUpdate();
+// AccountSchema.post('findOneAndUpdate', async function (doc, next) {
+//   try {
+//     if (doc) {
+//       const update = this.getUpdate();
 
-      // Check if any embedding-relevant fields were updated
-      const isRelevantFieldUpdated = EMBEDDING_FIELDS.some(
-        (field) =>
-          (update.$set && update.$set[field] !== undefined) ||
-          update[field] !== undefined
-      );
+//       // Check if any embedding-relevant fields were updated
+//       const isRelevantFieldUpdated = EMBEDDING_FIELDS.some(
+//         (field) =>
+//           (update.$set && update.$set[field] !== undefined) ||
+//           update[field] !== undefined
+//       );
 
-      if (isRelevantFieldUpdated) {
-        await doc.generateEmbedding();
-      }
-    }
-  } catch (err) {
-    console.error('Embedding generation failed after findOneAndUpdate:', err);
-  }
-  next();
-});
+//       if (isRelevantFieldUpdated) {
+//         await doc.generateEmbedding();
+//       }
+//     }
+//   } catch (err) {
+//     console.error('Embedding generation failed after findOneAndUpdate:', err);
+//   }
+//   next();
+// });
 
-AccountSchema.post('bulkWrite', async function (res, next) {
-  try {
-    const operations = this.options?.operations || [];
-    const modifiedIds = [];
+// AccountSchema.post('bulkWrite', async function (res, next) {
+//   try {
+//     const operations = this.options?.operations || [];
+//     const modifiedIds = [];
 
-    for (const op of operations) {
-      if (op.updateOne || op.replaceOne) {
-        const update = op.updateOne?.update || op.replaceOne?.replacement;
+//     for (const op of operations) {
+//       if (op.updateOne || op.replaceOne) {
+//         const update = op.updateOne?.update || op.replaceOne?.replacement;
 
-        // Check if any embedding-relevant fields were updated
-        const isRelevantFieldUpdated = EMBEDDING_FIELDS.some(
-          (field) =>
-            (update.$set && update.$set[field] !== undefined) ||
-            update[field] !== undefined
-        );
+//         // Check if any embedding-relevant fields were updated
+//         const isRelevantFieldUpdated = EMBEDDING_FIELDS.some(
+//           (field) =>
+//             (update.$set && update.$set[field] !== undefined) ||
+//             update[field] !== undefined
+//         );
 
-        if (isRelevantFieldUpdated) {
-          const filter = op.updateOne?.filter || op.replaceOne?.filter;
-          const doc = await this.model.findOne(filter);
-          if (doc) modifiedIds.push(doc._id);
-        }
-      }
+//         if (isRelevantFieldUpdated) {
+//           const filter = op.updateOne?.filter || op.replaceOne?.filter;
+//           const doc = await this.model.findOne(filter);
+//           if (doc) modifiedIds.push(doc._id);
+//         }
+//       }
 
-      if (op.insertOne?.document?._id) {
-        modifiedIds.push(op.insertOne.document._id);
-      }
-    }
+//       if (op.insertOne?.document?._id) {
+//         modifiedIds.push(op.insertOne.document._id);
+//       }
+//     }
 
-    // Remove duplicates
-    const uniqueIds = [...new Set(modifiedIds)];
+//     // Remove duplicates
+//     const uniqueIds = [...new Set(modifiedIds)];
 
-    // Generate embeddings for all (with retry logic for version conflicts)
-    await Promise.all(
-      uniqueIds.map(async (id) => {
-        try {
-          const doc = await this.model.findById(id);
-          if (doc) await doc.generateEmbedding();
-        } catch (err) {
-          if (err.name === 'VersionError') {
-            console.warn(
-              `Version conflict for document ${id}, skipping embedding generation`
-            );
-          } else {
-            throw err;
-          }
-        }
-      })
-    );
-  } catch (err) {
-    console.error('Embedding generation failed after bulkWrite:', err);
-  }
+//     // Generate embeddings for all (with retry logic for version conflicts)
+//     await Promise.all(
+//       uniqueIds.map(async (id) => {
+//         try {
+//           const doc = await this.model.findById(id);
+//           if (doc) await doc.generateEmbedding();
+//         } catch (err) {
+//           if (err.name === 'VersionError') {
+//             console.warn(
+//               `Version conflict for document ${id}, skipping embedding generation`
+//             );
+//           } else {
+//             throw err;
+//           }
+//         }
+//       })
+//     );
+//   } catch (err) {
+//     console.error('Embedding generation failed after bulkWrite:', err);
+//   }
 
-  next();
-});
+//   next();
+// });
 
 module.exports = mongoose.model('Account', AccountSchema);

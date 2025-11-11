@@ -1,5 +1,5 @@
 const {
-   createCRMProduct,
+  createCRMProduct,
   getAllCRMProducts,
   addProductToCRMProducts,
 } = require('../../controllers/crm/crmProductController');

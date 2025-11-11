@@ -19,6 +19,7 @@ const JobSchema = new Schema(
     organization: { type: ObjectId, ref: 'Organization' },
     user: { type: ObjectId, ref: 'User' },
     valid: { type: Boolean, default: true },
+    invoiceCreated: { type: Boolean, default: false },
   },
   {
     timestamps: true,

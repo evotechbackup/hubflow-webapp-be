@@ -407,7 +407,7 @@ const getInterviews = asyncHandler(async (req, res) => {
 });
 
 const getInterviewsForAgent = asyncHandler(async (req, res) => {
-  const {agentid} = req.params;
+  const { agentid } = req.params;
   const interviews = await RecruitmentResponse.find({
     interviewers: agentid,
     status: 'interview',
@@ -493,42 +493,42 @@ const scheduleInterview = asyncHandler(async (req, res) => {
     );
 
   // Process interviewers in parallel
-//   await Promise.all(
-//     interviewers.map(async (interviewerId) => {
-//       const agent = await User.findById(interviewerId);
+  //   await Promise.all(
+  //     interviewers.map(async (interviewerId) => {
+  //       const agent = await User.findById(interviewerId);
 
-//       await Promise.all([
-//         subscribeToTopicByAgentId(
-//           interviewerId,
-//           'interviewscheduled',
-//           responseId
-//         ),
-//         TaskNotification.create({
-//           type: 'interviewscheduled',
-//           receiver: interviewerId,
-//           date: new Date(),
-//           extraData: {
-//             reminder: reminderSet,
-//             applicantName: updatedRecruitmentResponse.fullName,
-//             applicantEmail: updatedRecruitmentResponse.email,
-//             applicantId: updatedRecruitmentResponse._id,
-//           },
-//         }),
-//         sendInterviewScheduledEmailNotificationToAgent(
-//           {
-//             interviewDate,
-//             interviewDescription,
-//             applicantName: updatedRecruitmentResponse.fullName,
-//             applicantEmail: updatedRecruitmentResponse.email,
-//             interviewPriority,
-//           },
-//           agent.email
-//         ),
-//       ]);
-//     })
-//   );
+  //       await Promise.all([
+  //         subscribeToTopicByAgentId(
+  //           interviewerId,
+  //           'interviewscheduled',
+  //           responseId
+  //         ),
+  //         TaskNotification.create({
+  //           type: 'interviewscheduled',
+  //           receiver: interviewerId,
+  //           date: new Date(),
+  //           extraData: {
+  //             reminder: reminderSet,
+  //             applicantName: updatedRecruitmentResponse.fullName,
+  //             applicantEmail: updatedRecruitmentResponse.email,
+  //             applicantId: updatedRecruitmentResponse._id,
+  //           },
+  //         }),
+  //         sendInterviewScheduledEmailNotificationToAgent(
+  //           {
+  //             interviewDate,
+  //             interviewDescription,
+  //             applicantName: updatedRecruitmentResponse.fullName,
+  //             applicantEmail: updatedRecruitmentResponse.email,
+  //             interviewPriority,
+  //           },
+  //           agent.email
+  //         ),
+  //       ]);
+  //     })
+  //   );
 
-//   await sendInterviewScheduledEmailNotification(to, from, body, subject);
+  //   await sendInterviewScheduledEmailNotification(to, from, body, subject);
   res.status(200).json({
     success: true,
     message: 'Recruitment responses retrieved successfully',
@@ -571,12 +571,12 @@ const updateScheduleInterview = asyncHandler(async (req, res) => {
   }
 
   // Delete existing notifications
-//   await TaskNotification.deleteMany({
-//     type: 'interviewscheduled',
-//     extraData: {
-//       applicantId: id,
-//     },
-//   });
+  //   await TaskNotification.deleteMany({
+  //     type: 'interviewscheduled',
+  //     extraData: {
+  //       applicantId: id,
+  //     },
+  //   });
 
   // Update recruitment response
   const updatedRecruitmentResponse =
@@ -596,40 +596,40 @@ const updateScheduleInterview = asyncHandler(async (req, res) => {
     );
 
   // Process interviewers in parallel
-//   await Promise.all(
-//     interviewers.map(async (interviewerId) => {
-//       const agent = await User.findById(interviewerId);
+  //   await Promise.all(
+  //     interviewers.map(async (interviewerId) => {
+  //       const agent = await User.findById(interviewerId);
 
-//       await Promise.all([
-//         subscribeToTopicByAgentId(interviewerId, 'interviewscheduled', id),
-//         TaskNotification.create({
-//           type: 'interviewscheduled',
-//           receiver: interviewerId,
-//           date: new Date(),
-//           extraData: {
-//             reminder: reminderSet,
-//             applicantName: updatedRecruitmentResponse.fullName,
-//             applicantEmail: updatedRecruitmentResponse.email,
-//             applicantId: updatedRecruitmentResponse._id,
-//           },
-//         }),
-//         sendInterviewScheduledEmailNotificationToAgent(
-//           {
-//             interviewDate,
-//             interviewDescription,
-//             applicantName: updatedRecruitmentResponse.fullName,
-//             applicantEmail: updatedRecruitmentResponse.email,
-//             interviewPriority,
-//           },
-//           agent.email,
-//           false,
-//           true
-//         ),
-//       ]);
-//     })
-//   );
+  //       await Promise.all([
+  //         subscribeToTopicByAgentId(interviewerId, 'interviewscheduled', id),
+  //         TaskNotification.create({
+  //           type: 'interviewscheduled',
+  //           receiver: interviewerId,
+  //           date: new Date(),
+  //           extraData: {
+  //             reminder: reminderSet,
+  //             applicantName: updatedRecruitmentResponse.fullName,
+  //             applicantEmail: updatedRecruitmentResponse.email,
+  //             applicantId: updatedRecruitmentResponse._id,
+  //           },
+  //         }),
+  //         sendInterviewScheduledEmailNotificationToAgent(
+  //           {
+  //             interviewDate,
+  //             interviewDescription,
+  //             applicantName: updatedRecruitmentResponse.fullName,
+  //             applicantEmail: updatedRecruitmentResponse.email,
+  //             interviewPriority,
+  //           },
+  //           agent.email,
+  //           false,
+  //           true
+  //         ),
+  //       ]);
+  //     })
+  //   );
 
-//   await sendInterviewScheduledEmailNotification(to, from, body, subject);
+  //   await sendInterviewScheduledEmailNotification(to, from, body, subject);
   res.status(200).json({
     success: true,
     message: 'Recruitment responses retrieved successfully',
@@ -650,12 +650,12 @@ const deleteScheduleInterview = asyncHandler(async (req, res) => {
       interviewPriority: null,
     },
   });
-//   await TaskNotification.deleteMany({
-//     type: 'interviewscheduled',
-//     extraData: {
-//       applicantId: id,
-//     },
-//   });
+  //   await TaskNotification.deleteMany({
+  //     type: 'interviewscheduled',
+  //     extraData: {
+  //       applicantId: id,
+  //     },
+  //   });
 
   res.status(200).json({
     success: true,

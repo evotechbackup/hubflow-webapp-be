@@ -1,6 +1,6 @@
 // StorageSchema.js
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const storageSchema = new mongoose.Schema(
   {
@@ -10,7 +10,7 @@ const storageSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["file", "folder"],
+      enum: ['file', 'folder'],
       required: true,
     },
     path: {
@@ -36,20 +36,20 @@ const storageSchema = new mongoose.Schema(
     },
     agent: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Agent",
+      ref: 'Agent',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
 );
 
-const Storage = mongoose.model("Storage", storageSchema);
+const Storage = mongoose.model('Storage', storageSchema);
 
 module.exports = Storage;

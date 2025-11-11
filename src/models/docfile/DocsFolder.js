@@ -1,6 +1,6 @@
 // StorageSchema.js
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const DocsFolderSchema = new mongoose.Schema(
   {
@@ -23,25 +23,25 @@ const DocsFolderSchema = new mongoose.Schema(
     agents: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     agent: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
 );
 
-const DocsFolder = mongoose.model("DocsFolder", DocsFolderSchema);
+const DocsFolder = mongoose.model('DocsFolder', DocsFolderSchema);
 
 module.exports = DocsFolder;

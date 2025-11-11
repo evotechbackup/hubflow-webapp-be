@@ -59,9 +59,11 @@ const TaskSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    tags: [{
-      type: String,
-    }],
+    tags: [
+      {
+        type: String,
+      },
+    ],
     tagColor: {
       type: String,
     },

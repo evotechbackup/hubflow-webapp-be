@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const RecruitOfferSchema = new mongoose.Schema(
   {
     applicant: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "RecruitmentResponse",
+      ref: 'RecruitmentResponse',
       required: true,
     },
     form: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "RecruitmentForm",
+      ref: 'RecruitmentForm',
       required: true,
     },
     jobRole: {
@@ -34,52 +34,52 @@ const RecruitOfferSchema = new mongoose.Schema(
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Agent",
+      ref: 'Agent',
       required: true,
     },
     approval: {
       type: String,
       enum: [
-        "none",
-        "pending",
-        "reviewed",
-        "verified",
-        "acknowledged",
-        "correction",
-        "rejected",
-        "approved1",
-        "approved2",
+        'none',
+        'pending',
+        'reviewed',
+        'verified',
+        'acknowledged',
+        'correction',
+        'rejected',
+        'approved1',
+        'approved2',
       ],
-      default: "pending",
+      default: 'pending',
     },
     reviewedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Agent",
+      ref: 'Agent',
     },
     reviewedAt: {
       type: Date,
     },
     verifiedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Agent",
+      ref: 'Agent',
     },
     verifiedAt: {
       type: Date,
     },
     acknowledgedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Agent",
+      ref: 'Agent',
     },
     acknowledgedAt: {
       type: Date,
     },
     approvedBy1: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Agent",
+      ref: 'Agent',
     },
     approvedBy2: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Agent",
+      ref: 'Agent',
     },
     approvedAt1: {
       type: Date,
@@ -90,11 +90,11 @@ const RecruitOfferSchema = new mongoose.Schema(
 
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     isValid: {
       type: Boolean,
@@ -106,4 +106,4 @@ const RecruitOfferSchema = new mongoose.Schema(
 
 RecruitOfferSchema.index({ organization: 1, company: 1 });
 
-module.exports = mongoose.model("RecruitOffer", RecruitOfferSchema);
+module.exports = mongoose.model('RecruitOffer', RecruitOfferSchema);

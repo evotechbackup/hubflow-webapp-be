@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const CRMInterestsSchema = new mongoose.Schema(
   {
@@ -6,51 +6,51 @@ const CRMInterestsSchema = new mongoose.Schema(
       {
         name: {
           type: String,
-          default: "",
+          default: '',
         },
         type: {
           type: String,
-          enum: ["project", "product", "services", "items", "properties"],
+          enum: ['project', 'product', 'services', 'items', 'properties'],
         },
         project: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Projects",
+          ref: 'Projects',
         },
         product: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Products",
+          ref: 'Products',
         },
         services: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Services",
+          ref: 'Services',
         },
         items: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "CRMItems",
+          ref: 'CRMItems',
         },
         properties: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "CRMProperties",
+          ref: 'CRMProperties',
         },
       },
     ],
 
     lead: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Leads",
+      ref: 'Leads',
     },
     contact: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CRMContacts",
+      ref: 'CRMContacts',
     },
 
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
@@ -60,4 +60,4 @@ CRMInterestsSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model("CRMInterests", CRMInterestsSchema);
+module.exports = mongoose.model('CRMInterests', CRMInterestsSchema);

@@ -1,19 +1,19 @@
-const mongoose = require("mongoose");
-const mongoosePaginate = require("mongoose-paginate-v2");
+const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const CRMQuoteSchema = new mongoose.Schema(
   {
     customer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CRMCustomer",
+      ref: 'CRMCustomer',
     },
     contactPerson: {
       type: String,
-      default: "",
+      default: '',
     },
     employee: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Employee",
+      ref: 'Employee',
     },
     subject: {
       type: String,
@@ -28,11 +28,11 @@ const CRMQuoteSchema = new mongoose.Schema(
       {
         itemId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
+          ref: 'Product',
         },
         itemsId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Service",
+          ref: 'Service',
         },
         productName: {
           type: String,
@@ -102,20 +102,20 @@ const CRMQuoteSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "pending",
+      default: 'pending',
     },
 
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     agent: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     valid: {
       type: Boolean,
@@ -123,19 +123,19 @@ const CRMQuoteSchema = new mongoose.Schema(
     },
     approval: {
       type: String,
-      default: "pending",
+      default: 'pending',
     },
     acceptStatus: {
       type: String,
-      enum: ["pending", "accepted", "rejected", "submitted", "notsubmitted"],
-      default: "pending",
+      enum: ['pending', 'accepted', 'rejected', 'submitted', 'notsubmitted'],
+      default: 'pending',
     },
     docAttached: {
       type: String,
     },
     deal: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Deal",
+      ref: 'Deal',
     },
   },
   { timestamps: true }
@@ -143,4 +143,4 @@ const CRMQuoteSchema = new mongoose.Schema(
 
 CRMQuoteSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model("CRMQuote", CRMQuoteSchema);
+module.exports = mongoose.model('CRMQuote', CRMQuoteSchema);

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Builders for properties
 const DeveloperSchema = new mongoose.Schema(
@@ -11,35 +11,35 @@ const DeveloperSchema = new mongoose.Schema(
     },
     thumbnail: {
       type: String,
-      default: "",
+      default: '',
     },
     address: {
       type: String,
-      default: "",
+      default: '',
     },
     phoneNo: {
       type: String,
-      default: "",
+      default: '',
     },
     email: {
       type: String,
-      default: "",
+      default: '',
     },
     description: {
       type: String,
-      default: "",
+      default: '',
     },
     properties: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "CRMProperties",
+        ref: 'CRMProperties',
       },
     ],
     notes: [
       {
         text: {
           type: String,
-          default: "",
+          default: '',
         },
         date: {
           type: Date,
@@ -49,14 +49,14 @@ const DeveloperSchema = new mongoose.Schema(
     ],
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Developer", DeveloperSchema);
+module.exports = mongoose.model('Developer', DeveloperSchema);

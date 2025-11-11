@@ -48,6 +48,7 @@ const customerRoutes = require('./sales/customerRoutes');
 const enquiryRoutes = require('./sales/enquiryRoutes');
 const quoteRoutes = require('./sales/quoteRoutes');
 const bookingRoutes = require('./sales/bookingRoutes');
+const invoiceRoutes = require('./sales/invoiceRoutes');
 
 // Procurement
 const vendorRoutes = require('./procurement/vendorRoutes');
@@ -221,6 +222,7 @@ router.use('/sales/customer', authenticate, customerRoutes);
 router.use('/sales/enquiry', authenticate, enquiryRoutes);
 router.use('/sales/quote', authenticate, quoteRoutes);
 router.use('/sales/booking', authenticate, bookingRoutes);
+router.use('/sales/invoice', authenticate, invoiceRoutes);
 
 // Procurement
 router.use('/procurement/vendor', authenticate, vendorRoutes);

@@ -292,7 +292,7 @@ const getFiles = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Files fetched successfully',
-    data: {documents},
+    data: { documents },
   });
 });
 

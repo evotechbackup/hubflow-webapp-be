@@ -332,7 +332,7 @@ const getInventoryAdjustment = asyncHandler(async (req, res) => {
 
 const addReason = asyncHandler(async (req, res) => {
   const orgId = req.params.orgid;
-  console.log(orgId , req.body.reason);
+  console.log(orgId, req.body.reason);
   const organization = await Organization.findByIdAndUpdate(
     orgId,
     {
@@ -353,11 +353,11 @@ const addReason = asyncHandler(async (req, res) => {
 
 const getReasons = asyncHandler(async (req, res) => {
   const org = await Organization.findById(req.params.id).select('reasons');
-  
+
   if (!org) {
     throw new Error('Organization not found');
   }
-  
+
   res.status(200).json({
     success: true,
     message: 'Reasons retrieved successfully',

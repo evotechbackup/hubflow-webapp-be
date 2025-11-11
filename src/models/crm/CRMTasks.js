@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const CRMTasksSchema = new mongoose.Schema(
   {
@@ -14,7 +14,7 @@ const CRMTasksSchema = new mongoose.Schema(
       type: Date,
     },
     type: {
-      enum: ["task", "meeting"],
+      enum: ['task', 'meeting'],
       type: String,
     },
     color: {
@@ -25,7 +25,7 @@ const CRMTasksSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
     description: {
       type: String,
@@ -35,26 +35,26 @@ const CRMTasksSchema = new mongoose.Schema(
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     leads: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Leads",
+      ref: 'Leads',
     },
     contacts: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CRMContacts",
+      ref: 'CRMContacts',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     status: {
       type: String,
-      default: "pending",
+      default: 'pending',
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("CRMTasks", CRMTasksSchema);
+module.exports = mongoose.model('CRMTasks', CRMTasksSchema);

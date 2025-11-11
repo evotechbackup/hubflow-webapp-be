@@ -1,18 +1,18 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const DealSchema = new mongoose.Schema(
   {
     lead: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Leads",
+      ref: 'Leads',
     },
     contact: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CRMContacts",
+      ref: 'CRMContacts',
     },
     employee: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Employee",
+      ref: 'Employee',
     },
     id: {
       type: Number,
@@ -22,21 +22,21 @@ const DealSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "open",
+      default: 'open',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
   },
   { timestamps: true }
 );
 
-DealSchema.pre("save", async function (next) {
+DealSchema.pre('save', async function (next) {
   if (this.isNew) {
     const lastDeal = await this.constructor
       .findOne({
@@ -53,4 +53,4 @@ DealSchema.index({
   organization: 1,
 });
 
-module.exports = mongoose.model("Deal", DealSchema);
+module.exports = mongoose.model('Deal', DealSchema);

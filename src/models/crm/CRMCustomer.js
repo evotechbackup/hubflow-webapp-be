@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const AddressSchema = new mongoose.Schema({
   attention: {
     type: String,
@@ -71,7 +71,7 @@ const CRMCustomerSchema = new mongoose.Schema(
     },
     comments: [
       {
-        text: { type: String, default: " " },
+        text: { type: String, default: ' ' },
         date: { type: Date, default: Date.now },
       },
     ],
@@ -135,28 +135,28 @@ const CRMCustomerSchema = new mongoose.Schema(
 
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     agent: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
     leads: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Leads",
+      ref: 'Leads',
     },
     contacts: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "CRMContacts",
+      ref: 'CRMContacts',
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("CRMCustomer", CRMCustomerSchema);
+module.exports = mongoose.model('CRMCustomer', CRMCustomerSchema);

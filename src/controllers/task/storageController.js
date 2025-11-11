@@ -40,9 +40,11 @@ const createFolder = asyncHandler(async (req, res) => {
   try {
     if (req.body.type === 'file') {
       if (!req.file) {
-        return res.status(400).json({ success: false, error: 'No file uploaded' });
+        return res
+          .status(400)
+          .json({ success: false, error: 'No file uploaded' });
       }
-      
+
       const filename = new UUID() + req.body.name;
       const params = {
         Bucket: bucketname,
@@ -53,7 +55,7 @@ const createFolder = asyncHandler(async (req, res) => {
 
       const command = new PutObjectCommand(params);
       await s3.send(command);
-      
+
       const newStorage = new Storage({
         name: req.body.name,
         type: 'file',
@@ -74,8 +76,8 @@ const createFolder = asyncHandler(async (req, res) => {
         message: 'File uploaded successfully',
         data: true,
       });
-    } 
-    
+    }
+
     if (req.body.type === 'folder') {
       const newStorage = new Storage({
         name: req.body.name,
@@ -93,17 +95,18 @@ const createFolder = asyncHandler(async (req, res) => {
         data: true,
       });
     }
-    
-    return res.status(400).json({ 
-      success: false, 
-      error: 'Invalid element type. Must be either "file" or "folder"' 
+
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid element type. Must be either "file" or "folder"',
     });
   } catch (error) {
     console.error('Error in createFolder:', error);
-    return res.status(500).json({ 
-      success: false, 
+    return res.status(500).json({
+      success: false,
       error: 'An error occurred while processing your request',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      details:
+        process.env.NODE_ENV === 'development' ? error.message : undefined,
     });
   }
 });

@@ -21,5 +21,4 @@ router.post('/approve', approveAdjustment);
 router.put('/approve/:id', approveAdjustment);
 router.put('/add-reason/:orgid', addReason);
 
-
 module.exports = router;

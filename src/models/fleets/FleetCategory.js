@@ -10,15 +10,15 @@ const FleetCategorySchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["equipment", "vehicle"],
+      enum: ['equipment', 'vehicle'],
     },
     organization: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Organization",
+      ref: 'Organization',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
+      ref: 'Company',
     },
   },
   { timestamps: true }
@@ -26,4 +26,4 @@ const FleetCategorySchema = new mongoose.Schema(
 
 FleetCategorySchema.index({ organization: 1, company: 1 });
 
-module.exports = mongoose.model("FleetCategory", FleetCategorySchema);
+module.exports = mongoose.model('FleetCategory', FleetCategorySchema);
