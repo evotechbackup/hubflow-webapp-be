@@ -27,6 +27,58 @@ const createShipment = asyncHandler(async (req, res) => {
   });
 });
 
+const updateShipment = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const shipmentData = req.body;
+
+  const { items = [], ...rest } = shipmentData;
+
+  const shipment = await Shipment.findById(id);
+
+  if (!shipment) {
+    throw new NotFoundError('Shipment not found');
+  }
+
+  Object.assign(shipment, rest);
+
+  const invoicedItems = shipment.items.filter(
+    (item) => item?.invoiceRef || item?.purchaseRef || item?.purchaseInvoiceRef
+  );
+
+  shipment.items = [...invoicedItems, ...items];
+
+  await shipment.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Shipment updated successfully',
+    data: shipment,
+  });
+});
+
+const addActivity = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const activityData = req.body;
+
+  console.log(activityData);
+
+  const shipment = await Shipment.findByIdAndUpdate(
+    id,
+    { $push: { items: { $each: activityData } } },
+    { new: true }
+  );
+
+  if (!shipment) {
+    throw new NotFoundError('Shipment not found');
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Activity added successfully',
+    data: shipment,
+  });
+});
+
 const getShipmentById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -57,5 +109,7 @@ const getShipmentById = asyncHandler(async (req, res) => {
 
 module.exports = {
   createShipment,
+  updateShipment,
+  addActivity,
   getShipmentById,
 };

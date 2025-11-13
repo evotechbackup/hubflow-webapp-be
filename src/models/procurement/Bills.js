@@ -178,6 +178,10 @@ const BillsSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
     },
+    job: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Job',
+    },
   },
   { timestamps: true }
 );

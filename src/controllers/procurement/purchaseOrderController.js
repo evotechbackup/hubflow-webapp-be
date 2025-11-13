@@ -259,7 +259,7 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
       document,
       company,
       organization,
-      agent: req.id,
+      user: req.id,
       docAttached,
       contactPerson,
       dueDate,
@@ -946,6 +946,7 @@ const getPurchaseOrdersById = asyncHandler(async (req, res) => {
     .populate('items.itemId')
     .populate('items.itemsId')
     .populate('items.fleetId')
+    .populate('job', ['id'])
     .populate('company')
     .populate('user', ['signature', 'fullName', 'email', 'phone', 'role'])
     .populate('verifiedBy', ['signature', 'fullName', 'email', 'phone', 'role'])
@@ -2134,9 +2135,11 @@ const getPurchaseQuotations = asyncHandler(async (req, res) => {
     ],
   });
   if (!purchaseOrders || purchaseOrders.length === 0) {
-    throw new NotFoundError(
-      'No purchase orders found for the provided vendorId'
-    );
+    return res.status(200).json({
+      success: true,
+      message: 'No purchase orders found for the provided vendorId',
+      data: [],
+    });
   }
 
   const purchaseQuotationIds = purchaseOrders.map((order) => order._id);
@@ -2145,9 +2148,11 @@ const getPurchaseQuotations = asyncHandler(async (req, res) => {
   const populatedPurchaseOrders = await Promise.all(promises);
 
   if (populatedPurchaseOrders.length === 0) {
-    throw new NotFoundError(
-      'No purchase orders quotation found for the provided vendorId'
-    );
+    return res.status(200).json({
+      success: true,
+      message: 'No purchase orders found for the provided vendorId',
+      data: [],
+    });
   }
 
   // const getItemDetails = async (itemId) => {
@@ -2177,7 +2182,7 @@ const getPurchaseQuotations = asyncHandler(async (req, res) => {
     ),
   };
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     message: 'Purchase quotations fetched successfully',
     data: responseObj,

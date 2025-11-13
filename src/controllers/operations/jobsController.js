@@ -36,6 +36,23 @@ const createJob = asyncHandler(async (req, res) => {
   });
 });
 
+const updateJob = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const jobData = req.body;
+
+  const job = await Job.findByIdAndUpdate(id, jobData, { new: true });
+
+  if (!job) {
+    throw new NotFoundError('Job not found');
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Job updated successfully',
+    data: job,
+  });
+});
+
 const getJobs = asyncHandler(async (req, res) => {
   const { orgId } = req.params;
   const { page = 1, limit = 10, search = '' } = req.query;
@@ -94,10 +111,9 @@ const getJobById = asyncHandler(async (req, res) => {
 const getJobByIdWithShipments = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const job = await Job.findById(id).populate(
-    'shipments',
-    'items invoiceCreated'
-  );
+  const job = await Job.findById(id)
+    .populate('shipments', 'items invoiceCreated')
+    .lean();
 
   if (!job) {
     throw new NotFoundError('Job not found');
@@ -161,6 +177,27 @@ const getProductsByJobAndVendor = asyncHandler(async (req, res) => {
   });
 });
 
+const getProductsByJobAndVendorForPurchaseInvoice = asyncHandler(
+  async (req, res) => {
+    const { jobId, vendorId } = req.params;
+
+    const job = await Job.findById(jobId).populate('shipments', 'items').lean();
+
+    const products = job.shipments?.flatMap((shipment) =>
+      shipment.items?.filter(
+        (item) =>
+          !item.purchaseInvoiceRef && item?.vendor?.toString() === vendorId
+      )
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Products fetched successfully',
+      data: products,
+    });
+  }
+);
+
 const getShipmentDetailsByJob = asyncHandler(async (req, res) => {
   const { jobId } = req.params;
   const job = await Job.findById(jobId)
@@ -209,7 +246,7 @@ const getShipmentDetailsByJob = asyncHandler(async (req, res) => {
           costProvision += (item.cost || 0) * (item.quantity || 0);
 
           // Cost (Actual) - sum of purchase amount * quantity
-          costActual += item.purchaseAmount || 0;
+          costActual += item.purchaseAmount || item.purchaseInvoiceAmount || 0;
 
           // Estimated Profit - invoice provision - cost provision
           estimatedProfit +=
@@ -217,7 +254,8 @@ const getShipmentDetailsByJob = asyncHandler(async (req, res) => {
 
           // Actual Profit - invoice actual - purchase amount
           actualProfit +=
-            (item.invoiceAmount || 0) - (item.purchaseAmount || 0);
+            (item.invoiceAmount || 0) -
+            (item.purchaseAmount || item.purchaseInvoiceAmount || 0);
         });
       }
     });
@@ -247,10 +285,12 @@ const getShipmentDetailsByJob = asyncHandler(async (req, res) => {
 
 module.exports = {
   createJob,
+  updateJob,
   getJobs,
   getJobById,
   getJobByIdWithShipments,
   getJobsByCustomer,
   getProductsByJobAndVendor,
   getShipmentDetailsByJob,
+  getProductsByJobAndVendorForPurchaseInvoice,
 };

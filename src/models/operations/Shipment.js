@@ -29,6 +29,10 @@ const ItemSchema = new Schema(
     purchaseId: String,
     purchaseRef: { type: ObjectId, ref: 'PurchaseOrder' },
     purchaseAmount: Number,
+
+    purchaseInvoiceId: String,
+    purchaseInvoiceRef: { type: ObjectId, ref: 'Bill' },
+    purchaseInvoiceAmount: Number,
   },
   { _id: false }
 );

@@ -22,6 +22,8 @@ const Organization = require('../../models/auth/Organization');
 // const InventoryFleet = require('../../models/fleets/InventoryFleet');
 const { asyncHandler } = require('../../middleware');
 const { NotFoundError } = require('../../utils/errors');
+const Shipment = require('../../models/operations/Shipment');
+const Jobs = require('../../models/operations/Jobs');
 
 const approveBill = async (bill) => {
   // await bill.items.forEach(async (item) => {
@@ -212,6 +214,7 @@ const createPartialBill = asyncHandler(async (req, res) => {
     totalBalancePaid,
     costCenter,
     expenseAccount,
+    job,
   } = req.body;
 
   const partialId = currentId.split('-P-');
@@ -249,12 +252,58 @@ const createPartialBill = asyncHandler(async (req, res) => {
     totalBalancePaid,
     costCenter,
     expenseAccount,
+    job,
   });
   const savedBills = await newBills.save();
   await PurchaseReceived.updateMany(
     { _id: { $in: orderNo } },
     { $set: { status: 'billed' } }
   );
+
+  if (job && vendor) {
+    const shipments = await Shipment.find({
+      jobId: job,
+      valid: true,
+    });
+
+    const bulkOps = [];
+
+    for (const shipment of shipments) {
+      const updatedItems = shipment.items.map((item) => {
+        if (
+          item.vendor.toString() === vendor.toString() &&
+          !item.purchaseInvoiceRef
+        ) {
+          const prodIndex = items.findIndex(
+            (i) => i.productName.toString() === item.productName.toString()
+          );
+
+          if (prodIndex !== -1) {
+            return {
+              ...item.toObject(),
+              purchaseInvoiceId: savedBills.id,
+              purchaseInvoiceRef: savedBills._id,
+              purchaseInvoiceAmount: savedBills.items[prodIndex].amount,
+            };
+          }
+        }
+        return item;
+      });
+
+      if (JSON.stringify(updatedItems) !== JSON.stringify(shipment.items)) {
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: shipment._id },
+            update: { $set: { items: updatedItems } },
+          },
+        });
+      }
+    }
+
+    if (bulkOps.length > 0) {
+      await Shipment.bulkWrite(bulkOps);
+    }
+  }
 
   // const agentIds = await User.find({
   //   organization,
@@ -362,6 +411,7 @@ const createBill = asyncHandler(async (req, res) => {
     totalBalance,
     costCenter,
     expenseAccount,
+    job,
   } = req.body;
 
   const partialId = await Bills.find({
@@ -406,12 +456,58 @@ const createBill = asyncHandler(async (req, res) => {
     totalBalancePaid: total - totalBalance,
     costCenter,
     expenseAccount,
+    job,
   });
   const savedBills = await newBills.save();
   await PurchaseReceived.updateMany(
     { _id: { $in: orderNo } },
     { $set: { status: 'billed' } }
   );
+
+  if (job && vendor) {
+    const shipments = await Shipment.find({
+      jobId: job,
+      valid: true,
+    });
+
+    const bulkOps = [];
+
+    for (const shipment of shipments) {
+      const updatedItems = shipment.items.map((item) => {
+        if (
+          item.vendor.toString() === vendor.toString() &&
+          !item.purchaseInvoiceRef
+        ) {
+          const prodIndex = items.findIndex(
+            (i) => i.productName.toString() === item.productName.toString()
+          );
+
+          if (prodIndex !== -1) {
+            return {
+              ...item.toObject(),
+              purchaseInvoiceId: savedBills.id,
+              purchaseInvoiceRef: savedBills._id,
+              purchaseInvoiceAmount: savedBills.items[prodIndex].amount,
+            };
+          }
+        }
+        return item;
+      });
+
+      if (JSON.stringify(updatedItems) !== JSON.stringify(shipment.items)) {
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: shipment._id },
+            update: { $set: { items: updatedItems } },
+          },
+        });
+      }
+    }
+
+    if (bulkOps.length > 0) {
+      await Shipment.bulkWrite(bulkOps);
+    }
+  }
 
   // const agentIds = await Agent.find({
   //   organization,
@@ -940,7 +1036,6 @@ const getBillById = asyncHandler(async (req, res) => {
   const purchase = await Bills.findById(billId)
     .populate('vendor')
     .populate('company')
-    .populate('order', 'id')
     .populate('poNo', 'id')
     .populate('costCenter', 'code')
     .populate('organization')
@@ -1737,6 +1832,26 @@ const checkExistId = asyncHandler(async (req, res) => {
   return res.json({ success: true, message: 'ID is available' });
 });
 
+const getJobsByVendorId = asyncHandler(async (req, res) => {
+  const { vendorId } = req.params;
+  const shipmentIds = await Shipment.find({
+    'items.vendor': vendorId,
+    'items.purchaseInvoiceRef': { $exists: false },
+    valid: true,
+  }).distinct('_id');
+
+  const jobs = await Jobs.find({
+    shipments: { $in: shipmentIds },
+    valid: true,
+  }).select('id');
+
+  res.status(200).json({
+    success: true,
+    message: 'Jobs fetched successfully',
+    data: jobs,
+  });
+});
+
 module.exports = {
   createPartialBill,
   createBill,
@@ -1757,4 +1872,5 @@ module.exports = {
   getFilteredBillsByAgent,
   deleteBill,
   checkExistId,
+  getJobsByVendorId,
 };

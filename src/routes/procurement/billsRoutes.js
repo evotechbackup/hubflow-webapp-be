@@ -18,12 +18,13 @@ const {
   getFilteredBillsByAgent,
   deleteBill,
   checkExistId,
+  getJobsByVendorId,
 } = require('../../controllers/procurement/billsController');
 const router = require('express').Router();
 
 router.post('/partial', createPartialBill);
 
-router.post('/:orderId', createBill);
+router.post('/', createBill);
 
 router.put('/:billId', updateBill);
 
@@ -61,5 +62,7 @@ router.get('/agent/filter/:agentid', getFilteredBillsByAgent);
 router.delete('/delete/:id', deleteBill);
 
 router.get('/checkExistId/:orgid', checkExistId);
+
+router.get('/jobs/:vendorId', getJobsByVendorId);
 
 module.exports = router;
