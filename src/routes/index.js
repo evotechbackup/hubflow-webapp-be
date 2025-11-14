@@ -69,6 +69,7 @@ const jobsRoutes = require('./operations/jobsRoutes');
 const shipmentRoutes = require('./operations/shipmentRoutes');
 const shipmentDimensionRoutes = require('./operations/shipmentDimensionRoutes');
 const shipmentRoutingRoutes = require('./operations/shipmentRoutingRoutes');
+const shippingBillRoutes = require('./operations/shippingBillRoutes');
 
 // Accounts
 const accountRoutes = require('../routes/accounts/accountRoutes');
@@ -261,6 +262,7 @@ router.use('/operations/jobs', authenticate, jobsRoutes);
 router.use('/operations/shipment', authenticate, shipmentRoutes);
 router.use('/operations/dimensions', authenticate, shipmentDimensionRoutes);
 router.use('/operations/routing', authenticate, shipmentRoutingRoutes);
+router.use('/operations/shipping-bill', authenticate, shippingBillRoutes);
 
 // Accounts
 router.use('/accounts', authenticate, accountRoutes);
