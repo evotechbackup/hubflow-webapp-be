@@ -8,7 +8,6 @@ const RFP = require('../../models/procurement/RFP');
 const PurchaseReceived = require('../../models/procurement/PurchaseReceive');
 const mongoose = require('mongoose');
 const PaymentMade = require('../../models/procurement/PaymentMade');
-const Vendors = require('../../models/procurement/Vendor');
 const CostCenter = require('../../models/accounts/CostCenter');
 const {
   findNextApprovalLevelAndNotify,
@@ -24,11 +23,12 @@ const {
 const { createActivityLog } = require('../../utils/logUtils');
 const Shipment = require('../../models/operations/Shipment');
 const Jobs = require('../../models/operations/Jobs');
+const Vendor = require('../../models/procurement/Vendor');
 
 const approvePurchaseOrder = async (updatedPurchaseOrder, session) => {
   let totalItemsVat = 0;
 
-  const vendor = await Vendors.findById(updatedPurchaseOrder.vendor).select(
+  const vendor = await Vendor.findById(updatedPurchaseOrder.vendor).select(
     'displayName'
   );
 
@@ -1590,7 +1590,7 @@ const getFilteredPurchaseOrders = asyncHandler(async (req, res) => {
     ];
   }
   if (filter_vendorName) {
-    const vendorIds = await Vendors.find({
+    const vendorIds = await Vendor.find({
       displayName: { $regex: filter_vendorName, $options: 'i' },
     }).distinct('_id');
 
@@ -1686,7 +1686,7 @@ const getFilteredPurchaseOrdersWithoutPagination = asyncHandler(
       ];
     }
     if (filter_vendorName) {
-      const vendorIds = await Vendors.find({
+      const vendorIds = await Vendor.find({
         displayName: { $regex: filter_vendorName, $options: 'i' },
       }).distinct('_id');
 
@@ -1776,7 +1776,7 @@ const getFilteredPurchaseOrdersByUser = asyncHandler(async (req, res) => {
     ];
   }
   if (filter_vendorName) {
-    const vendorIds = await Vendors.find({
+    const vendorIds = await Vendor.find({
       displayName: { $regex: filter_vendorName, $options: 'i' },
     }).distinct('_id');
 
@@ -2242,6 +2242,34 @@ const getJobsByVendorId = asyncHandler(async (req, res) => {
   });
 });
 
+const getVendorsByJobId = asyncHandler(async (req, res) => {
+  const { jobId } = req.params;
+
+  const shipments = await Shipment.find({
+    jobId,
+  }).select('items');
+
+  // etract unique vendors
+  const vendors = shipments.reduce((acc, shipment) => {
+    shipment.items.forEach((item) => {
+      if (!acc.includes(item.vendor)) {
+        acc.push(item.vendor);
+      }
+    });
+    return acc;
+  }, []);
+
+  const vendorsDetails = await Vendor.find({
+    _id: { $in: vendors },
+  }).select('displayName currency contactPersons');
+
+  res.status(200).json({
+    success: true,
+    message: 'Vendors fetched successfully',
+    data: vendorsDetails,
+  });
+});
+
 module.exports = {
   createPurchaseOrder,
   updatePurchaseOrder,
@@ -2266,4 +2294,5 @@ module.exports = {
   getPurchaseOrdersPayment,
   checkExistId,
   getJobsByVendorId,
+  getVendorsByJobId,
 };

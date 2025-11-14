@@ -22,6 +22,7 @@ const {
   getPurchaseOrdersPayment,
   checkExistId,
   getJobsByVendorId,
+  getVendorsByJobId,
 } = require('../../controllers/procurement/purchaseOrderController');
 const router = require('express').Router();
 
@@ -73,5 +74,7 @@ router.get('/purchaseorders/payment/:vendorId', getPurchaseOrdersPayment);
 router.get('/checkExistId/:orgid', checkExistId);
 
 router.get('/jobs/:vendorId', getJobsByVendorId);
+
+router.get('/vendors/:jobId', getVendorsByJobId);
 
 module.exports = router;
