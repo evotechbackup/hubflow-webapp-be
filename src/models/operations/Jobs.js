@@ -14,6 +14,12 @@ const JobSchema = new Schema(
 
     id: { type: String },
     date: { type: Date, default: Date.now },
+    status: {
+      type: String,
+      enum: ['open', 'closed', 'pending', 'incomplete'],
+      default: 'open',
+    },
+    closingDate: { type: Date },
 
     company: { type: ObjectId, ref: 'Company' },
     organization: { type: ObjectId, ref: 'Organization' },

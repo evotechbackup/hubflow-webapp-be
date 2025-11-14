@@ -67,6 +67,8 @@ const serviceCategoryRoutes = require('./operations/serviceCategoryRoutes');
 const serviceRoutes = require('./operations/serviceRoute');
 const jobsRoutes = require('./operations/jobsRoutes');
 const shipmentRoutes = require('./operations/shipmentRoutes');
+const shipmentDimensionRoutes = require('./operations/shipmentDimensionRoutes');
+const shipmentRoutingRoutes = require('./operations/shipmentRoutingRoutes');
 
 // Accounts
 const accountRoutes = require('../routes/accounts/accountRoutes');
@@ -257,6 +259,8 @@ router.use('/operations/service-category', authenticate, serviceCategoryRoutes);
 router.use('/operations/service', authenticate, serviceRoutes);
 router.use('/operations/jobs', authenticate, jobsRoutes);
 router.use('/operations/shipment', authenticate, shipmentRoutes);
+router.use('/operations/dimensions', authenticate, shipmentDimensionRoutes);
+router.use('/operations/routing', authenticate, shipmentRoutingRoutes);
 
 // Accounts
 router.use('/accounts', authenticate, accountRoutes);

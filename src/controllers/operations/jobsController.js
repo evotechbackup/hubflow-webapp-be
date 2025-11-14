@@ -3,6 +3,7 @@ const Shipment = require('../../models/operations/Shipment');
 const { asyncHandler } = require('../../middleware/errorHandler');
 const { NotFoundError } = require('../../utils/errors');
 const Booking = require('../../models/sales/Booking');
+const { default: mongoose } = require('mongoose');
 
 const createJob = asyncHandler(async (req, res) => {
   const jobData = req.body;
@@ -94,7 +95,10 @@ const getJobById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const job = await Job.findById(id)
-    .populate('customer', 'displayName contactPersons')
+    .populate(
+      'customer',
+      'displayName contactPersons emailAddress billingAddress'
+    )
     .populate('shipments', 'id');
 
   if (!job) {
@@ -283,6 +287,71 @@ const getShipmentDetailsByJob = asyncHandler(async (req, res) => {
   });
 });
 
+const getUniqueVendorsByJob = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const result = await Shipment.aggregate([
+    {
+      $match: {
+        jobId: new mongoose.Types.ObjectId(id),
+      },
+    },
+    {
+      $unwind: '$items',
+    },
+    {
+      $group: {
+        _id: '$items.vendor',
+      },
+    },
+    {
+      $lookup: {
+        from: 'vendors',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'vendorDetails',
+      },
+    },
+    {
+      $unwind: '$vendorDetails',
+    },
+    {
+      $project: {
+        name: '$vendorDetails.displayName',
+        email: '$vendorDetails.emailAddress',
+        country: '$vendorDetails.billingAddress.country',
+      },
+    },
+  ]);
+
+  res.status(201).json({
+    success: true,
+    message: 'Unique vendors fetched successfully',
+    data: result,
+  });
+});
+
+const changeJobStatus = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { status, closingDate } = req.body;
+
+  const job = await Job.findByIdAndUpdate(
+    id,
+    { $set: { status, closingDate } },
+    { new: true }
+  );
+
+  if (!job) {
+    throw new NotFoundError('Job not found');
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Job status updated successfully',
+    data: job,
+  });
+});
+
 module.exports = {
   createJob,
   updateJob,
@@ -293,4 +362,6 @@ module.exports = {
   getProductsByJobAndVendor,
   getShipmentDetailsByJob,
   getProductsByJobAndVendorForPurchaseInvoice,
+  getUniqueVendorsByJob,
+  changeJobStatus,
 };

@@ -8,6 +8,8 @@ const {
   getProductsByJobAndVendorForPurchaseInvoice,
   getShipmentDetailsByJob,
   updateJob,
+  getUniqueVendorsByJob,
+  changeJobStatus,
 } = require('../../controllers/operations/jobsController');
 
 const express = require('express');
@@ -16,6 +18,7 @@ const router = express.Router();
 router.post('/', createJob);
 
 router.put('/:id', updateJob);
+router.put('/status/:id', changeJobStatus);
 
 router.get('/all/:orgId', getJobs);
 
@@ -29,5 +32,6 @@ router.get(
   '/bills/job/:jobId/vendor/:vendorId',
   getProductsByJobAndVendorForPurchaseInvoice
 );
+router.get('/unique-vendors/:id', getUniqueVendorsByJob);
 
 module.exports = router;

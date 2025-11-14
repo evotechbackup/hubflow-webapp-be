@@ -60,8 +60,6 @@ const addActivity = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const activityData = req.body;
 
-  console.log(activityData);
-
   const shipment = await Shipment.findByIdAndUpdate(
     id,
     { $push: { items: { $each: activityData } } },
@@ -86,7 +84,7 @@ const getShipmentById = asyncHandler(async (req, res) => {
     .populate('organization', ['organizationLogo'])
     .populate('booking', ['id'])
     .populate('user', ['fullName'])
-    .populate('items.vendor', ['displayName'])
+    .populate('items.vendor', ['displayName', 'emailAddress', 'billingAddress'])
     .populate({
       path: 'jobId',
       select: 'customer shipmentType id',
