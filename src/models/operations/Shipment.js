@@ -98,6 +98,13 @@ const ShipmentSchema = new Schema(
     containerRemarks: String,
     hsDescription: String,
 
+    // Exchange rate
+    fromCurrency: String,
+    fromCurrencyCode: String,
+    toCurrency: String,
+    toCurrencyCode: String,
+    exchangeRate: Number,
+
     // costing
     booking: {
       type: ObjectId,

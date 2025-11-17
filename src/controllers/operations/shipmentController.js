@@ -105,9 +105,45 @@ const getShipmentById = asyncHandler(async (req, res) => {
   });
 });
 
+const updateExchangeRate = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const {
+    fromCurrency,
+    fromCurrencyCode,
+    toCurrency,
+    toCurrencyCode,
+    exchangeRate,
+  } = req.body;
+
+  const shipment = await Shipment.findByIdAndUpdate(
+    id,
+    {
+      $set: {
+        fromCurrency,
+        fromCurrencyCode,
+        toCurrency,
+        toCurrencyCode,
+        exchangeRate,
+      },
+    },
+    { new: true }
+  );
+
+  if (!shipment) {
+    throw new NotFoundError('Shipment not found');
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Exchange rate updated successfully',
+    data: shipment,
+  });
+});
+
 module.exports = {
   createShipment,
   updateShipment,
   addActivity,
   getShipmentById,
+  updateExchangeRate,
 };
