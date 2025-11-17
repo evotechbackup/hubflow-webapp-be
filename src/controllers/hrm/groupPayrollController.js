@@ -1011,6 +1011,7 @@ const getGroupPayrollsByMonth = asyncHandler(async (req, res) => {
         id: 1,
         title: 1,
         approval: 1,
+        voucherCreated: 1,
       },
     },
     {
@@ -1025,6 +1026,7 @@ const getGroupPayrollsByMonth = asyncHandler(async (req, res) => {
         approval: { $first: '$approval' },
         id: { $first: '$id' },
         title: { $first: '$title' },
+        voucherCreated: { $first: '$voucherCreated' },
       },
     },
     {

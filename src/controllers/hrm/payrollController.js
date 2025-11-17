@@ -1050,7 +1050,7 @@ const getpayrollbymonth = asyncHandler(async (req, res) => {
     },
   })
     .select(
-      'id month employeeName salary totalPay type startDate endDate notes approval organization'
+      'id month employeeName salary totalPay type startDate endDate voucherCreated notes approval organization'
     )
     .sort({ startDate: -1 });
 
