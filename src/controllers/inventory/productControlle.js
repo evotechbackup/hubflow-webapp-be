@@ -104,7 +104,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
     organization: orgId,
   })
     .populate('category')
-    .select('productName price inWarehouseQuantity mrq category');
+    .select('productName price inWarehouseQuantity mrq category unit');
   res.status(200).json({
     success: true,
     message: 'Product retrived successfully',

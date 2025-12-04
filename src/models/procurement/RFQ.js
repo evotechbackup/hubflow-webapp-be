@@ -44,16 +44,6 @@ const RFQSchema = new mongoose.Schema(
         },
       },
     ],
-    otherItems: [
-      {
-        productName: {
-          type: String,
-        },
-        quantity: {
-          type: Number,
-        },
-      },
-    ],
     id: {
       type: String,
       required: true,

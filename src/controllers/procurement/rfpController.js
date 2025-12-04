@@ -541,7 +541,7 @@ const getRFPListForRFQ = asyncHandler(async (req, res) => {
     organization: orgid,
     rfqCreated: false,
     poCreated: false,
-  }).select('id items otherItems');
+  }).select('id items');
 
   res.status(200).json({
     success: true,

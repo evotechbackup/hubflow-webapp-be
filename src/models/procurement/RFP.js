@@ -46,29 +46,6 @@ const RFPSchema = new mongoose.Schema(
         },
       },
     ],
-    otherItems: [
-      {
-        productName: {
-          type: String,
-        },
-        quantity: {
-          type: Number,
-        },
-        budget: {
-          type: Number,
-        },
-        unit: {
-          type: String,
-          default: null,
-        },
-        description: {
-          type: String,
-        },
-        remarks: {
-          type: String,
-        },
-      },
-    ],
     id: {
       type: String,
       required: true,
