@@ -41,62 +41,33 @@ const ShipmentSchema = new Schema(
   {
     jobId: { type: ObjectId, ref: 'Job' },
 
-    // Shipment info
-    carrier: String,
-    mblNo: String,
-    mblDate: Date,
-    vesselName: String,
-    voyageNo: String,
-    deliveryAgent: String,
-    placeOfReceipt: String,
-    por: String,
-    pol: String,
-    pod: String,
-    pof: String,
-    placeOfDelivery: String,
-    etd: Date,
-    eta: Date,
-    crossTrade: {
-      type: String,
-      enum: ['yes', 'no'],
-      default: 'no',
-    },
-    incoterm: String,
-    freight: String,
-    serviceType: String,
-    payableAt: String,
-    dispatchAt: String,
-    isHazardous: {
-      type: String,
-      enum: ['yes', 'no'],
-      default: 'no',
-    },
-    remarks: String,
-    salesperson: String,
-    shipper: String,
-    consignee: String,
-    internalRemarks: String,
-
     // container/consignment
-    containerType: String,
-    containerNo: String,
-    numberOfPackages: Number,
-    numberOfPallet: Number,
-    actualSeal: String,
-    grossWeight: Number,
-    grossWeightUnit: String,
-    netWeight: Number,
-    netWeightUnit: String,
-    volumeWeight: Number,
-    volumeWeightUnit: String,
-    totalWeight: Number,
-    totalWeightUnit: String,
-    volume: Number,
-    volumeUnit: String,
-    chargeableUnit: String,
-    hsCode: String,
-    containerRemarks: String,
-    hsDescription: String,
+    containers: [
+      {
+        containerType: String,
+        containerNo: String,
+        numberOfPackages: Number,
+        package: String,
+        numberOfPallet: Number,
+        actualSeal: String,
+        grossWeight: Number,
+        grossWeightUnit: String,
+        netWeight: Number,
+        netWeightUnit: String,
+        volumeWeight: Number,
+        volumeWeightUnit: String,
+        totalWeight: Number,
+        totalWeightUnit: String,
+        volume: Number,
+        volumeUnit: String,
+        chargeableUnit: String,
+        hsCode: String,
+        containerRemarks: String,
+        hsDescription: String,
+        marksNumbers: String,
+        goodsDescription: String,
+      },
+    ],
 
     // Exchange rate
     fromCurrency: String,
@@ -136,7 +107,7 @@ ShipmentSchema.plugin(mongoosePaginate);
 // auto assign id
 ShipmentSchema.pre('save', async function (next) {
   if (!this.id) {
-    // SHPT-YYYY-MM-DD-totalcountoftodayshipments
+    // BL-YYYY-MM-DD-totalcountoftodayshipments
     const today = new Date();
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -148,7 +119,7 @@ ShipmentSchema.pre('save', async function (next) {
         $lt: new Date(year, month - 1, parseInt(day) + 1),
       },
     });
-    this.id = `SHPT-${year}-${month}-${day}-${count + 1}`;
+    this.id = `BL-${year}-${month}-${day}-${count + 1}`;
   }
   next();
 });

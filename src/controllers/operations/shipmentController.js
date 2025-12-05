@@ -87,7 +87,8 @@ const getShipmentById = asyncHandler(async (req, res) => {
     .populate('items.vendor', ['displayName', 'emailAddress', 'billingAddress'])
     .populate({
       path: 'jobId',
-      select: 'customer shipmentType id',
+      select:
+        'customer shipmentType id mblNo shipper consignee salesperson pol pod pof netWeightUnit netWeight volumeUnit volume numberOfPackages vesselName voyageNo containerType por shipments freight',
       populate: {
         path: 'customer',
         select: 'displayName billingAddress',

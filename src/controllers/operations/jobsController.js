@@ -9,6 +9,7 @@ const createJob = asyncHandler(async (req, res) => {
   const jobData = req.body;
 
   const job = new Job({
+    ...jobData,
     shipmentType: jobData.shipmentType,
     customer: jobData.customer,
     contactPerson: jobData.contactPerson,
@@ -25,6 +26,8 @@ const createJob = asyncHandler(async (req, res) => {
   });
 
   await shipment.save();
+
+  job.shipments = [shipment._id];
 
   await job.save();
 

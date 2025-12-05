@@ -12,6 +12,42 @@ const JobSchema = new Schema(
 
     shipments: [{ type: ObjectId, ref: 'Shipment' }],
 
+    // Shipment info
+    carrier: String,
+    mblNo: String,
+    mblDate: Date,
+    vesselName: String,
+    voyageNo: String,
+    deliveryAgent: String,
+    placeOfReceipt: String,
+    por: String,
+    pol: String,
+    pod: String,
+    pof: String,
+    placeOfDelivery: String,
+    etd: Date,
+    eta: Date,
+    crossTrade: {
+      type: String,
+      enum: ['yes', 'no'],
+      default: 'no',
+    },
+    incoterm: String,
+    freight: String,
+    serviceType: String,
+    payableAt: String,
+    dispatchAt: String,
+    isHazardous: {
+      type: String,
+      enum: ['yes', 'no'],
+      default: 'no',
+    },
+    remarks: String,
+    salesperson: String,
+    shipper: String,
+    consignee: String,
+    internalRemarks: String,
+
     id: { type: String },
     date: { type: Date, default: Date.now },
     status: {
