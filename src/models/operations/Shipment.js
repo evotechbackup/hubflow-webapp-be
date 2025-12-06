@@ -69,6 +69,10 @@ const ShipmentSchema = new Schema(
       },
     ],
 
+    // Remarks
+    remarks: String,
+    terms: String,
+
     // Exchange rate
     fromCurrency: String,
     fromCurrencyCode: String,
