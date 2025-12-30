@@ -24,7 +24,7 @@ const CRMContactsSchema = new mongoose.Schema(
     phone: {
       type: String,
     },
-    customerType: {
+    categoryType: {
       type: String,
       enum: ['individual', 'business'],
     },
@@ -33,6 +33,9 @@ const CRMContactsSchema = new mongoose.Schema(
       default: false,
     },
     industry: {
+      type: String,
+    },
+    subindustry: {
       type: String,
     },
     region: {
@@ -78,13 +81,48 @@ const CRMContactsSchema = new mongoose.Schema(
 
     comments: [
       {
-        comment: {
+        permanent: {
+          comment: {
+            type: String,
+            default: '',
+          },
+          date: {
+            type: Date,
+            default: Date.now,
+          },
+          createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+          },
+        },
+        current: {
+          comment: {
+            type: String,
+            default: '',
+          },
+          isEdited: {
+            type: Boolean,
+            default: false,
+          },
+          editedAt: {
+            type: Date,
+          },
+          createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+          },
+        },
+      },
+    ],
+    socialMedia: [
+      {
+        name: {
           type: String,
           default: '',
         },
-        date: {
-          type: Date,
-          default: Date.now,
+        link: {
+          type: String,
+          default: '',
         },
       },
     ],

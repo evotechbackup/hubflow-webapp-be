@@ -72,9 +72,60 @@ const deleteAccount = asyncHandler(async (req, res) => {
 
 const getAccountById = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const { category_type, agentValue, status, country, search_query } =
+    req.query;
+
+  const matchQuery = {};
+  if (
+    category_type !== 'undefined' &&
+    category_type !== null &&
+    category_type !== ''
+  ) {
+    matchQuery.customerType = category_type;
+  }
+
+  if (status !== 'undefined' && status !== null && status !== '') {
+    matchQuery.pipelineStatus = status;
+  }
+
+  if (country !== 'undefined' && country !== null && country !== '') {
+    matchQuery.region = country;
+  }
+
+  if (agentValue !== 'undefined' && agentValue !== null && agentValue !== '') {
+    matchQuery.assignedTo = agentValue;
+  }
+
+  if (
+    search_query !== 'undefined' &&
+    search_query !== null &&
+    search_query !== ''
+  ) {
+    matchQuery.$or = [
+      { fullName: { $regex: search_query, $options: 'i' } },
+      { phone: { $regex: search_query, $options: 'i' } },
+      { companyName: { $regex: search_query, $options: 'i' } },
+      // { email: { $regex: search_query, $options: "i" } },
+    ];
+  }
+
   const crmAccount = await CRMAccounts.findById(id)
-    .populate('leads')
-    .populate('contacts');
+    .populate({
+      path: 'leads',
+      match: Object.keys(matchQuery).length ? matchQuery : {},
+      populate: {
+        path: 'assignedTo',
+        select: 'firstName lastName',
+      },
+    })
+    .populate({
+      path: 'contacts',
+      match: Object.keys(matchQuery).length ? matchQuery : {},
+      populate: {
+        path: 'assignedTo',
+        select: 'firstName lastName',
+      },
+    });
   res.status(200).json({
     success: true,
     message: 'crm retrived successfully ',

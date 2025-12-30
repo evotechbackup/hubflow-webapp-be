@@ -1,9 +1,12 @@
 const { asyncHandler } = require('../../middleware/errorHandler');
 const { NotFoundError } = require('../../utils/errors');
 const Lead = require('../../models/crm/Leads');
+const Deals = require('../../models/crm/Deals');
 const CRMContacts = require('../../models/crm/CRMContacts');
+const CRMTasks = require('../../models/crm/CRMTasks');
 const Employee = require('../../models/hrm/Employee');
 const CRMAccounts = require('../../models/crm/CRMAccounts');
+const mongoose = require('mongoose');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 // const { createActivityLog } = require("../../utilities/logUtils");
@@ -30,8 +33,9 @@ const createLead = asyncHandler(async (req, res) => {
     email,
     companyName,
     phone,
-    customerType,
+    categoryType,
     industry,
+    subindustry,
     region,
     source,
     description,
@@ -41,6 +45,7 @@ const createLead = asyncHandler(async (req, res) => {
     agentEmail,
     organization,
     company,
+    socialMedia,
   } = req.body;
 
   const employee = await Employee.findOne({ email: agentEmail });
@@ -53,8 +58,9 @@ const createLead = asyncHandler(async (req, res) => {
     email,
     companyName,
     phone,
-    customerType,
+    categoryType,
     industry,
+    subindustry,
     region,
     source,
     description,
@@ -64,6 +70,7 @@ const createLead = asyncHandler(async (req, res) => {
     logs: [{ status: 'new', agent: req?._id, date: new Date() }],
     organization,
     company,
+    socialMedia,
     assignedTo: employee ? [employee?._id] : [],
   });
   const savedLeads = await lead.save();
@@ -82,13 +89,133 @@ const createLead = asyncHandler(async (req, res) => {
   });
 });
 
+const bulkEdit = asyncHandler(async (req, res) => {
+  const {
+    leadListId,
+    categoryType,
+    account,
+    industry,
+    subindustry,
+    region,
+    source,
+  } = req.body;
+
+  if (!leadListId || !Array.isArray(leadListId) || leadListId.length === 0) {
+    throw new NotFoundError('Please provide lead IDs to update');
+  }
+  const invalidIds = leadListId.filter(
+    (id) => !mongoose.Types.ObjectId.isValid(id)
+  );
+  if (invalidIds.length > 0) {
+    throw new NotFoundError('Invalid lead ID(s) provided');
+  }
+  const updateData = {};
+  if (categoryType) updateData.categoryType = categoryType;
+  if (account !== undefined) updateData.account = account;
+  if (industry) updateData.industry = industry;
+  if (subindustry) updateData.subindustry = subindustry;
+  if (region) updateData.region = region;
+  if (source) updateData.source = source;
+  const result = await Lead.updateMany(
+    { _id: { $in: leadListId } },
+    { $set: updateData }
+  );
+  res.status(200).json({
+    success: true,
+    message: 'Lead retrieved successfully',
+    data: {
+      modifiedCount: result.modifiedCount,
+      matchedCount: result.matchedCount,
+    },
+  });
+});
+
+const bulkassign = asyncHandler(async (req, res) => {
+  const { leadListId, assignedTo } = req.body;
+
+  if (!leadListId || !Array.isArray(leadListId) || leadListId.length === 0) {
+    throw new NotFoundError('Please provide lead IDs to update');
+  }
+  const invalidIds = leadListId.filter(
+    (id) => !mongoose.Types.ObjectId.isValid(id)
+  );
+  if (invalidIds.length > 0) {
+    throw new NotFoundError('Invalid lead ID(s) provided');
+  }
+  const updateData = {};
+  if (assignedTo) updateData.assignedTo = assignedTo;
+  const result = await Lead.updateMany(
+    { _id: { $in: leadListId } },
+    { $addToSet: { assignedTo } }
+  );
+  res.status(200).json({
+    success: true,
+    message: 'Lead retrieved successfully',
+    data: {
+      modifiedCount: result.modifiedCount,
+      matchedCount: result.matchedCount,
+    },
+  });
+});
+
 const getAllLeads = asyncHandler(async (req, res) => {
   const { orgid } = req.params;
-  const leads = await Lead.find({
-    organization: orgid,
-  })
-    .populate('assignedTo', ['firstName', 'lastName'])
-    .populate('account', ['name']);
+  const {
+    category_type,
+    agentValue,
+    status,
+    country,
+    search_query,
+    accountValue,
+  } = req.query;
+
+  const matchQuery = { organization: orgid };
+
+  if (
+    category_type !== undefined &&
+    category_type !== null &&
+    category_type !== ''
+  ) {
+    matchQuery.categoryType = category_type;
+  }
+
+  if (status !== undefined && status !== null && status !== '') {
+    matchQuery.pipelineStatus = status;
+  }
+
+  if (country !== undefined && country !== null && country !== '') {
+    matchQuery.region = country;
+  }
+
+  if (
+    accountValue !== undefined &&
+    accountValue !== null &&
+    accountValue !== ''
+  ) {
+    matchQuery.account = accountValue;
+  }
+
+  if (agentValue !== undefined && agentValue !== null && agentValue !== '') {
+    matchQuery.assignedTo = agentValue;
+  }
+
+  if (
+    search_query !== undefined &&
+    search_query !== null &&
+    search_query !== ''
+  ) {
+    matchQuery.$or = [
+      { firstName: { $regex: search_query, $options: 'i' } },
+      { lastName: { $regex: search_query, $options: 'i' } },
+      { phone: { $regex: search_query, $options: 'i' } },
+      { companyName: { $regex: search_query, $options: 'i' } },
+    ];
+  }
+
+  const leads = await Lead.find(matchQuery).populate('assignedTo', [
+    'firstName',
+    'lastName',
+  ]);
   res.status(200).json({
     success: true,
     message: 'Leads fetched successfully',
@@ -98,15 +225,19 @@ const getAllLeads = asyncHandler(async (req, res) => {
 
 const getLead = asyncHandler(async (req, res) => {
   const { id } = req.params;
-
   const lead = await Lead.findById(id)
-    .populate('assignedTo', ['firstName', 'lastName'])
-    .populate('account', ['name']);
-
-  if (!lead) {
-    throw new NotFoundError('Lead not found');
-  }
-
+    .populate('account', 'name')
+    .populate({
+      path: 'assignedTo',
+      select: 'firstName lastName employeeId email role department location',
+      populate: {
+        path: 'department',
+        select: 'name code',
+      },
+    })
+    .populate('logs.agent', 'fullName')
+    .populate('comments.permanent.createdBy', 'fullName email')
+    .populate('comments.current.createdBy', 'fullName email');
   res.status(200).json({
     success: true,
     message: 'Lead retrieved successfully',
@@ -116,19 +247,77 @@ const getLead = asyncHandler(async (req, res) => {
 
 const addComment = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { comment } = req.body;
+  const { comment, agent } = req.body;
 
-  const lead = await Lead.findById(id);
-  if (!lead) {
-    throw new NotFoundError('Lead not found');
-  }
+  const newComment = {
+    permanent: {
+      comment,
+      date: Date.now(),
+      createdBy: agent,
+    },
+    current: {
+      comment,
+      isEdited: false,
+      editedAt: null,
+      createdBy: agent,
+    },
+  };
 
   const updatedLeads = await Lead.findByIdAndUpdate(
     id,
-    {
-      $set: { companyName: lead.companyName },
-      $push: { comments: { comment, date: Date.now() } },
-    },
+    { $push: { comments: newComment } },
+    { new: true }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: 'added',
+    data: updatedLeads,
+  });
+});
+
+const editComment = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { commentId, comment, agent } = req.body;
+
+  const lead = await Lead.findOne({ _id: id, 'comments._id': commentId });
+
+  if (!lead) {
+    throw new NotFoundError('Lead not found or comment does not exist');
+  }
+
+  const commentToUpdate = lead.comments.find(
+    (c) => c._id.toString() === commentId
+  );
+
+  const hasCurrentComment = commentToUpdate?.current?.comment;
+
+  let updateQuery;
+
+  if (hasCurrentComment) {
+    updateQuery = {
+      $set: {
+        'comments.$.current.comment': comment,
+        'comments.$.current.editedAt': Date.now(),
+        'comments.$.current.isEdited': true,
+        'comments.$.current.createdBy': agent,
+      },
+    };
+  } else {
+    updateQuery = {
+      $set: {
+        'comments.$.current': {
+          comment,
+          editedAt: Date.now(),
+          isEdited: true,
+        },
+      },
+    };
+  }
+
+  const updatedLeads = await Lead.findOneAndUpdate(
+    { _id: id, 'comments._id': commentId },
+    updateQuery,
     { new: true }
   );
 
@@ -206,20 +395,19 @@ const getLeadsWithoutCustomers = asyncHandler(async (req, res) => {
 const assignedTo = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { employeeId } = req.body;
+  console.log('e,mpl', employeeId);
 
-  const lead = await Lead.findById(id);
-  if (!lead) {
+  const uniqueEmployeeIds = [...new Set(employeeId)];
+
+  const updatedLeads = await Lead.findByIdAndUpdate(
+    id,
+    { assignedTo: uniqueEmployeeIds },
+    { new: true }
+  );
+
+  if (!updatedLeads) {
     throw new NotFoundError('Lead not found');
   }
-  const isAssigned = lead.assignedTo.includes(employeeId);
-
-  const updateOperation = isAssigned
-    ? { $pull: { assignedTo: employeeId } }
-    : { $push: { assignedTo: employeeId } };
-
-  const updatedLeads = await Lead.findByIdAndUpdate(id, updateOperation, {
-    new: true,
-  });
   res.status(200).json({
     success: true,
     message: 'Lead assigned successfully',
@@ -402,8 +590,31 @@ const uploadFile = asyncHandler(async (req, res) => {
   }
 });
 
+const getLeadsDeals = asyncHandler(async (req, res) => {
+  const leadId = req.params.id;
+  const leaddeals = await Deals.find({ lead: leadId });
+  res.status(200).json({
+    success: true,
+    message: 'Lead retrieved successfully',
+    data: leaddeals,
+  });
+});
+
+const getLeadsMeetings = asyncHandler(async (req, res) => {
+  const leadId = req.params.id;
+  const leadmeeting = await CRMTasks.find({ leads: leadId });
+  res.status(200).json({
+    success: true,
+    message: 'Lead retrieved successfully',
+    data: leadmeeting,
+  });
+});
+
 module.exports = {
   createLead,
+  bulkEdit,
+  bulkassign,
+  editComment,
   getAllLeads,
   updateLead,
   deleteLead,
@@ -416,4 +627,6 @@ module.exports = {
   addComment,
   changepipeline,
   uploadFile,
+  getLeadsDeals,
+  getLeadsMeetings,
 };

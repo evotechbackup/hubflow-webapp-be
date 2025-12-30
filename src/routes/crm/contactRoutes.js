@@ -11,15 +11,25 @@ const {
   deleteFiles,
   addComment,
   changePipeline,
+  bulkEdit,
+  bulkassign,
+  getCRMContactsDeals,
+  getCRMContactsMeeting,
+  editComment,
 } = require('../../controllers/crm/contactController');
+const { authenticate } = require('../../middleware');
 
 const router = require('express').Router();
 
-router.get('/all/:orgid', getAllContacts);
+router.get('/:orgid', getAllContacts);
 
-router.get('/:id', getContact);
+router.get('/getcontactByid/:id', authenticate, getContact);
 
-router.post('/create', createContact);
+router.post('/create', authenticate, createContact);
+
+router.put('/bulk-edit', authenticate, bulkEdit);
+
+router.put('/bulk-assign', authenticate, bulkassign);
 
 router.put('/update/:id', updateContact);
 
@@ -36,6 +46,12 @@ router.put('/updateFiles/:id/:documentId', updateFiles);
 router.get('/getFiles/:id', getFiles);
 
 router.put('/addComment/:id', addComment);
+
+router.put('/editComment/:id', editComment);
+
+router.get('/deals/:id', authenticate, getCRMContactsDeals);
+
+router.get('/meeting/:id', authenticate, getCRMContactsMeeting);
 
 router.put('/changePipeline/:id', changePipeline);
 
