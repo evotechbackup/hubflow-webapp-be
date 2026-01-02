@@ -168,6 +168,7 @@ const createPayroll = asyncHandler(async (req, res) => {
     agent,
     costCenter,
   } = req.body;
+  console.log('data', req.body);
 
   const dateUsingMonth = new Date(month);
 

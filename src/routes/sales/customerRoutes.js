@@ -20,6 +20,7 @@ const {
   getCustomersWithPagination,
   getCustomersByAgentWithPagination,
 } = require('../../controllers/sales/customerController');
+const { authenticate } = require('../../middleware');
 
 router.get('/:orgid', getCustomers);
 
@@ -54,7 +55,7 @@ router.post('/', createCustomer);
 
 // router.post('/create/crmcontact', async (req, res) => {});
 
-router.get('/getcustomerbyid/:id', getCustomerById);
+router.get('/getcustomerbyid/:id', authenticate, getCustomerById);
 
 router.put('/userassign', userAssign);
 

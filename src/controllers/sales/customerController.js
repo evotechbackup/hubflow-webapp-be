@@ -361,7 +361,7 @@ const getCustomerById = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Customer details fetched successfully',
-    customer: customerData,
+    data: customerData,
   });
 });
 

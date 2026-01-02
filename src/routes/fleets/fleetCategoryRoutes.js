@@ -18,7 +18,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.get('/:orgid', authenticate, getFleetCategoriesByOrgId);
-router.get('/:id', authenticate, getFleetCategoryById);
+router.get('/getById/:id', authenticate, getFleetCategoryById);
 router.get('/filter/:orgid', authenticate, getFleetCategoriesFilterByOrgId);
 router.get(
   '/categories-for-select/:orgid/:type',

@@ -36,11 +36,11 @@ const createEmployeeGroup = asyncHandler(async (req, res) => {
 
 const updateEmployeeGroup = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, employees, code } = req.body;
+  const { name, employees, code , type } = req.body;
 
   const updatedEmployeeGroup = await EmployeeGroup.findByIdAndUpdate(
     id,
-    { name, employees, code },
+    { name, employees, code , type },
     { new: true }
   );
   if (!updatedEmployeeGroup) {
