@@ -100,5 +100,4 @@ InvoiceSchema.index({ organization: 1 });
 
 InvoiceSchema.plugin(mongoosePaginate);
 
-module.exports =
-  mongoose.models.Invoice || mongoose.model('Invoice', InvoiceSchema);
+module.exports = mongoose.model('Invoice', InvoiceSchema);
