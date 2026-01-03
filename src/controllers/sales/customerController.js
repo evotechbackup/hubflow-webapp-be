@@ -3,9 +3,9 @@ const Customer = require('../../models/sales/Customer');
 // const MailRecord = require('../../models/MailRecord');
 const { default: mongoose } = require('mongoose');
 const axios = require('axios');
-// const CRMContacts = require('../../models/crm/CRMContacts');
-// const Leads = require('../../models/crm/Leads');
-// const CRMCustomer = require('../../models/crm/CRMCustomer');
+const CRMContacts = require('../../models/crm/CRMContacts');
+const Leads = require('../../models/crm/Leads');
+const CRMCustomer = require('../../models/crm/CRMCustomer');
 // const Account = require('../../models/accounts/Account');
 
 const { asyncHandler } = require('../../middleware/errorHandler');
@@ -321,40 +321,40 @@ const createCustomer = asyncHandler(async (request, response) => {
   });
 });
 
-// const createLeads = asyncHandler(async (req, res) => {
-//   const customer = req.body;
-//   const newCustomer = new CRMCustomer(customer);
-//   await newCustomer.save();
+const createLeads = asyncHandler(async (req, res) => {
+  const customer = req.body;
+  const newCustomer = new CRMCustomer(customer);
+  await newCustomer.save();
 
-//   await Leads.findByIdAndUpdate(
-//     customer.leads,
-//     { isCustomer: true },
-//     { new: true }
-//   );
+  await Leads.findByIdAndUpdate(
+    customer.leads,
+    { isCustomer: true },
+    { new: true }
+  );
 
-//   res.json({
-//     success: true,
-//     message: 'Customer details submitted successfully',
-//     customer: newCustomer,
-//   });
-// });
+  res.json({
+    success: true,
+    message: 'Customer details submitted successfully',
+    customer: newCustomer,
+  });
+});
 
-// const createCRMContact = asyncHandler(async (req, res) => {
-//   const customer = req.body;
-//   const newCustomer = new CRMCustomer(customer);
-//   await newCustomer.save();
+const createCRMContact = asyncHandler(async (req, res) => {
+  const customer = req.body;
+  const newCustomer = new CRMCustomer(customer);
+  await newCustomer.save();
 
-//   await CRMContacts.findByIdAndUpdate(
-//     customer.contacts,
-//     { isCustomer: true },
-//     { new: true }
-//   );
+  await CRMContacts.findByIdAndUpdate(
+    customer.contacts,
+    { isCustomer: true },
+    { new: true }
+  );
 
-//   res.json({
-//     success: true,
-//     message: 'CRM Contact details submitted successfully',
-//   });
-// });
+  res.json({
+    success: true,
+    message: 'CRM Contact details submitted successfully',
+  });
+});
 
 const getCustomerById = asyncHandler(async (req, res) => {
   const customerData = await Customer.findById(req.params.id);
@@ -635,4 +635,6 @@ module.exports = {
   getCustomersForSelectByAgent,
   getCustomersWithPagination,
   getCustomersByAgentWithPagination,
+  createLeads,
+  createCRMContact,
 };

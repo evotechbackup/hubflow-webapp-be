@@ -11,6 +11,14 @@ const CRMQuoteSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    lead: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Leads',
+    },
+    contact: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'CRMContacts',
+    },
     employee: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Employee',
@@ -20,6 +28,10 @@ const CRMQuoteSchema = new mongoose.Schema(
     },
     rfqNumber: {
       type: String,
+    },
+    serviceCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ServiceCategory',
     },
     description: {
       type: String,
@@ -115,7 +127,7 @@ const CRMQuoteSchema = new mongoose.Schema(
     },
     agent: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Agent',
     },
     valid: {
       type: Boolean,

@@ -24,7 +24,7 @@ router.put('/updateapproval/:id', updateBookingApproval);
 
 router.put('/changevalidation/:id', changeValidation);
 
-router.put('/:id', updateBooking);
+router.put('/update/:id', updateBooking);
 
 router.get('/filter/:orgid', getBookings);
 

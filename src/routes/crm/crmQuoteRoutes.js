@@ -11,14 +11,19 @@ const {
 
 const router = require('express').Router();
 
-router.get('/filter/:orgid', getFilterQuotes);
-router.get('/agent-filter/:agentid', getAgentFilterQuotes);
-router.get('/quotebyid/:id', getQuoteById);
-router.get('/quotebyquoteid/:id', getQuoteByQuoteId);
-
 router.post('/:dealId', createQuote);
 
-router.put('/:id', updateQuote);
+router.get('/filter/:orgid', getFilterQuotes);
+
+router.get('/agent-filter/:agentid', getAgentFilterQuotes);
+
+router.get('/quotebyid/:id', getQuoteById);
+
+router.get('/quotebyfortem/:id', getQuoteById);
+
+router.get('/quotebyquoteid/:id', getQuoteByQuoteId);
+
+router.put('/update/:id', updateQuote);
 router.put('/changevalidation/:id', changeValidation);
 router.put('/edit-status/:id', updateQuoteStatus);
 

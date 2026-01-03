@@ -110,6 +110,9 @@ const crmServiceRoutes = require('./crm/crmServiceRoutes');
 const crmTaskRoutes = require('./crm/crmTaskRoutes');
 const dealRoutes = require('./crm/dealRoutes');
 const developerRoutes = require('./crm/developerRoutes');
+const crmEmployeeTargetRoute = require('./crm/crmEmployeeTargetRoute');
+const crmAnalyticsRoute = require('./crm/crmAnalyticsRoutes');
+const crmPerformanceRoutes = require('./reports/crmPerformanceRoutes');
 
 //hrm
 const employeeRoutes = require('./hrm/employeeRoutes');
@@ -326,6 +329,9 @@ router.use('/crm/services', authenticate, crmServiceRoutes);
 router.use('/crm/tasks', authenticate, crmTaskRoutes);
 router.use('/crm/deals', authenticate, dealRoutes);
 router.use('/crm/developers', authenticate, developerRoutes);
+router.use('/crm/employee-targets', authenticate, crmEmployeeTargetRoute);
+router.use('/crm/crmAnalytics', authenticate, crmAnalyticsRoute);
+router.use('/reports/crmReport', authenticate, crmPerformanceRoutes);
 
 //recruit
 router.use('/recruit/recruitmentform', recruitmentFormRoutes);

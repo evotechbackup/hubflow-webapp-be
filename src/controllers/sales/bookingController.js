@@ -143,7 +143,17 @@ const postBooking = asyncHandler(async (req, res) => {
 
 const getBookingById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const booking = await Booking.findById(id).populate('customer');
+  const booking = await Booking.findById(id)
+    .populate('customer')
+    .populate('quote')
+    .populate({
+      path: 'items.serviceId',
+      select: 'name price costPrice unit',
+    })
+    .populate({
+      path: 'items.vendor',
+      select: 'displayName _id currency',
+    });
   res.status(200).json({
     success: true,
     message: 'Booking fetched successfully',
@@ -345,43 +355,60 @@ const updateBooking = asyncHandler(async (req, res) => {
   // Create the new ID
   const newId = `${baseId}-REV${newRevision}`;
 
-  const updatedBooking = await Booking.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      ...req.body,
-      id: isrevised === 'true' ? newId : booking.id,
-      verifiedAt: null,
-      verifiedBy: null,
-      reviewedAt: null,
-      reviewedBy: null,
-      approvedAt1: null,
-      approvedBy1: null,
-      approvedAt2: null,
-      approvedBy2: null,
-      acknowledgedAt: null,
-      acknowledgedBy: null,
-    },
-    { new: true }
-  );
+  // Prepare update data
+  const updateData = { ...req.body };
+
+  // Update the ID based on revision
+  updateData.id = isrevised === 'true' ? newId : booking.id;
+
+  // Reset approval fields
+  updateData.verifiedAt = null;
+  updateData.verifiedBy = null;
+  updateData.reviewedAt = null;
+  updateData.reviewedBy = null;
+  updateData.approvedAt1 = null;
+  updateData.approvedBy1 = null;
+  updateData.approvedAt2 = null;
+  updateData.approvedBy2 = null;
+  updateData.acknowledgedAt = null;
+  updateData.acknowledgedBy = null;
+
+  // Update each field individually
+  Object.keys(updateData).forEach((key) => {
+    if (updateData[key] !== undefined) {
+      booking[key] = updateData[key];
+    }
+  });
+
+  // Save the updated booking
+  const updatedBooking = await booking.save();
+
+  // Populate related fields for response
+  await updatedBooking.populate('customer');
+  await updatedBooking.populate('contactPerson');
+  await updatedBooking.populate('quote');
+  await updatedBooking.populate('enquiry');
+  await updatedBooking.populate('items.serviceId');
+  await updatedBooking.populate('items.vendor');
 
   // const hasApproval = await ifHasApproval(
-  //   'quotes',
-  //   updatedQuote.organization
+  //   'bookings',
+  //   updatedBooking.organization
   // );
 
-  // updatedQuote.approval = hasApproval ? 'pending' : 'none';
-  // await updatedQuote.save();
+  // updatedBooking.approval = hasApproval ? 'pending' : 'none';
+  // await updatedBooking.save();
 
   // await createActivityLog({
   //   userId: req._id,
   //   action: 'update',
-  //   type: 'quote',
-  //   actionId: updatedQuote.id,
-  //   organization: updatedQuote.organization,
-  //   company: updatedQuote.company,
+  //   type: 'booking',
+  //   actionId: updatedBooking.id,
+  //   organization: updatedBooking.organization,
+  //   company: updatedBooking.company,
   // });
 
-  res.status(201).json({
+  res.status(200).json({
     success: true,
     message: 'Booking updated successfully',
     data: updatedBooking,
@@ -496,8 +523,8 @@ module.exports = {
   postBooking,
   getBookings,
   getBookingById,
-  getBookingDetailsById,
   updateBooking,
+  getBookingDetailsById,
   rejectBooking,
   updateBookingApproval,
   changeValidation,

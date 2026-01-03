@@ -6,6 +6,8 @@ const Product = require('../../models/inventory/Product');
 const { asyncHandler } = require('../../middleware/errorHandler');
 
 const createQuote = asyncHandler(async (req, res) => {
+  const { dealId } = req.params;
+
   const {
     id,
     customID,
@@ -29,10 +31,12 @@ const createQuote = asyncHandler(async (req, res) => {
     agent = null,
     contactPerson,
     itemsFromInventory,
+    lead = null,
+    contact = null,
+    serviceCategory = null,
   } = req.body;
 
-  let { dealId } = req.params;
-  if (dealId === '0') dealId = null;
+  const dealid = dealId === '0' ? null : dealId;
 
   let lastInsertedId = await LastInsertedId.findOne({
     entity: 'Quotes',
@@ -77,7 +81,10 @@ const createQuote = asyncHandler(async (req, res) => {
     description,
     docAttached,
     contactPerson,
-    deal: dealId || null,
+    lead,
+    contact,
+    serviceCategory,
+    deal: dealid || null,
   });
 
   const savedQuote = await newQuote.save();
@@ -318,10 +325,35 @@ const getQuoteById = asyncHandler(async (req, res) => {
     data: quotes,
   });
 });
+const getQuotebyfortemById = asyncHandler(async (req, res) => {
+  const _id = req.params.id;
+  const quotes = await CRMQuote.find({ _id })
+    .populate('lead')
+    .populate('contact')
+    .populate('items.itemId')
+    .populate('items.itemsId')
+    .populate('serviceCategory', ['name'])
+    .populate('company')
+    .populate('agent', [
+      'signature',
+      'fullName',
+      'email',
+      'phone',
+      'profileType',
+    ])
+    .populate('organization');
+  res.status(200).json({
+    success: true,
+    message: 'Quote fetched successfully',
+    data: quotes,
+  });
+});
 
 const getQuoteByQuoteId = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const quotes = await CRMQuote.findById(id)
+    .populate('lead', 'displayName')
+    .populate('contact', 'displayName')
     .populate('customer')
     .populate('employee')
     .populate('items.itemId')
@@ -369,4 +401,5 @@ module.exports = {
   updateQuote,
   changeValidation,
   updateQuoteStatus,
+  getQuotebyfortemById,
 };
